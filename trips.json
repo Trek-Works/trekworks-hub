@@ -1,12 +1,23 @@
 [
   {
+    "id": "SP-2025",
     "name": "SP-2025 (Japan)",
     "org": "TW-Japan",
+    "group": "Japan",
     "url": "https://tw-japan.github.io/SP-2025/"
   },
   {
+    "id": "GJN-2024",
     "name": "GJN-2024 (Thailand)",
     "org": "TW-Thailand",
+    "group": "Thailand",
     "url": "https://tw-thailand.github.io/GJN-2024/"
+  },
+  {
+    "id": "GJN-2025",
+    "name": "GJN-2025 (South Korea)",
+    "org": "TW-South-Korea",
+    "group": "South Korea",
+    "url": "https://tw-south-korea.github.io/GJN-2025/"
   }
 ]
