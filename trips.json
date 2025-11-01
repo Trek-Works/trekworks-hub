@@ -19,5 +19,12 @@
     "org": "TW-South-Korea",
     "group": "South Korea",
     "url": "https://tw-south-korea.github.io/GJN-2025/"
+  },
+  {
+    "id": "GJN-2026",
+    "name": "GJN-2026 (Japan)",
+    "org": "TW-Japan",
+    "group": "Japan",
+    "url": "https://tw-japan.github.io/GJN-2026/"
   }
 ]
