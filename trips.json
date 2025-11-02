@@ -1,30 +1,38 @@
-[
+[[
   {
     "id": "SP-2025",
-    "name": "SP-2025 (Japan)",
-    "org": "TW-Japan",
-    "group": "Japan",
-    "url": "https://tw-japan.github.io/SP-2025/"
+    "title": "SP-2025 (Japan)",
+    "country": "Japan",
+    "flag": "🇯🇵",
+    "start": "2025-05-10",
+    "end": "2025-05-20",
+    "path": "/Japan/SP-2025/"
   },
   {
-    "id": "GJN-2024",
-    "name": "GJN-2024 (Thailand)",
-    "org": "TW-Thailand",
-    "group": "Thailand",
-    "url": "https://tw-thailand.github.io/GJN-2024/"
+    "id": "GJN-2024-Sep",
+    "title": "GJN-2024 (Thailand)",
+    "country": "Thailand",
+    "flag": "🇹🇭",
+    "start": "2024-09-02",
+    "end": "2024-09-12",
+    "path": "/Thailand/GJN-2024-Sep/"
   },
   {
-    "id": "GJN-2025",
-    "name": "GJN-2025 (South Korea)",
-    "org": "TW-South-Korea",
-    "group": "South Korea",
-    "url": "https://tw-south-korea.github.io/GJN-2025/"
+    "id": "GJN-2025-Jun",
+    "title": "GJN-2025 (South Korea)",
+    "country": "South Korea",
+    "flag": "🇰🇷",
+    "start": "2025-06-05",
+    "end": "2025-06-15",
+    "path": "/South-Korea/GJN-2025-Jun/"
   },
   {
-    "id": "GJN-2026",
-    "name": "GJN-2026 (Japan)",
-    "org": "TW-Japan",
-    "group": "Japan",
-    "url": "https://tw-japan.github.io/GJN-2026/"
+    "id": "GJN-2026-May",
+    "title": "GJN-2026 (Japan)",
+    "country": "Japan",
+    "flag": "🇯🇵",
+    "start": "2026-05-14",
+    "end": "2026-05-29",
+    "path": "/Japan/GJN-2026-May/"
   }
 ]
