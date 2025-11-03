@@ -89,6 +89,31 @@
       font-weight: bold;
       display: inline-block;
     }
+
+    /* ✅ MOBILE RESPONSIVE FIX (MATCH ACCOMMODATION) */
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      td {
+        white-space: normal !important;
+        text-align: left !important;
+        padding-left: 0.6em !important;
+        padding-top: 0.35em !important;
+        padding-bottom: 0.35em !important;
+        border: none !important;
+        border-bottom: 1px solid #ddd !important;
+      }
+
+      .flight-card {
+        padding: 1em !important;
+      }
+    }
 </style>
 </head>
 
