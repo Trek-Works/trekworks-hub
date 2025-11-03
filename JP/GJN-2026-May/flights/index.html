@@ -4,9 +4,10 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Japan – Flights (May 2026)</title>
-<link href="/SP-2025-accommodation-flights/assets/manifest.json" rel="manifest"/>
-<link href="/SP-2025-accommodation-flights/assets/icons/icon-192x192.png" rel="icon" type="image/png"/>
-<link href="/SP-2025-accommodation-flights/assets/icons/icon-192x192.png" rel="apple-touch-icon"/>
+
+<link rel="manifest" href="assets/manifest.json">
+<link rel="icon" type="image/png" href="assets/icons/icon-192x192.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
 
 <style>
     body {
@@ -17,7 +18,7 @@
 
     h1 {
       text-align: center;
-      margin-bottom: 1.8em;
+      margin-bottom: 1em;
     }
 
     .flight-card {
@@ -58,9 +59,19 @@
       border-bottom: none;
     }
 
-    /* Airline Badges */
     .badge-jetstar {
       background: #FF6A00;
+      color: white;
+      padding: 0.25em 0.6em;
+      border-radius: 12px;
+      font-size: 0.88em;
+      font-weight: bold;
+      display: inline-block;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-jal, .badge-jta {
+      background: #B50000;
       color: white;
       padding: 0.25em 0.6em;
       border-radius: 12px;
@@ -78,17 +89,6 @@
       font-weight: bold;
       display: inline-block;
     }
-
-    .badge-jal, .badge-jta {
-      background: #B50000;
-      color: white;
-      padding: 0.25em 0.6em;
-      border-radius: 12px;
-      font-size: 0.88em;
-      font-weight: bold;
-      display: inline-block;
-      letter-spacing: 0.5px;
-    }
 </style>
 </head>
 
@@ -96,10 +96,14 @@
 
 <h1>Japan – Flights (May 2026)</h1>
 
+<p style="text-align:center; margin-top: -0.5em;">
+  <a href="../" style="text-decoration:none; font-size:0.95em; color:#0077cc;">← Back to Trip Home</a>
+</p>
+
+
 <!-- FLIGHT 1 -->
 <div class="flight-card">
   <div class="flight-title">1. Sydney (SYD) ➔ Osaka (KIX)</div>
-
   <table>
   <thead>
   <tr>
@@ -110,13 +114,7 @@
   <tbody>
   <tr>
   <td><strong>Date:</strong> 14 May 2026</td>
-
-  <td><strong>Flight:</strong>
-    <span class="badge-jetstar">
-      <a href="https://www.flightaware.com/live/flight/JST13" target="_blank">JETSTAR JQ13</a>
-    </span>
-  </td>
-
+  <td><span class="badge-jetstar"><a href="https://www.flightaware.com/live/flight/JST13" target="_blank">JETSTAR JQ13</a></span></td>
   <td><a href="https://check-in.jetstar.com/au/en/checkin" target="_blank">Jetstar Check In</a></td>
   <td><strong>Bag drop:</strong> 8:10am</td>
   <td><strong>Departure:</strong> 11:10am</td>
@@ -132,7 +130,6 @@
 <!-- FLIGHT 2 -->
 <div class="flight-card">
   <div class="flight-title">2. Osaka (Itami ITM) ➔ Okinawa (Naha OKA)</div>
-
   <table>
   <thead>
   <tr>
@@ -143,13 +140,7 @@
   <tbody>
   <tr>
     <td><strong>Date:</strong> 17 May 2026</td>
-
-    <td><strong>Flight:</strong>
-      <span class="badge-jal">
-        <a href="https://www.flightaware.com/live/flight/JAL2087" target="_blank">JAL 2087</a>
-      </span>
-    </td>
-
+    <td><span class="badge-jal"><a href="https://www.flightaware.com/live/flight/JAL2087" target="_blank">JAL 2087</a></span></td>
     <td><a href="https://digital.jal.co.jp/ssci/identification?lang=en-GB" target="_blank">JAL Check In</a></td>
     <td><strong>Airport Check-In:</strong> 12:50</td>
     <td><strong>From:</strong> 14:50</td>
@@ -165,7 +156,6 @@
 <!-- FLIGHT 3 -->
 <div class="flight-card">
   <div class="flight-title">3. Okinawa (Naha OKA) ➔ Fukuoka (FUK)</div>
-
   <table>
   <thead>
   <tr>
@@ -176,13 +166,7 @@
   <tbody>
   <tr>
     <td><strong>Date:</strong> 22 May 2026</td>
-
-    <td><strong>Flight:</strong>
-      <span class="badge-jta">
-        <a href="https://www.flightaware.com/live/flight/JTA54" target="_blank">JTA 054</a>
-      </span>
-    </td>
-
+    <td><span class="badge-jta"><a href="https://www.flightaware.com/live/flight/JTA54" target="_blank">JTA 054</a></span></td>
     <td><a href="https://digital.jal.co.jp/ssci/identification?lang=en-GB" target="_blank">JAL Check In</a></td>
     <td><strong>Airport Check-In:</strong> 11:35</td>
     <td><strong>From:</strong> 13:35</td>
@@ -198,7 +182,6 @@
 <!-- FLIGHT 4 -->
 <div class="flight-card">
   <div class="flight-title">4. Osaka (KIX) ➔ Sydney (SYD)</div>
-
   <table>
   <thead>
   <tr>
@@ -209,13 +192,7 @@
   <tbody>
   <tr>
   <td><strong>Date:</strong> 26 May 2026</td>
-
-  <td><strong>Flight:</strong>
-    <span class="badge-jetstar">
-      <a href="https://www.flightaware.com/live/flight/JST14" target="_blank">JETSTAR JQ14</a>
-    </span>
-  </td>
-
+  <td><span class="badge-jetstar"><a href="https://www.flightaware.com/live/flight/JST14" target="_blank">JETSTAR JQ14</a></span></td>
   <td><a href="https://check-in.jetstar.com/au/en/checkin" target="_blank">Jetstar Check In</a></td>
   <td><strong>Bag drop:</strong> 6:25pm</td>
   <td><strong>Departure:</strong> 9:25pm</td>
