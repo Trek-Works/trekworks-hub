@@ -91,14 +91,18 @@
   </div>
 
 <script>
+/* ===== TRIP DATA ===== */
 const FALLBACK = [
-  {"id":"GJN-2024-Aug_Sep","title":"GJN-2024 (Japan)","country":"Japan","flag":"🇯🇵","start":"2024-08-31","end":"2024-09-09","path":"/JP/GJN-2024-Aug_Sep/"},
+  /* Japan ------------------------------------------------------ */
+  {"id":"GJN-2024-Sep","title":"GJN-2024 (Japan)","country":"Japan","flag":"🇯🇵","start":"2024-08-31","end":"2024-09-09","path":"/JP/GJN-2024-Sep/"},
   {"id":"SP-2025-Aug_Sep","title":"SP-2025 (Japan)","country":"Japan","flag":"🇯🇵","start":"2025-08-20","end":"2025-09-07","path":"/JP/SP-2025-Aug_Sep/"},
   {"id":"GJN-2026-May","title":"GJN-2026 (Japan)","country":"Japan","flag":"🇯🇵","start":"2026-05-14","end":"2026-05-29","path":"/JP/GJN-2026-May/"},
 
-  {"id":"GJN-2024-Sep","title":"GJN-2024 (Thailand)","country":"Thailand","flag":"🇹🇭","start":"2024-09-02","end":"2024-09-12","path":"/TH/GJN-2024-Sep/"},
+  /* Thailand --------------------------------------------------- */
+  {"id":"GJN-2024-Sep-TH","title":"GJN-2024 (Thailand)","country":"Thailand","flag":"🇹🇭","start":"2024-09-02","end":"2024-09-12","path":"/TH/GJN-2024-Sep/"},
   {"id":"GJN-2025-May","title":"GJN-2025 (Thailand)","country":"Thailand","flag":"🇹🇭","start":"2025-05-10","end":"2025-05-20","path":"/TH/GJN-2025-May/"},
 
+  /* Korea ------------------------------------------------------ */
   {"id":"GJN-2025-Sep","title":"GJN-2025 (South Korea)","country":"South Korea","flag":"🇰🇷","start":"2025-09-05","end":"2025-09-15","path":"/KR/GJN-2025-Sep/"}
 ];
 
@@ -111,12 +115,12 @@ async function loadTrips(){
   }catch(e){ return FALLBACK; }
 }
 
+/* ===== Sorting rules ===== */
 function sortCountryTrips(a,b){
-  const x = a.id.localeCompare(b.id); 
-  if(x !== 0) return x;
+  const codeSort = a.id.localeCompare(b.id);
+  if(codeSort !== 0) return codeSort;
   return new Date(a.start) - new Date(b.start);
 }
-
 function byDateAsc(a,b){ return new Date(a.start) - new Date(b.start); }
 
 function groupBy(arr, key){
@@ -130,6 +134,7 @@ function el(tag, cls, html){
   return n;
 }
 
+/* ===== Render “Countries” view ===== */
 function renderCountries(trips){
   const root = document.createDocumentFragment();
   const groups = groupBy(trips, 'country');
@@ -146,25 +151,27 @@ function renderCountries(trips){
     const section = el('section','section');
     const flag = groups[country][0]?.flag || '🌍';
     section.appendChild(el('h2',null,`<span class="flag">${flag}</span> ${country}`));
+
     const grid = el('div','grid');
-    groups[country].sort(sortCountryTrips).forEach(t=>{
-      grid.appendChild(card(t));
-    });
+    groups[country].sort(sortCountryTrips).forEach(t=> grid.appendChild(card(t)));
+
     section.appendChild(grid);
     root.appendChild(section);
     root.appendChild(el('div','divider'));
   });
+
   return root;
 }
 
+/* ===== Render “Timeline” view ===== */
 function renderTimeline(trips){
   const root = document.createDocumentFragment();
   const section = el('section','section');
   section.appendChild(el('h2',null,'📅 Timeline <span class="muted">(all trips)</span>'));
+
   const grid = el('div','grid');
-  trips.slice().sort(byDateAsc).forEach(t=>{
-    grid.appendChild(card(t,true));
-  });
+  trips.slice().sort(byDateAsc).forEach(t=> grid.appendChild(card(t,true)));
+
   section.appendChild(grid);
   root.appendChild(section);
   return root;
@@ -182,31 +189,36 @@ function card(t, showCountryBadge=false){
   const a = el('a','card');
   a.href = t.path;
   a.setAttribute('aria-label', `${t.title} (${t.country})`);
+
   const title = el('div','title', t.title);
   const meta = el('div','meta');
+
   meta.append(el('span',null,fmtRange(t)));
+
   if(showCountryBadge){
     const badge = el('span','pill',`<span class="flag">${t.flag || '🌍'}</span>${t.country}`);
     meta.appendChild(badge);
   }
+
   a.append(title, meta);
   return a;
 }
 
+/* ===== Tab Switching ===== */
 function setMode(mode){
   const seg = document.querySelector('.seg');
   const btnCountries = document.getElementById('tab-countries');
-  const btnTimeline  = document.getElementById('tab-timeline');
+  const btnTimeline = document.getElementById('tab-timeline');
   seg.dataset.mode = mode;
 
-  const countriesActive = mode==='countries';
-  btnCountries.setAttribute('aria-selected', countriesActive);
-  btnCountries.setAttribute('aria-pressed', countriesActive);
-  btnCountries.tabIndex = countriesActive ? 0 : -1;
+  const onCountries = mode==='countries';
+  btnCountries.setAttribute('aria-selected', onCountries);
+  btnCountries.setAttribute('aria-pressed', onCountries);
+  btnCountries.tabIndex = onCountries ? 0 : -1;
 
-  btnTimeline.setAttribute('aria-selected', !countriesActive);
-  btnTimeline.setAttribute('aria-pressed', !countriesActive);
-  btnTimeline.tabIndex = countriesActive ? -1 : 0;
+  btnTimeline.setAttribute('aria-selected', !onCountries);
+  btnTimeline.setAttribute('aria-pressed', !onCountries);
+  btnTimeline.tabIndex = onCountries ? -1 : 0;
 }
 
 (async function init(){
@@ -218,7 +230,7 @@ function setMode(mode){
 
   const seg = document.querySelector('.seg');
   const btnCountries = document.getElementById('tab-countries');
-  const btnTimeline  = document.getElementById('tab-timeline');
+  const btnTimeline = document.getElementById('tab-timeline');
 
   function go(mode){
     setMode(mode);
@@ -226,11 +238,11 @@ function setMode(mode){
     (mode==='countries' ? btnCountries : btnTimeline).focus({preventScroll:true});
   }
 
-  btnCountries.addEventListener('click', ()=> go('countries'));
-  btnTimeline .addEventListener('click', ()=> go('timeline'));
+  btnCountries.addEventListener('click',()=>go('countries'));
+  btnTimeline.addEventListener('click',()=>go('timeline'));
 
-  seg.addEventListener('keydown', e=>{
-    if(e.key==='ArrowRight' || e.key==='ArrowLeft'){
+  seg.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft' || e.key==='ArrowRight'){
       e.preventDefault();
       go(seg.dataset.mode==='countries' ? 'timeline' : 'countries');
     }
