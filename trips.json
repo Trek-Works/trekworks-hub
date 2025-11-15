@@ -54,5 +54,14 @@
     "start": "2025-09-01",
     "end": "2025-09-09",
     "path": "/KR/GJN-2025-Sep/"
+  },
+  {
+    "id": "GJN-2027-May",
+    "title": "GJN-2027 (South Korea)",
+    "country": "South Korea",
+    "flag": "🇰🇷",
+    "start": "2027-05-01",
+    "end": "2027-05-09",
+    "path": "/KR/GJN-2027-May/"
   }
 ]
