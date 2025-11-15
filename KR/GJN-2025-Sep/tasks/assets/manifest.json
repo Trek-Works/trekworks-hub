@@ -1,0 +1,22 @@
+{
+  "name": "📋 South Korea Travel Tasks 2025",
+  "short_name": "Tasks",
+  "start_url": "/GJN-2025-tasks/",
+  "scope": "/GJN-2025-tasks/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#b11d1d",
+  "icons": [
+    {
+      "src": "/GJN-2025-tasks/assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/GJN-2025-tasks/assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

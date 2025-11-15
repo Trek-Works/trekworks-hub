@@ -1,0 +1,22 @@
+{
+  "name": "🚆💳 South Korea Travel Cards 2025",
+  "short_name": "Travel Cards",
+  "start_url": "/GJN-2025-travel-cards/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0b3d91",
+  "icons": [
+    {
+      "src": "/GJN-2025-travel-cards/assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/GJN-2025-travel-cards/assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "scope": "/GJN-2025-travel-cards/"
+}

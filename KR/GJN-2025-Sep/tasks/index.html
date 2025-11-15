@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>🧳 South Korea Travel Tasks 2025</title>
+<link href="/GJN-2025-tasks/assets/manifest.json" rel="manifest"/>
+<link href="/GJN-2025-tasks/assets/icons/icon-192x192.png" rel="icon" type="image/png"/>
+<link href="/GJN-2025-tasks/assets/icons/icon-192x192.png" rel="apple-touch-icon"/>
+<style>
+  body {
+    font-family: sans-serif;
+    background: #f5f5f5;
+    padding: 1em;
+  }
+  h1 {
+    text-align: center;
+  }
+  details {
+    margin-bottom: 1.5em;
+    background: white;
+    border-radius: 8px;
+    padding: 1em;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  summary {
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .table-scroll {
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+    min-width: 600px;
+  }
+  th, td {
+    padding: 0.7em;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    word-break: break-word;
+  }
+  th:nth-child(1), td:nth-child(1) { width: 15%; }
+  th:nth-child(2), td:nth-child(2) { width: 35%; }
+  th:nth-child(3), td:nth-child(3) { width: 10%; }
+  th:nth-child(4), td:nth-child(4) { width: 25%; }
+  th:nth-child(5), td:nth-child(5) { width: 15%; }
+  th {
+    background: #eaeaea;
+  }
+  a {
+    color: #DC143C;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+<h1>🧳 South Korea Travel Tasks 2025</h1>
+<details>
+<summary>✈️ Prior to Departure</summary>
+<div class="table-scroll">
+<table>
+<thead>
+<tr><th>Item</th><th>Description</th><th>Price</th><th>Task</th><th>URL</th></tr>
+</thead>
+<tbody>
+<tr><td>eSIM</td><td>Virtual SIM to install directly on phone.</td><td>Various</td><td>Register and install before travel.</td><td><a href="https://bytesim.com/products/esim-south-korea?sku=18061185983857064763750715/" rel="noopener noreferrer" target="_blank">Link</a></td></tr><tr><td>Google Translate</td><td>Translation app with offline mode.</td><td>Free</td><td>Download app &amp; language pack.</td><td><a href="https://play.google.com/store/apps/details?id=com.google.android.apps.translate" rel="noopener noreferrer" target="_blank">Link</a></td></tr><tr><td>Kakao T </td><td>Allows users to book taxis, designated drivers, and even e-bikes or scooters.</td><td>Free</td><td>Download app.</td><td><a href="https://play.google.com/store/apps/details?id=com.kakao.taxi&amp;hl=en_AU" rel="noopener noreferrer" target="_blank">Link</a></td></tr><tr><td>Travel Insurance</td><td>Policy number, coverage &amp; provider.</td><td>Various</td><td>Print + digital copy.</td><td><a href="https://www.comparethemarket.com.au/travel-insurance/?" rel="noopener noreferrer" target="_blank">Link</a></td></tr><tr><td>Travel Visa</td><td>Check visa rules by country.</td><td>AUD$24</td><td>Check exemption before travel.</td><td><a href="https://www.k-eta.go.kr/portal/newapply/index.do" rel="noopener noreferrer" target="_blank">Link</a></td></tr><tr><td>Smart Pass</td><td>Pre-registering of passport, facial data, and boarding pass.</td><td>Free</td><td>For quick pass through immigration and boarding gates via <a href="https://www.airport.kr/ap_en/1416/subview.do" rel="noopener noreferrer" target="_blank">SmartPass</a> lane.</td><td><a href="https://play.google.com/store/apps/details?id=kr.airport.android.smartpass&amp;hl=en" rel="noopener noreferrer" target="_blank">Link</a></td></tr><tr><td>Up Card</td><td>Free ATM withdrawals. $10 plastic card optional.</td><td>AUD$10</td><td>Order at least 2 weeks prior.</td><td><a href="https://up.com.au/download/" rel="noopener noreferrer" target="_blank">Link</a></td></tr><tr><td>Wise</td><td>Free 2x ATM withdrawals/month. $10 card.</td><td>AUD$10</td><td>Optional backup card.</td><td><a href="https://wise.com/" rel="noopener noreferrer" target="_blank">Link</a></td></tr></tbody>
+</table>
+</div>
+</details>
+<details>
+<summary>🛬 On Arrival</summary>
+<div class="table-scroll">
+<table>
+<thead>
+<tr><th>Item</th><th>Description</th><th>Price</th><th>Task</th><th>URL</th></tr>
+</thead>
+<tbody>
+<tr><td>T-money Card</td><td>Rechargeable transport smart card.</td><td>₩5,000</td><td>Purchase at Incheon Airport.</td><td><a href="https://youtu.be/W9gsKrhCRQE" rel="noopener noreferrer" target="_blank">Link</a></td></tr>
+<tr><td>Cash</td><td>Korea is cash-heavy. Use local currency at ATM.</td><td>Various</td><td>Withdraw at airport using local setting.</td><td><a href="https://youtu.be/BGaE2mgfN40" rel="noopener noreferrer" target="_blank">Link</a></td></tr></tbody>
+</table>
+</div>
+</details>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+      try {
+        const reg = await navigator.serviceWorker.register('/GJN-2025-tasks/service-worker.js');
+        reg.update();
+        setInterval(() => reg.update(), 30 * 60 * 1000);
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data && event.data.type === 'NEW_VERSION_ACTIVATED') {
+            location.reload();
+          }
+        });
+      } catch (e) { console.error('SW registration failed:', e); }
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href]');
+    if (!a) return;
+    const url = new URL(a.href, location.href);
+    const sameOrigin = url.origin === location.origin && url.pathname.startsWith('/GJN-2025-tasks/');
+    if (!sameOrigin && !navigator.onLine) {
+      e.preventDefault();
+      alert('You are offline. Reconnect to get live updates. The app refreshes itself once you’re back online.');
+    }
+  });
+</script>
+</body>
+</html>
