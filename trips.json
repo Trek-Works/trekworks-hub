@@ -8,6 +8,7 @@
     "end": "2024-09-10",
     "path": "/JP/GJN-2024-Sep/"
   },
+
   {
     "id": "GJN-2026-May",
     "title": "GJN-2026 (Japan)",
@@ -17,13 +18,14 @@
     "end": "2026-05-29",
     "path": "/JP/GJN-2026-May/"
   },
+
   {
     "id": "SP-2025-Aug_Sep",
     "title": "SP-2025 (Japan)",
     "country": "Japan",
     "flag": "🇯🇵",
-    "start": "2025-08-20",
-    "end": "2025-09-05",
+    "start": "2025-08-30",
+    "end": "2025-09-07",
     "path": "/JP/SP-2025-Aug_Sep/"
   },
 
@@ -55,6 +57,7 @@
     "end": "2025-09-18",
     "path": "/KR/GJN-2025-Sep/"
   },
+
   {
     "id": "GJN-2027-May",
     "title": "GJN-2027 (South Korea)",
