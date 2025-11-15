@@ -9,6 +9,15 @@
     "path": "/JP/GJN-2024-Sep/"
   },
   {
+    "id": "GJN-2026-May",
+    "title": "GJN-2026 (Japan)",
+    "country": "Japan",
+    "flag": "🇯🇵",
+    "start": "2026-05-14",
+    "end": "2026-05-29",
+    "path": "/JP/GJN-2026-May/"
+  },
+  {
     "id": "SP-2025-Aug_Sep",
     "title": "SP-2025 (Japan)",
     "country": "Japan",
@@ -17,32 +26,23 @@
     "end": "2025-09-05",
     "path": "/JP/SP-2025-Aug_Sep/"
   },
-  {
-    "id": "GJN-2026-May",
-    "title": "GJN-2026 (Japan)",
-    "country": "Japan",
-    "flag": "🇯🇵",
-    "start": "2026-05-01",
-    "end": "2026-09-09",
-    "path": "/JP/GJN-2026-May/"
-  },
 
   {
-    "id": "GJN-2024-TH-Sep",
+    "id": "GJN-2024-Jul",
     "title": "GJN-2024 (Thailand)",
     "country": "Thailand",
     "flag": "🇹🇭",
     "start": "2024-09-02",
     "end": "2024-09-12",
-    "path": "/TH/GJN-2024-Sep/"
+    "path": "/TH/GJN-2024-Jul/"
   },
   {
     "id": "GJN-2025-May",
     "title": "GJN-2025 (Thailand)",
     "country": "Thailand",
     "flag": "🇹🇭",
-    "start": "2025-05-01",
-    "end": "2025-09-09",
+    "start": "2025-05-19",
+    "end": "2025-05-28",
     "path": "/TH/GJN-2025-May/"
   },
 
