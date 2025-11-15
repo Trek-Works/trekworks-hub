@@ -1,0 +1,22 @@
+{
+  "name": "📋 South Korea Shopping 2025",
+  "short_name": "shopping",
+  "start_url": "/GJN-2025-shopping/",
+  "scope": "/GJN-2025-shopping/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#b11d1d",
+  "icons": [
+    {
+      "src": "/GJN-2025-shopping/assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/GJN-2025-shopping/assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
