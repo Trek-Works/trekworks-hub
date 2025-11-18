@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-globals */
-const VERSION = 'v2026-05-flights-01';
-const CACHE_NAME = `gjn-2026-flights-${VERSION}`;
+const VERSION = 'v2024-09-flights-01';
+const CACHE_NAME = `gjn-2024-flights-${VERSION}`;
 
-const BASE = '/JP/GJN-2026-May/flights';
+const BASE = '/JP/GJN-2024-Sep/flights';
 
 const APP_SHELL = [
   `${BASE}/`,
@@ -23,7 +23,7 @@ self.addEventListener('activate', event => {
     const keys = await caches.keys();
     await Promise.all(
       keys
-        .filter(k => k.startsWith('gjn-2026-flights-') && k !== CACHE_NAME)
+        .filter(k => k.startsWith('gjn-2024-flights-') && k !== CACHE_NAME)
         .map(k => caches.delete(k))
     );
     await self.clients.claim();
@@ -67,3 +67,4 @@ self.addEventListener('fetch', event => {
   // External fetch fallback
   event.respondWith(fetch(request).catch(() => caches.match(request)));
 });
+
