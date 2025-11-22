@@ -1,19 +1,19 @@
 {
-  "name": "Flights – Japan 2026",
-  "short_name": "Flights 2026",
-  "start_url": "/JP/GJN-2026-May/flights/",
-  "scope": "/JP/GJN-2026-May/flights/",
+  "name": "Japan – Flights (Sep 2024)",
+  "short_name": "Flights 2024",
+  "start_url": "/public-pwa/JP/GJN-2024-Sep/flights/",
+  "scope": "/public-pwa/JP/GJN-2024-Sep/flights/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#cc0000",
+  "theme_color": "#ffffff",
   "icons": [
     {
-      "src": "/JP/GJN-2026-May/flights/assets/icons/icon-192x192.png",
+      "src": "/public-pwa/JP/GJN-2024-Sep/flights/assets/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/JP/GJN-2026-May/flights/assets/icons/icon-512x512.png",
+      "src": "/public-pwa/JP/GJN-2024-Sep/flights/assets/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
