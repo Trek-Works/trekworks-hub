@@ -1,133 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Japan – Flights (Sep 2024)</title>
 
     <!-- PWA -->
     <link rel="manifest" href="manifest.json" />
-    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" />
     <meta name="theme-color" content="#ffffff" />
+
+    <!-- iOS PWA Support -->
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Flights 2024" />
 
     <style>
         body {
             margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-                sans-serif;
-            background: #fafafa;
-            color: #111;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 28px;
-            text-align: center;
-        }
-
-        .icon {
-            width: 80px;
-            opacity: 0.9;
-            margin: 30px auto 10px;
-            display: block;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            background: #ffffff;
+            color: #000;
+            padding: 24px;
+            line-height: 1.5;
         }
 
         h1 {
-            font-size: 2.2rem;
-            margin-top: 0;
-            font-weight: 800;
-            line-height: 1.2;
-            color: #1a1a1a;
+            font-size: 2.3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
         }
 
-        p.description {
-            font-size: 1.15rem;
-            margin: 20px 0 32px;
-            line-height: 1.55;
-            color: #333;
-            padding: 0 8px;
-        }
-
-        .btn-primary {
+        .link {
             display: inline-block;
-            padding: 16px 26px;
-            background: #2962ff;
-            color: #fff;
+            margin-top: 12px;
             font-size: 1.2rem;
-            font-weight: 600;
             text-decoration: none;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(41, 98, 255, 0.25);
-            transition: 0.25s;
+            color: #4a3aff;
+            font-weight: 500;
         }
 
-        .btn-primary:hover {
-            background: #1e4ee8;
+        .container {
+            max-width: 900px;
+            margin: auto;
         }
 
-        .note {
-            margin-top: 28px;
-            font-size: 0.95rem;
-            color: #666;
-        }
-
-        /* iPhone install hint box */
-        #ios-hint {
+        /* iPhone install banner */
+        #ios-install-banner {
             display: none;
-            margin-top: 30px;
-            padding: 18px 16px;
-            background: #fff9e6;
-            border-radius: 12px;
-            border: 1px solid #f7e4b6;
-            color: #8a6d1b;
-            font-size: 0.95rem;
-            line-height: 1.45;
+            padding: 14px;
+            margin-top: 18px;
+            background: #f0f0f5;
+            border-radius: 10px;
+            font-size: 1rem;
         }
 
-        /* Show only on iPhone */
-        @supports (-webkit-touch-callout: none) {
-            #ios-hint {
-                display: block;
-            }
+        #ios-install-banner b {
+            font-weight: 600;
         }
     </style>
-
 </head>
+
 <body>
     <div class="container">
+        <h1>Japan – Flights (Sep 2024)</h1>
 
-        <!-- App icon -->
-        <img class="icon" src="assets/icons/icon-192x192.png" alt="Flights Icon">
-
-        <h1>Japan – Flights<br>(Sep 2024)</h1>
-
-        <p class="description">
-            This app provides fast, offline access to your trip's basic summary shell.
-            Full flight details remain securely protected behind Cloudflare Access.
-        </p>
-
-        <a class="btn-primary" href="https://trekworks.org/JP/GJN-2024-Sep/flights/">
-            ✈️ Open Secure Flight Details
+        <a href="https://trekworks.org/JP/GJN-2024-Sep/flights/" class="link">
+            ← Open Secure Flight Details
         </a>
 
-        <div class="note">
-            Works offline after first load. Secure details require authentication.
-        </div>
+        <p style="margin-top: 18px; font-size: 1.1rem;">
+            This app provides offline access to basic trip shell pages.
+            The actual flight details are securely stored behind Cloudflare.
+        </p>
 
-        <div id="ios-hint">
-            <strong>iPhone users:</strong><br>
-            Install this app by tapping the <strong>Share</strong> icon and selecting
-            <strong>“Add to Home Screen”</strong>.
+        <!-- iPhone install banner -->
+        <div id="ios-install-banner">
+            <b>Install this app:</b><br>
+            Tap the <span style="font-size: 1.3rem;">□↑</span> icon in Safari, then choose<br>
+            <b>"Add to Home Screen"</b>.
         </div>
     </div>
 
     <script>
+        // ---------------------------------------------------
+        // PHASE B: Smart Auto-Open Logic (Cloudflare shortcut)
+        // ---------------------------------------------------
+
+        const secureURL = "https://trekworks.org/JP/GJN-2024-Sep/flights/";
+        const hasCFAuth = document.cookie.includes("CF_Authorization=");
+
+        if (hasCFAuth) {
+            // User is already authenticated → skip shell
+            window.location.href = secureURL;
+        } else {
+            console.log("No Cloudflare Access cookie found — showing landing shell.");
+        }
+
+        // -----------------------------------------
+        // iOS install banner (shows only on iPhones)
+        // -----------------------------------------
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        const isStandalone = window.matchMedia("(display-mode: standalone)").matches
+            || window.navigator.standalone === true;
+
+        if (isIOS && !isStandalone) {
+            document.getElementById("ios-install-banner").style.display = "block";
+        }
+
+        // -----------------------------------------
+        // Service worker registration
+        // -----------------------------------------
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("service-worker.js");
+            navigator.serviceWorker.register("service-worker.js")
+                .then(() => console.log("Service Worker registered"))
+                .catch(err => console.log("Service Worker error:", err));
         }
     </script>
 
