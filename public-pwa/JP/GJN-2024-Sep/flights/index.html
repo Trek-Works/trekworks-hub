@@ -1,41 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Japan – Flights (Sep 2024)</title>
 
-    <!-- Manifest (NEW PATH) -->
-    <link rel="manifest" href="/public-pwa/JP/GJN-2024-Sep/flights/manifest.json">
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
 
-    <!-- iOS PWA Support -->
-    <link rel="apple-touch-icon" href="/public-pwa/JP/GJN-2024-Sep/flights/assets/icons/icon-192.png">
+    <!-- Icons -->
+    <link rel="icon" type="image/png" href="assets/icons/icon-192x192.png">
 
-    <meta name="theme-color" content="#ffffff">
-
-    <!-- Service Worker -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/public-pwa/JP/GJN-2024-Sep/flights/service-worker.js');
-        }
-    </script>
+    <!-- iOS PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background: #fafafa;
+            font-family: system-ui, sans-serif;
+            padding: 24px;
+            margin: 0;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        a {
+            color: #4a00e0;
+            text-decoration: none;
+            font-size: 1.2rem;
         }
     </style>
 </head>
-
 <body>
-    <h1>Japan – Flights (Sep 2024)</h1>
-    <a href="/JP/GJN-2024-Sep/">← Back to Trip Home</a>
 
-    <!-- YOUR EXISTING FLIGHT CARDS BELOW (unchanged) -->
-    <!-- (I do not rewrite them unless you ask) -->
+    <h1>Japan – Flights (Sep 2024)</h1>
+
+    <p><a href="/JP/GJN-2024-Sep/flights/">← Open Secure Flight Details</a></p>
+    <p>This app provides offline access to basic trip shell pages.  
+       The actual flight details are securely stored behind Cloudflare.</p>
+
+    <script>
+        // Register service worker
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js")
+                .catch(err => console.error("SW registration failed:", err));
+        }
+    </script>
 
 </body>
 </html>

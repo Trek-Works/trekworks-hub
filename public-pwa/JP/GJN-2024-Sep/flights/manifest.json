@@ -1,21 +1,22 @@
 {
-  "name": "Japan – Flights (Sep 2024)",
-  "short_name": "Flights 2024",
-  "start_url": "/public-pwa/JP/GJN-2024-Sep/flights/",
-  "scope": "/public-pwa/JP/GJN-2024-Sep/flights/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
-  "icons": [
-    {
-      "src": "/public-pwa/JP/GJN-2024-Sep/flights/assets/icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/public-pwa/JP/GJN-2024-Sep/flights/assets/icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+    "name": "Japan – Flights (Sep 2024)",
+    "short_name": "Flights 2024",
+    "description": "PWA shell for Japan 2024 flights",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "icons": [
+        {
+            "src": "assets/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
 }
