@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TrekWorks Hub</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050813" />
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="./manifest.json" />
+
+  <!-- iOS basics (harmless on Android/Desktop) -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="TrekWorks Hub" />
+
+  <!-- Basic dark styling -->
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050813;
+      --bg-elevated: #111827;
+      --bg-elevated-soft: #0b1220;
+      --card-hover: #1f2937;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.14);
+      --accent-strong: #0ea5e9;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #111827;
+      --pill-bg: #020617;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, sans-serif;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2.5rem;
+      width: 100%;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-emoji {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #fbbf24, #22c55e 40%, #0ea5e9 80%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.8),
+        0 18px 45px rgba(15, 118, 219, 0.45);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .brand-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .tabs {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.85);
+      border-radius: 999px;
+      padding: 0.18rem;
+      border: 1px solid rgba(55, 65, 81, 0.85);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.85);
+      overflow: hidden;
+    }
+
+    .tab {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      padding: 0.45rem 0.95rem;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      white-space: nowrap;
+    }
+
+    .tab span.icon {
+      font-size: 0.9rem;
+    }
+
+    .tab.active {
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-weight: 600;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .info-banner {
+      font-size: 0.86rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.85rem;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.92)
+      );
+      color: var(--text-muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .info-dot {
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 999px;
+      margin-top: 0.25rem;
+      background: radial-gradient(circle at 40% 20%, #22c55e, #16a34a);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.85);
+      flex-shrink: 0;
+    }
+
+    .info-banner strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .countries-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.9rem;
+    }
+
+    .country-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .country-label {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .country-label span.code-pill {
+      font-size: 0.78rem;
+      padding: 0.1rem 0.6rem;
+      border-radius: 999px;
+      background: var(--pill-bg);
+      border: 1px solid rgba(55, 65, 81, 0.7);
+      color: #e5e7eb;
+    }
+
+    .trip-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .trip-card {
+      background: radial-gradient(circle at top left, #111827, #020617 80%);
+      border-radius: 1.2rem;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      padding: 1.05rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 18px 38px rgba(15, 23, 42, 0.88);
+      transition:
+        border-color 140ms ease,
+        background-color 140ms ease,
+        transform 140ms ease,
+        box-shadow 140ms ease;
+    }
+
+    .trip-card:hover {
+      border-color: var(--accent);
+      background: radial-gradient(circle at top left, #111827, #020617 80%);
+      transform: translateY(-1px);
+      box-shadow: 0 22px 50px rgba(8, 47, 73, 0.7);
+    }
+
+    .trip-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.35rem;
+    }
+
+    .trip-title span.flag {
+      font-size: 1.1rem;
+    }
+
+    .trip-dates {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+    }
+
+    .trip-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.35rem;
+      margin-top: 0.2rem;
+      font-size: 0.8rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      color: #e5e7eb;
+    }
+
+    .trip-pill span.dot {
+      width: 0.42rem;
+      height: 0.42rem;
+      border-radius: 999px;
+      background: var(--accent-strong);
+    }
+
+    .empty {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 2.5rem 0 0.75rem;
+    }
+
+    footer {
+      margin-top: 2.3rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      opacity: 0.9;
+    }
+
+    footer span.dot {
+      margin: 0 0.5rem;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .brand-title {
+        font-size: 1.4rem;
+      }
+
+      .tabs {
+        align-self: stretch;
+        justify-content: space-between;
+      }
+
+      .page {
+        padding-inline: 1rem;
+      }
+    }
+  </style>
+
+  <script>
+    // Register the service worker (PWA plumbing)
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("./service-worker.js")
+          .catch((err) => {
+            console.warn("Service worker registration failed", err);
+          });
+      });
+    }
+  </script>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <div class="brand-emoji" aria-hidden="true">🌏</div>
+        <div class="brand-text">
+          <div class="brand-title">TrekWorks Hub</div>
+          <div class="brand-subtitle">
+            Offline trip shell for your secure travel details.
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs" aria-label="Hub view mode">
+        <button class="tab active" data-view="countries">
+          <span class="icon">🗺️</span>
+          <span>Countries</span>
+        </button>
+        <button class="tab" data-view="timeline">
+          <span class="icon">📅</span>
+          <span>Timeline</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="info-banner" aria-label="PWA offline information">
+        <div class="info-dot"></div>
+        <div>
+          <strong>Works offline after first load.</strong>
+          &nbsp;Trip cards open the secure pages you already use
+          (Cloudflare will still request a one-time password where required).
+        </div>
+      </section>
+
+      <section id="countries-view" class="countries-container" aria-live="polite"></section>
+
+      <section id="timeline-view" class="countries-container" style="display:none" aria-live="polite"></section>
+
+      <p id="empty-state" class="empty" style="display:none">
+        No trips are configured yet. Add trips to <code>trips.json</code> to populate the hub.
+      </p>
+    </main>
+
+    <footer>
+      <span>© TrekWorks</span>
+      <span class="dot">•</span>
+      <span>Hub PWA shell — public, trip details secured behind Cloudflare Access</span>
+    </footer>
+  </div>
+
+  <script>
+    const tripsUrl = "./trips.json";
+
+    /** Render countries view (grouped by country) */
+    function renderCountries(trips) {
+      const container = document.getElementById("countries-view");
+      container.innerHTML = "";
+
+      const byCountry = new Map();
+      trips.forEach((trip) => {
+        if (!byCountry.has(trip.countryCode)) {
+          byCountry.set(trip.countryCode, {
+            countryCode: trip.countryCode,
+            countryName: trip.countryName,
+            flag: trip.flagEmoji,
+            trips: [],
+          });
+        }
+        byCountry.get(trip.countryCode).trips.push(trip);
+      });
+
+      const groups = Array.from(byCountry.values());
+
+      if (!groups.length) {
+        document.getElementById("empty-state").style.display = "block";
+        return;
+      } else {
+        document.getElementById("empty-state").style.display = "none";
+      }
+
+      groups.forEach((group) => {
+        const block = document.createElement("section");
+        block.className = "country-block";
+
+        const label = document.createElement("div");
+        label.className = "country-label";
+        label.innerHTML = `
+          <span class="code-pill">${group.countryCode}</span>
+          <span>${group.countryName}</span>
+        `;
+        block.appendChild(label);
+
+        const row = document.createElement("div");
+        row.className = "trip-row";
+
+        group.trips.forEach((trip) => {
+          const a = document.createElement("a");
+          a.className = "trip-card";
+          a.href = trip.path;
+          a.innerHTML = `
+            <div class="trip-title">
+              <span>${trip.label}</span>
+              <span class="flag" aria-hidden="true">${trip.flagEmoji}</span>
+            </div>
+            <div class="trip-dates">${trip.dateRange}</div>
+            <div class="trip-pill">
+              <span class="dot"></span>
+              <span>${trip.shortDescription || "Trip workspace"}</span>
+            </div>
+          `;
+          row.appendChild(a);
+        });
+
+        block.appendChild(row);
+        container.appendChild(block);
+      });
+    }
+
+    /** Render timeline view (sorted by start date) */
+    function renderTimeline(trips) {
+      const container = document.getElementById("timeline-view");
+      container.innerHTML = "";
+
+      if (!trips.length) {
+        document.getElementById("empty-state").style.display = "block";
+        return;
+      } else {
+        document.getElementById("empty-state").style.display = "none";
+      }
+
+      const sorted = [...trips].sort((a, b) => (a.startDate || "").localeCompare(b.startDate || ""));
+
+      const block = document.createElement("section");
+      block.className = "country-block";
+
+      const label = document.createElement("div");
+      label.className = "country-label";
+      label.innerHTML = `
+        <span class="code-pill">ALL</span>
+        <span>Timeline</span>
+      `;
+      block.appendChild(label);
+
+      const row = document.createElement("div");
+      row.className = "trip-row";
+
+      sorted.forEach((trip) => {
+        const a = document.createElement("a");
+        a.className = "trip-card";
+        a.href = trip.path;
+        a.innerHTML = `
+          <div class="trip-title">
+            <span>${trip.label}</span>
+            <span class="flag" aria-hidden="true">${trip.flagEmoji}</span>
+          </div>
+          <div class="trip-dates">${trip.dateRange}</div>
+          <div class="trip-pill">
+            <span class="dot"></span>
+            <span>${trip.countryName}</span>
+          </div>
+        `;
+        row.appendChild(a);
+      });
+
+      block.appendChild(row);
+      container.appendChild(block);
+    }
+
+    /** Simple tab toggling */
+    function setupTabs(trips) {
+      const tabs = document.querySelectorAll(".tab");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+
+          const view = tab.dataset.view;
+          const countriesView = document.getElementById("countries-view");
+          const timelineView = document.getElementById("timeline-view");
+
+          if (view === "timeline") {
+            countriesView.style.display = "none";
+            timelineView.style.display = "flex";
+          } else {
+            countriesView.style.display = "flex";
+            timelineView.style.display = "none";
+          }
+        });
+      });
+    }
+
+    /** Fetch trips.json and render */
+    async function init() {
+      try {
+        const res = await fetch(tripsUrl, { cache: "no-cache" });
+        if (!res.ok) throw new Error("Failed to load trips.json");
+        const trips = await res.json();
+
+        renderCountries(trips);
+        renderTimeline(trips);
+        setupTabs(trips);
+      } catch (err) {
+        console.error(err);
+        document.getElementById("empty-state").textContent =
+          "Unable to load trips. Check that trips.json exists under /public-pwa/.";
+        document.getElementById("empty-state").style.display = "block";
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
