@@ -1,0 +1,79 @@
+[
+  {
+    "id": "JP-GJN-2024",
+    "countryCode": "JP",
+    "countryName": "Japan",
+    "flagEmoji": "🇯🇵",
+    "label": "GJN-2024 (Japan)",
+    "dateRange": "Aug 31, 2024 → Sep 10, 2024",
+    "startDate": "2024-08-31",
+    "endDate": "2024-09-10",
+    "path": "/JP/GJN-2024-Sep/"
+  },
+  {
+    "id": "JP-GJN-2026",
+    "countryCode": "JP",
+    "countryName": "Japan",
+    "flagEmoji": "🇯🇵",
+    "label": "GJN-2026 (Japan)",
+    "dateRange": "May 14, 2026 → May 29, 2026",
+    "startDate": "2026-05-14",
+    "endDate": "2026-05-29",
+    "path": "/JP/GJN-2026-May/"
+  },
+  {
+    "id": "JP-SP-2025",
+    "countryCode": "JP",
+    "countryName": "Japan",
+    "flagEmoji": "🇯🇵",
+    "label": "SP-2025 (Japan)",
+    "dateRange": "Aug 30, 2025 → Sep 07, 2025",
+    "startDate": "2025-08-30",
+    "endDate": "2025-09-07",
+    "path": "/JP/SP-2025-Sep/"
+  },
+  {
+    "id": "TH-GJN-2024",
+    "countryCode": "TH",
+    "countryName": "Thailand",
+    "flagEmoji": "🇹🇭",
+    "label": "GJN-2024 (Thailand)",
+    "dateRange": "Jul 03, 2024 → Jul 09, 2024",
+    "startDate": "2024-07-03",
+    "endDate": "2024-07-09",
+    "path": "/TH/GJN-2024-Jul/"
+  },
+  {
+    "id": "TH-GJN-2025",
+    "countryCode": "TH",
+    "countryName": "Thailand",
+    "flagEmoji": "🇹🇭",
+    "label": "GJN-2025 (Thailand)",
+    "dateRange": "May 19, 2025 → May 28, 2025",
+    "startDate": "2025-05-19",
+    "endDate": "2025-05-28",
+    "path": "/TH/GJN-2025-May/"
+  },
+  {
+    "id": "KR-GJN-2025",
+    "countryCode": "KR",
+    "countryName": "South Korea",
+    "flagEmoji": "🇰🇷",
+    "label": "GJN-2025 (South Korea)",
+    "dateRange": "Sep 08, 2025 → Sep 18, 2025",
+    "startDate": "2025-09-08",
+    "endDate": "2025-09-18",
+    "path": "/KR/GJN-2025-Sep/"
+  },
+  {
+    "id": "KR-GJN-2027",
+    "countryCode": "KR",
+    "countryName": "South Korea",
+    "flagEmoji": "🇰🇷",
+    "label": "GJN-2027 (South Korea)",
+    "dateRange": "May 01, 2027 → May 10, 2027",
+    "startDate": "2027-05-01",
+    "endDate": "2027-05-10",
+    "path": "/KR/GJN-2027-May/"
+  }
+]
