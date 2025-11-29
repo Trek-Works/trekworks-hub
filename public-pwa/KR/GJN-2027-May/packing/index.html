@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Japan – Flights (Sep 2024)</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+                sans-serif;
+            background: #fafafa;
+            color: #111;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 28px;
+            text-align: center;
+        }
+
+        .icon {
+            width: 80px;
+            opacity: 0.9;
+            margin: 30px auto 10px;
+            display: block;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-top: 0;
+            font-weight: 800;
+            line-height: 1.2;
+            color: #1a1a1a;
+        }
+
+        p.description {
+            font-size: 1.15rem;
+            margin: 20px 0 32px;
+            line-height: 1.55;
+            color: #333;
+            padding: 0 8px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 16px 26px;
+            background: #2962ff;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(41, 98, 255, 0.25);
+            transition: 0.25s;
+        }
+
+        .btn-primary:hover {
+            background: #1e4ee8;
+        }
+
+        .note {
+            margin-top: 28px;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        /* iPhone install hint box */
+        #ios-hint {
+            display: none;
+            margin-top: 30px;
+            padding: 18px 16px;
+            background: #fff9e6;
+            border-radius: 12px;
+            border: 1px solid #f7e4b6;
+            color: #8a6d1b;
+            font-size: 0.95rem;
+            line-height: 1.45;
+        }
+
+        /* Show only on iPhone */
+        @supports (-webkit-touch-callout: none) {
+            #ios-hint {
+                display: block;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+
+        <!-- App icon -->
+        <img class="icon" src="assets/icons/icon-192x192.png" alt="Flights Icon">
+
+        <h1>Japan – Flights<br>(Sep 2024)</h1>
+
+        <p class="description">
+            This app provides fast, offline access to your trip's basic summary shell.
+            Full flight details remain securely protected behind Cloudflare Access.
+        </p>
+
+        <a class="btn-primary" href="https://trekworks.org/JP/GJN-2024-Sep/flights/">
+            ✈️ Open Secure Flight Details
+        </a>
+
+        <div class="note">
+            Works offline after first load. Secure details require authentication.
+        </div>
+
+        <div id="ios-hint">
+            <strong>iPhone users:</strong><br>
+            Install this app by tapping the <strong>Share</strong> icon and selecting
+            <strong>“Add to Home Screen”</strong>.
+        </div>
+    </div>
+
+    <script>
+        // ---------------------------------------------------
+        // PHASE B: Smart Auto-Open Logic (Cloudflare shortcut)
+        // ---------------------------------------------------
+
+        const secureURL = "https://trekworks.org/JP/GJN-2024-Sep/flights/";
+        const hasCFAuth = document.cookie.includes("CF_Authorization=");
+
+        if (hasCFAuth) {
+            // User already authenticated → skip shell
+            window.location.href = secureURL;
+        } else {
+            console.log("No Cloudflare Access cookie found — showing landing shell.");
+        }
+
+        // -----------------------------------------
+        // Service worker registration
+        // -----------------------------------------
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("service-worker.js")
+                .then(() => console.log("Service Worker registered"))
+                .catch(err => console.log("Service Worker error:", err));
+        }
+    </script>
+
+</body>
+</html>
