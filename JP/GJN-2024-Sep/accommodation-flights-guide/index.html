@@ -1,768 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Accommodation & Flights – JP GJN-2024 (Japan)</title>
-
-  <!-- Simple, secure-only page (no PWA hooks here) -->
-  <link rel="icon" type="image/png" href="icon-192x192.png" />
-
-  <style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Accommodation & Flights – JP GJN-2024-Sep</title>
+<style>
     :root {
-      --bg-main: #05060b;
-      --bg-card: #11141f;
-      --bg-card-soft: #181b26;
-      --accent: #ffb347;
-      --accent-soft: rgba(255, 179, 71, 0.12);
-      --accent-blue: #4ea8ff;
-      --accent-green: #4fd28a;
-      --border-soft: rgba(255, 255, 255, 0.08);
-      --text-main: #f5f7ff;
-      --text-muted: #a7b1d0;
-      --danger: #ff7b8a;
-      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.65);
-      --radius-card: 18px;
+        --bg-main: #0e1117;
+        --bg-card: #1b1f27;
+        --bg-card-2: #232834;
+        --text-main: #e6e6e6;
+        --text-muted: #9ca3af;
+        --accent: #4ca3ff;
+        --accent-2: #7dd3fc;
+        --radius: 14px;
+        --shadow: 0 4px 12px rgba(0,0,0,0.35);
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
-      padding: 24px 16px 40px;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #15192a 0, #05060b 45%, #020308 100%);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg-main);
+        color: var(--text-main);
+        line-height: 1.55;
     }
-
     .page {
-      width: 100%;
-      max-width: 980px;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 32px 20px 140px;
     }
-
-    header {
-      text-align: center;
-      margin-bottom: 28px;
+    h1,h2,h3,h4 {
+        margin: 0;
+        font-weight: 600;
     }
-
-    .trip-flag {
-      font-size: 18px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 6px;
+    h1 {
+        font-size: 28px;
+        text-align: center;
+        margin-bottom: 4px;
     }
-
-    .trip-title {
-      font-size: clamp(28px, 4vw, 32px);
-      font-weight: 700;
-      margin: 0 0 4px;
+    .sub-header {
+        text-align: center;
+        color: var(--text-muted);
+        margin-bottom: 26px;
+        font-size: 14px;
     }
-
-    .trip-dates {
-      font-size: 15px;
-      color: var(--text-muted);
+    .top-nav {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 28px;
     }
-
-    .status-row {
-      margin-top: 16px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
+    .btn {
+        background: var(--bg-card-2);
+        padding: 8px 14px;
+        border-radius: var(--radius);
+        color: var(--text-main);
+        text-decoration: none;
+        font-size: 14px;
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: 0.2s ease;
+        margin: 0 6px;
     }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(0, 0, 0, 0.35);
-      color: var(--text-muted);
+    .btn:hover {
+        background: var(--accent);
+        color: #000;
     }
-
-    .pill-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--accent-green);
-      box-shadow: 0 0 0 3px rgba(79, 210, 138, 0.35);
-    }
-
-    .pill-label-strong {
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    .nav-row {
-      margin-top: 12px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      font-size: 13px;
-    }
-
-    .nav-row a {
-      text-decoration: none;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      color: var(--accent-blue);
-    }
-
-    .nav-row a:hover {
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    main {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .section {
-      background: radial-gradient(circle at top, #171b2a, #0c0f19);
-      border-radius: var(--radius-card);
-      padding: 18px 18px 14px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
     .section-title {
-      font-size: 17px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+        font-size: 20px;
+        font-weight: 700;
+        margin: 30px 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
-
-    .section-title span.emoji {
-      font-size: 20px;
+    .card {
+        background: var(--bg-card);
+        border-radius: var(--radius);
+        padding: 22px;
+        margin-bottom: 18px;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(255,255,255,0.07);
     }
-
-    .section-subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .section-badge {
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: rgba(0, 0, 0, 0.3);
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-
-    .card-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .hotel-card,
-    .flight-card,
-    .info-card {
-      border-radius: 14px;
-      background: linear-gradient(135deg, var(--bg-card) 0, #181c29 100%);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 10px 12px 10px;
-    }
-
-    .hotel-header,
-    .flight-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: baseline;
-      margin-bottom: 6px;
-    }
-
-    .hotel-main,
-    .flight-main {
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .hotel-main span.city-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      background: rgba(255, 255, 255, 0.04);
-      margin-right: 6px;
-    }
-
-    .chip {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      white-space: nowrap;
-    }
-
-    .hotel-meta,
-    .flight-meta {
-      font-size: 12px;
-      color: var(--text-muted);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 16px;
-    }
-
-    .meta-label {
-      font-weight: 500;
-      color: var(--text-main);
-    }
-
-    .meta-group {
-      display: inline-flex;
-      gap: 4px;
-      align-items: baseline;
-    }
-
-    .detail-table {
-      margin-top: 8px;
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 12px;
-    }
-
-    .detail-table th,
-    .detail-table td {
-      text-align: left;
-      padding: 2px 0;
-      vertical-align: top;
-    }
-
-    .detail-table th {
-      width: 110px;
-      color: var(--text-muted);
-      font-weight: 500;
-      padding-right: 6px;
-    }
-
-    .detail-table a {
-      color: var(--accent-blue);
-      text-decoration: none;
-    }
-
-    .detail-table a:hover {
-      text-decoration: underline;
-    }
-
-    .amount {
-      font-weight: 600;
-      color: var(--accent);
-    }
-
-    .total-row {
-      margin-top: 6px;
-      font-size: 12px;
-      text-align: right;
-      color: var(--text-muted);
-    }
-
-    .total-row .amount {
-      font-size: 13px;
-    }
-
-    .info-card p {
-      margin: 2px 0;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .info-card strong {
-      color: var(--text-main);
-    }
-
-    .footer-note {
-      margin-top: 18px;
-      text-align: center;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .footer-note a {
-      color: var(--accent-blue);
-      text-decoration: none;
-    }
-
-    .footer-note a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 640px) {
-      body {
-        padding: 18px 10px 30px;
-      }
-      .section {
-        padding: 14px 12px 12px;
-      }
-      .hotel-header,
-      .flight-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .section-subtitle {
+    .row {
         margin-bottom: 6px;
-      }
+        font-size: 15px;
     }
-  </style>
+    .row strong {
+        color: var(--accent-2);
+    }
+    .tag {
+        display: inline-block;
+        background: rgba(255,255,255,0.08);
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 13px;
+        margin-left: 8px;
+        color: var(--accent-2);
+    }
+    .btn-row {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+    }
+    footer {
+        text-align: center;
+        margin-top: 50px;
+        color: var(--text-muted);
+        font-size: 13px;
+    }
+</style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <div class="trip-flag">JP · GJN-2024-Sep · Japan Trip</div>
-      <h1 class="trip-title">Accommodation & Flights</h1>
-      <div class="trip-dates">31 Aug 2024 → 10 Sep 2024</div>
+<div class="page">
 
-      <div class="status-row">
-        <div class="pill">
-          <span class="pill-dot"></span>
-          <span class="pill-label-strong">Secure section</span>
-          <span>Cloudflare sign in required</span>
-        </div>
-        <div class="pill">
-          <span class="pill-label-strong">Currency:</span>
-          <span>AUD</span>
-        </div>
-      </div>
+    <h1>Accommodation & Flights</h1>
+    <div class="sub-header">JP · GJN-2024-Sep · Japan Trip</div>
 
-      <div class="nav-row">
-        <a href="../index.html">← Back to Trip Home</a>
-        <a href="/public-pwa/JP/GJN-2024-Sep/" target="_blank" rel="noopener">Open Installable Trip App</a>
-        <a href="#accommodation">Hotels</a>
-        <a href="#flights">Flights</a>
-        <a href="#insurance">Insurance</a>
-      </div>
-    </header>
+    <div class="top-nav">
+        <a class="btn" href="/public-pwa/JP/GJN-2024-Sep/">← Back to Trip Home</a>
+    </div>
 
-    <main>
-      <!-- Accommodation -->
-      <section class="section" id="accommodation">
-        <div class="section-header">
-          <div>
-            <div class="section-title">
-              <span class="emoji">🏨</span>
-              <span>Accommodation</span>
-            </div>
-            <div class="section-subtitle">
-              All hotel bookings for this trip. Amounts are shown in Australian dollars (AUD).
-            </div>
-          </div>
-          <div class="section-badge">Total: <strong class="amount">$1,933.07 AUD</strong> · 7 stays</div>
-        </div>
+    <!-- ACCOMMODATION -->
+    <h2 class="section-title">🏨 Accommodation</h2>
 
-        <div class="card-list">
+    <!-- Osaka #1 -->
+    <div class="card">
+        <h3>Candeo Hotels Osaka The Tower <span class="tag">2 nights – $392.50 AUD</span></h3>
+        <div class="row"><strong>Check-in:</strong> 31 Aug 2024 – 3:00pm</div>
+        <div class="row"><strong>Check-out:</strong> 02 Sep 2024 – 11:00am</div>
+        <div class="row"><strong>Room:</strong> Run of House – Room</div>
+        <div class="row"><strong>Address:</strong> 1-1-5 Dojimahama, Kita Ward, Osaka 530-0004</div>
+        <div class="row"><strong>Phone:</strong> +81 6 6131 7714</div>
+        <div class="row"><strong>Confirmation:</strong> 72057076255371</div>
+    </div>
 
-          <!-- Osaka 1 -->
-          <article class="hotel-card">
-            <div class="hotel-header">
-              <div class="hotel-main">
-                <span class="city-pill">🏙 Osaka</span>
-                Candeo Hotels Osaka The Tower
-              </div>
-              <div class="chip">2 nights · $392.50 AUD</div>
-            </div>
-            <div class="hotel-meta">
-              <div class="meta-group">
-                <span class="meta-label">Check-in:</span>
-                <span>31 Aug 2024 · 3:00pm</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Check-out:</span>
-                <span>02 Sep 2024 · 11:00am</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Room:</span>
-                <span>Run of House – Room</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Confirmation:</span>
-                <span>72057076255371</span>
-              </div>
-            </div>
-            <table class="detail-table">
-              <tr>
-                <th>Address</th>
-                <td>1-1-5 Dojimahama, Kita Ward, Osaka 530-0004, Japan</td>
-              </tr>
-              <tr>
-                <th>Phone</th>
-                <td><a href="tel:+81661317714">+81 6 6131 7714</a></td>
-              </tr>
-            </table>
-          </article>
+    <!-- Hiroshima #1 -->
+    <div class="card">
+        <h3>Rihga Royal Hotel Hiroshima <span class="tag">1 night – $141.28 AUD</span></h3>
+        <div class="row"><strong>Check-in:</strong> 02 Sep 2024 – 3:00pm</div>
+        <div class="row"><strong>Check-out:</strong> 03 Sep 2024 – 11:00am</div>
+        <div class="row"><strong>Room:</strong> Standard Double Non-Smoking</div>
+        <div class="row"><strong>Address:</strong> 6-78 Motomachi, Naka-ku, Hiroshima 730-0011</div>
+        <div class="row"><strong>Phone:</strong> +81 8 2502 1121</div>
+        <div class="row"><strong>Confirmation:</strong> 1338199705</div>
+    </div>
 
-          <!-- Hiroshima -->
-          <article class="hotel-card">
-            <div class="hotel-header">
-              <div class="hotel-main">
-                <span class="city-pill">🏙 Hiroshima</span>
-                Rihga Royal Hotel Hiroshima
-              </div>
-              <div class="chip">1 night · $141.28 AUD</div>
-            </div>
-            <div class="hotel-meta">
-              <div class="meta-group">
-                <span class="meta-label">Check-in:</span>
-                <span>02 Sep 2024 · 3:00pm</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Check-out:</span>
-                <span>03 Sep 2024 · 11:00am</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Room:</span>
-                <span>Standard Double Non-Smoking</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Confirmation:</span>
-                <span>1338199705</span>
-              </div>
-            </div>
-            <table class="detail-table">
-              <tr>
-                <th>Address</th>
-                <td>6-78 Motomachi, Naka-ku, Hiroshima 730-0011, Japan</td>
-              </tr>
-              <tr>
-                <th>Phone</th>
-                <td><a href="tel:+81825021121">+81 8 2502 1121</a></td>
-              </tr>
-            </table>
-          </article>
+    <!-- Tokyo #1 -->
+    <div class="card">
+        <h3>Hotel Amanek Shinjuku Kabukicho <span class="tag">2 nights – $501.88 AUD</span></h3>
+        <div class="row"><strong>Check-in:</strong> 03 Sep 2024 – 3:00pm</div>
+        <div class="row"><strong>Check-out:</strong> 05 Sep 2024 – 11:00am</div>
+        <div class="row"><strong>Room:</strong> 1 King Non Smoking</div>
+        <div class="row"><strong>Address:</strong> 2-4-10 Kabukicho, Shinjuku-ku, Tokyo 160-0021</div>
+        <div class="row"><strong>Phone:</strong> +81 3 6265 9140</div>
+        <div class="row"><strong>Confirmation:</strong> 1336658581</div>
+    </div>
 
-          <!-- Tokyo 1 -->
-          <article class="hotel-card">
-            <div class="hotel-header">
-              <div class="hotel-main">
-                <span class="city-pill">🏙 Tokyo</span>
-                Hotel Amanek Shinjuku-Kabukicho
-              </div>
-              <div class="chip">2 nights · $501.88 AUD</div>
-            </div>
-            <div class="hotel-meta">
-              <div class="meta-group">
-                <span class="meta-label">Check-in:</span>
-                <span>03 Sep 2024 · 3:00pm</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Check-out:</span>
-                <span>05 Sep 2024 · 10:00am</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Room:</span>
-                <span>1 King Non Smoking</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Confirmation:</span>
-                <span>1336658561</span>
-              </div>
-            </div>
-            <table class="detail-table">
-              <tr>
-                <th>Address</th>
-                <td>2-4-10 Kabukicho, Shinjuku-ku, Tokyo 160-0021, Japan</td>
-              </tr>
-              <tr>
-                <th>Phone</th>
-                <td><a href="tel:+81362659140">+81 3 6265 9140</a></td>
-              </tr>
-            </table>
-          </article>
+    <!-- Yudanaka -->
+    <div class="card">
+        <h3>Yudanaka Tawaraya Ryokan <span class="tag">1 night – $213.00 AUD</span></h3>
+        <div class="row"><strong>Check-in:</strong> 05 Sep 2024 – 3:00pm</div>
+        <div class="row"><strong>Check-out:</strong> 06 Sep 2024 – 10:00am</div>
+        <div class="row"><strong>Room:</strong> Japanese Style Superior</div>
+        <div class="row"><strong>Address:</strong> 4115 Hirao, Yamanouchi, Nagano 381-0401</div>
+        <div class="row"><strong>Phone:</strong> +81 2 6933 3525</div>
+        <div class="row"><strong>Confirmation:</strong> 1354673721</div>
+    </div>
 
-          <!-- Yudanaka -->
-          <article class="hotel-card">
-            <div class="hotel-header">
-              <div class="hotel-main">
-                <span class="city-pill">🏞 Yudanaka</span>
-                Yudanaka Tawaraya Ryokan
-              </div>
-              <div class="chip">1 night · $213.00 AUD</div>
-            </div>
-            <div class="hotel-meta">
-              <div class="meta-group">
-                <span class="meta-label">Check-in:</span>
-                <span>05 Sep 2024 · 3:00pm</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Check-out:</span>
-                <span>06 Sep 2024 · 10:00am</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Room:</span>
-                <span>Japanese Style Superior</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Confirmation:</span>
-                <span>1354673721</span>
-              </div>
-            </div>
-            <table class="detail-table">
-              <tr>
-                <th>Address</th>
-                <td>4115 Hirao, Yamanouchi, Shimotakai-gun, Yudanaka, Nagano 381-0401, Japan</td>
-              </tr>
-              <tr>
-                <th>Phone</th>
-                <td><a href="tel:+81269333525">+81 2 6933 3525</a></td>
-              </tr>
-            </table>
-          </article>
+    <!-- Tokyo #2 -->
+    <div class="card">
+        <h3>Daiwa Roynet Hotel Ginza PREMIER <span class="tag">1 night – $294.13 AUD</span></h3>
+        <div class="row"><strong>Check-in:</strong> 06 Sep 2024 – 2:00pm</div>
+        <div class="row"><strong>Check-out:</strong> 07 Sep 2024 – 11:00am</div>
+        <div class="row"><strong>Room:</strong> Superior Double – Non-Smoking</div>
+        <div class="row"><strong>Address:</strong> 1-13-15, Chuo-ku, Ginza, Tokyo 104-0061</div>
+        <div class="row"><strong>Phone:</strong> +81 3 5159 1380</div>
+        <div class="row"><strong>Confirmation:</strong> 1359474653</div>
+    </div>
 
-          <!-- Tokyo 2 -->
-          <article class="hotel-card">
-            <div class="hotel-header">
-              <div class="hotel-main">
-                <span class="city-pill">🏙 Tokyo</span>
-                Daiwa Roynet Hotel Ginza PREMIER
-              </div>
-              <div class="chip">1 night · $294.13 AUD</div>
-            </div>
-            <div class="hotel-meta">
-              <div class="meta-group">
-                <span class="meta-label">Check-in:</span>
-                <span>06 Sep 2024 · 2:00pm</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Check-out:</span>
-                <span>07 Sep 2024 · 11:00am</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Room:</span>
-                <span>Superior Double Room – Non-Smoking</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Confirmation:</span>
-                <span>1359474653</span>
-              </div>
-            </div>
-            <table class="detail-table">
-              <tr>
-                <th>Address</th>
-                <td>1-13-15, Chuo-ku, Ginza, Tokyo 104-0061, Japan</td>
-              </tr>
-              <tr>
-                <th>Phone</th>
-                <td><a href="tel:+81351591380">+81 3 5159 1380</a></td>
-              </tr>
-            </table>
-          </article>
+    <!-- Kyoto -->
+    <div class="card">
+        <h3>DoubleTree by Hilton Kyoto Higashiyama <span class="tag">1 night – $250.00 AUD</span></h3>
+        <div class="row"><strong>Check-in:</strong> 07 Sep 2024 – 2:00pm</div>
+        <div class="row"><strong>Check-out:</strong> 08 Sep 2024 – 12:00pm</div>
+        <div class="row"><strong>Room:</strong> Twin Guest Room</div>
+        <div class="row"><strong>Address:</strong> 1-4-5, Honmachi Higashiyama-ku, Kyoto 6050981</div>
+        <div class="row"><strong>Phone:</strong> +81 75-533 7070</div>
+        <div class="row"><strong>Confirmation:</strong> 3118131657</div>
+    </div>
 
-          <!-- Kyoto -->
-          <article class="hotel-card">
-            <div class="hotel-header">
-              <div class="hotel-main">
-                <span class="city-pill">🏯 Kyoto</span>
-                DoubleTree by Hilton Kyoto Higashiyama
-              </div>
-              <div class="chip">1 night · $250.00 AUD</div>
-            </div>
-            <div class="hotel-meta">
-              <div class="meta-group">
-                <span class="meta-label">Check-in:</span>
-                <span>07 Sep 2024 · 2:00pm</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Check-out:</span>
-                <span>08 Sep 2024 · 12:00pm</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Room:</span>
-                <span>Twin Guest Room</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Confirmation:</span>
-                <span>3118131657</span>
-              </div>
-            </div>
-            <table class="detail-table">
-              <tr>
-                <th>Address</th>
-                <td>1-4-5, Honmachi Higashiyama-ku, Kyoto 6050981, Japan</td>
-              </tr>
-              <tr>
-                <th>Phone</th>
-                <td><a href="tel:+81755337070">+81 75 533 7070</a></td>
-              </tr>
-            </table>
-          </article>
+    <!-- Osaka #2 -->
+    <div class="card">
+        <h3>Quintessa Hotel Osaka Bay <span class="tag">1 night – $140.28 AUD</span></h3>
+        <div class="row"><strong>Check-in:</strong> 08 Sep 2024 – 3:00pm</div>
+        <div class="row"><strong>Check-out:</strong> 09 Sep 2024 – 11:00am</div>
+        <div class="row"><strong>Room:</strong> Corner Suite – Twin Beds</div>
+        <div class="row"><strong>Address:</strong> 1-13-65 Nankokita, Suminoe-ku, Osaka 559-0034</div>
+        <div class="row"><strong>Phone:</strong> +81 6 6613 7007</div>
+        <div class="row"><strong>Confirmation:</strong> 1348027997</div>
+    </div>
 
-          <!-- Osaka 2 -->
-          <article class="hotel-card">
-            <div class="hotel-header">
-              <div class="hotel-main">
-                <span class="city-pill">🏙 Osaka</span>
-                Quintessa Hotel Osaka Bay
-              </div>
-              <div class="chip">1 night · $140.28 AUD</div>
-            </div>
-            <div class="hotel-meta">
-              <div class="meta-group">
-                <span class="meta-label">Check-in:</span>
-                <span>08 Sep 2024 · 3:00pm</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Check-out:</span>
-                <span>09 Sep 2024 · 11:00am</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Room:</span>
-                <span>1× Corner Suite Room twin beds</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Confirmation:</span>
-                <span>1348027997</span>
-              </div>
-            </div>
-            <table class="detail-table">
-              <tr>
-                <th>Address</th>
-                <td>1-13-65 Nankokita, Suminoe-ku, Bay Area, Osaka, 559-0034, Japan</td>
-              </tr>
-              <tr>
-                <th>Phone</th>
-                <td><a href="tel:+81666137007">+81 6 6613 7007</a></td>
-              </tr>
-            </table>
-          </article>
+    <footer>Trip data sourced from secure trip records.</footer>
 
-        </div>
-
-        <div class="total-row">
-          Trip accommodation total: <span class="amount">$1,933.07 AUD</span>
-        </div>
-      </section>
-
-      <!-- Flights -->
-      <section class="section" id="flights">
-        <div class="section-header">
-          <div>
-            <div class="section-title">
-              <span class="emoji">✈️</span>
-              <span>Flights</span>
-            </div>
-            <div class="section-subtitle">
-              International flights for this trip. Times are shown in local time at departure / arrival.
-            </div>
-          </div>
-          <div class="section-badge">Carrier: Jetstar</div>
-        </div>
-
-        <div class="card-list">
-          <!-- Outbound -->
-          <article class="flight-card">
-            <div class="flight-header">
-              <div class="flight-main">
-                JQ13 · Sydney (SYD) → Osaka (KIX)
-              </div>
-              <div class="chip">31 Aug 2024</div>
-            </div>
-            <div class="flight-meta">
-              <div class="meta-group">
-                <span class="meta-label">Depart:</span>
-                <span>31 Aug 2024 · 10:20am · Sydney</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Arrive:</span>
-                <span>31 Aug 2024 · 7:00pm · Osaka</span>
-              </div>
-            </div>
-          </article>
-
-          <!-- Return -->
-          <article class="flight-card">
-            <div class="flight-header">
-              <div class="flight-main">
-                JQ14 · Osaka (KIX) → Sydney (SYD)
-              </div>
-              <div class="chip">09–10 Sep 2024</div>
-            </div>
-            <div class="flight-meta">
-              <div class="meta-group">
-                <span class="meta-label">Depart:</span>
-                <span>09 Sep 2024 · 9:25pm · Osaka</span>
-              </div>
-              <div class="meta-group">
-                <span class="meta-label">Arrive:</span>
-                <span>10 Sep 2024 · 8:10am · Sydney</span>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <!-- Insurance (summary only) -->
-      <section class="section" id="insurance">
-        <div class="section-header">
-          <div>
-            <div class="section-title">
-              <span class="emoji">🛡️</span>
-              <span>Travel Insurance (Japan)</span>
-            </div>
-            <div class="section-subtitle">
-              Quick reference for insurance covering this trip.
-            </div>
-          </div>
-          <div class="section-badge">Policy: 53180941</div>
-        </div>
-
-        <div class="info-card">
-          <p><strong>Cover period:</strong> 31 Aug 2024 – 10 Sep 2024</p>
-          <p><strong>Stay:</strong> 2 nights (policy wording), country: Japan</p>
-          <p><strong>Company:</strong> World2Cover Travel Insurance</p>
-          <p><strong>Policy type:</strong> Top cover</p>
-          <p><strong>Excess:</strong> AUD $200</p>
-          <p><strong>Premium paid:</strong> $251.61 AUD</p>
-          <p><strong>PDS:</strong>
-            <a href="https://shorturl.at/RoG42" target="_blank" rel="noopener">
-              Policy disclosure statement
-            </a>
-          </p>
-          <p><strong>Emergency (Japan):</strong> 0800 800 9117</p>
-          <p><strong>Emergency (Alt):</strong> 03 6228 5881</p>
-        </div>
-      </section>
-
-      <div class="footer-note">
-        For trains and other ground transport, see the
-        <a href="../road-transport-guide/index.html">Road Transport Guide</a>.  
-        For packing details, see the
-        <a href="../travel-packing-guide/index.html">Travel Packing Guide</a>.
-      </div>
-    </main>
-  </div>
+</div>
 </body>
 </html>
