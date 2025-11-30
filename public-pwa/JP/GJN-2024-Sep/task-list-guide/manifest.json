@@ -1,0 +1,20 @@
+{
+    "name": "Thailand Task List Guide",
+    "short_name": "Task List",
+    "start_url": "/task-list-guide/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0b3d91",
+    "icons": [
+        {
+            "src": "assets/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
