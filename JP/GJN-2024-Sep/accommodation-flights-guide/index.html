@@ -1,139 +1,768 @@
-
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Thailand Accommodation &amp; Flights Guide 2025</title>
-<link href="/accommodation-flights-guide/assets/manifest.json" rel="manifest"/>
-<link href="/accommodation-flights-guide/assets/icons/icon-192x192.png" rel="icon" type="image/png"/>
-<link href="/accommodation-flights-guide/assets/icons/icon-192x192.png" rel="apple-touch-icon"/>
-<style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Accommodation & Flights – JP GJN-2024 (Japan)</title>
+
+  <!-- Simple, secure-only page (no PWA hooks here) -->
+  <link rel="icon" type="image/png" href="icon-192x192.png" />
+
+  <style>
+    :root {
+      --bg-main: #05060b;
+      --bg-card: #11141f;
+      --bg-card-soft: #181b26;
+      --accent: #ffb347;
+      --accent-soft: rgba(255, 179, 71, 0.12);
+      --accent-blue: #4ea8ff;
+      --accent-green: #4fd28a;
+      --border-soft: rgba(255, 255, 255, 0.08);
+      --text-main: #f5f7ff;
+      --text-muted: #a7b1d0;
+      --danger: #ff7b8a;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.65);
+      --radius-card: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: sans-serif;
-      background: #f5f5f5;
-      padding: 1em;
+      margin: 0;
+      padding: 24px 16px 40px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #15192a 0, #05060b 45%, #020308 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
     }
-    h1 {
-      text-align: center;
-    }
-    details {
-      margin-bottom: 1.5em;
-      background: white;
-      border-radius: 8px;
-      padding: 1em;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    summary {
-      font-size: 1.2em;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    table {
+
+    .page {
       width: 100%;
+      max-width: 980px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .trip-flag {
+      font-size: 18px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .trip-title {
+      font-size: clamp(28px, 4vw, 32px);
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+
+    .trip-dates {
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    .status-row {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--text-muted);
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent-green);
+      box-shadow: 0 0 0 3px rgba(79, 210, 138, 0.35);
+    }
+
+    .pill-label-strong {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .nav-row {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .nav-row a {
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--accent-blue);
+    }
+
+    .nav-row a:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .section {
+      background: radial-gradient(circle at top, #171b2a, #0c0f19);
+      border-radius: var(--radius-card);
+      padding: 18px 18px 14px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title span.emoji {
+      font-size: 20px;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .section-badge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .hotel-card,
+    .flight-card,
+    .info-card {
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--bg-card) 0, #181c29 100%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 10px 12px 10px;
+    }
+
+    .hotel-header,
+    .flight-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .hotel-main,
+    .flight-main {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .hotel-main span.city-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.04);
+      margin-right: 6px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .hotel-meta,
+    .flight-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+    }
+
+    .meta-label {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .meta-group {
+      display: inline-flex;
+      gap: 4px;
+      align-items: baseline;
+    }
+
+    .detail-table {
+      margin-top: 8px;
       border-collapse: collapse;
-      margin-top: 1em;
+      width: 100%;
+      font-size: 12px;
     }
-    th, td {
-      padding: 0.5em;
+
+    .detail-table th,
+    .detail-table td {
       text-align: left;
-      border-bottom: 1px solid #ccc;
+      padding: 2px 0;
+      vertical-align: top;
     }
-    th {
-      background: #eaeaea;
+
+    .detail-table th {
+      width: 110px;
+      color: var(--text-muted);
+      font-weight: 500;
+      padding-right: 6px;
     }
-    @media (max-width: 600px) {
-      table, thead, tbody, th, td, tr {
-        display: block;
+
+    .detail-table a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .detail-table a:hover {
+      text-decoration: underline;
+    }
+
+    .amount {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .total-row {
+      margin-top: 6px;
+      font-size: 12px;
+      text-align: right;
+      color: var(--text-muted);
+    }
+
+    .total-row .amount {
+      font-size: 13px;
+    }
+
+    .info-card p {
+      margin: 2px 0;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .info-card strong {
+      color: var(--text-main);
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .footer-note a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    .footer-note a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 18px 10px 30px;
       }
-      th {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
+      .section {
+        padding: 14px 12px 12px;
       }
-      td {
-        padding-left: 1em;
-        padding-top: 0.5em;
-        border: none;
-        border-bottom: 1px solid #ddd;
-        text-align: left;
+      .hotel-header,
+      .flight-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .section-subtitle {
+        margin-bottom: 6px;
       }
     }
   </style>
 </head>
 <body>
-<h1>Thailand Accommodation &amp; Flights Guide 2025</h1>
-<details>
-<summary>🏝️ Phuket Accommodation</summary>
-<table style="table-layout: fixed; width: 100%;">
-<thead>
-<tr><th style="width: 15%;">Destination</th><th style="width: 15%;">Room Type</th><th style="width: 15%;">Stay</th><th style="width: 12%;">Check-in</th><th style="width: 12%;">Check-out</th><th style="width: 21%;">Contact</th><th style="width: 10%;">Directions</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://www.outrigger.com/thailand/outrigger-surin-beach-resort" rel="noopener noreferrer" style="color:#DC143C; text-decoration: underline;" target="_blank">Outrigger Surin Beach Resort</a></td><td><a href="https://www.outrigger.com/thailand/outrigger-surin-beach-resort/rooms-suites/deluxe-pool-access" rel="noopener noreferrer" target="_blank">Deluxe Pool Access 1 King </a></td><td><strong><strong>Stay:</strong></strong> 19 to 28 May 2025 (9 nights)</td><td><strong>Check-in:</strong> 2:00 PM</td><td><strong>Check-out:</strong> 12:00 PM (lunch)</td><td>121/1 Moo 3, Srisunthorn Road, Cheng Talay, Thalang, Phuket 83110<br/>+66 7636 0250<br/><a href="mailto:reservations.surin@outrigger.com">reservations.surin@outrigger.com</a></td><td>Directions – <a href="https://maps.app.goo.gl/Tte2ZEs4HhrqRNtB7" rel="noopener noreferrer" target="_blank">Outrigger Surin Beach Resort</a></td></tr>
-</tbody>
-</table>
-</details>
-<details>
-<summary>🏙️ Bangkok Accommodation</summary>
-<table style="table-layout: fixed; width: 100%;">
-<thead>
-<tr><th style="width: 15%;">Destination</th><th style="width: 15%;">Room Type</th><th style="width: 15%;">Stay</th><th style="width: 12%;">Check-in</th><th style="width: 12%;">Check-out</th><th style="width: 21%;">Contact</th><th style="width: 10%;">Directions</th></tr>
-</thead>
-<tbody>
-<tr><td><a href="https://grandecentrepointratchadamri.com/" rel="noopener noreferrer" style="color:#DC143C; text-decoration: underline;" target="_blank">Grande Centre Point Hotel Ratchadamri</a></td><td><a href="https://grandecentrepointratchadamri.com/rooms/grande-suite/" rel="noopener noreferrer" target="_blank">Grand Suite</a></td><td><strong>Stay:</strong> 23 to 25 May 2025 (2 nights)</td><td><strong>Check-in:</strong> 2:00 PM</td><td><strong>Check-out:</strong> 12:00 PM (lunch)</td><td>153/2, Soi Mahatlek - Luang 1, Ratchadamri Road, Lumpini, Pathumwan, Bangkok 10330<br/>+66 2 091 9000<br/><a href="mailto:ratchadamri@gcphotels.com">ratchadamri@gcphotels.com</a></td><td>Directions – <a href="https://maps.app.goo.gl/WDZAE1p6tFvAuvgK9" rel="noopener noreferrer" target="_blank">Grande Centre Point Hotel Ratchadamri</a></td></tr>
-</tbody>
-</table>
-</details>
-<details><summary>✈️ Flights</summary><details><summary style="color: crimson; font-weight: normal; cursor: pointer;">1. Sydney (SYD) <span style="color: crimson;"> ➔ </span> Phuket (HKT)</summary><table>
-<thead>
-<tr><th style="width: 8%;">Date</th>
-<th style="width: 8%;">Flight</th>
-<th style="width: 8%;">Status</th>
-<th style="width: 15%;">Check-in</th>
-<th style="width: 16%;">Airport Check-In Time</th>
-<th style="width: 16%;">Departure (local time)</th>
-<th style="width: 16%;">Arrival (local time)</th>
-<th style="width: 14%;">Booking Ref</th>
-</tr>
-</thead>
-<tbody><tr><td>Date: 19 May 2025</td><td><a href="https://www.google.com/search?q=JQ27&amp;rlz=1C1CHBF_enAU1117AU1118&amp;oq=JQ27&amp;gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQABiABDIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiABDIHCAkQABiABNIBBzMxNmowajSoAgCwAgE&amp;sourceid=chrome&amp;ie=UTF-8" rel="noopener noreferrer" target="_blank">Jetstar JQ27</a></td><td><a href="https://booking.jetstar.com/flight-status/?culture=en-AU" rel="noopener noreferrer" target="_blank">Jetstar Flight Status</a></td><td><a href="https://check-in.jetstar.com/au/en/checkin" rel="noopener noreferrer" target="_blank">Jetstar Check In</a></td><td>Bag drop: 19 May 2025 – 11:25am</td><td>Departure (local): 19 May 2025 – 2:25pm</td><td>Arrival (local): 19 May 2025 – 8:40pm</td><td>Booking – ZGFQNB</td></tr></tbody></table></details><details><summary style="color: crimson; font-weight: normal; cursor: pointer;">2. Phuket (HKT) <span style="color: crimson;"> ➔ </span> Bangkok (BKK)</summary><table>
-<thead>
-<tr><th style="width: 8%;">Date</th>
-<th style="width: 8%;">Flight</th>
-<th style="width: 8%;">Status</th>
-<th style="width: 15%;">Check-in</th>
-<th style="width: 16%;">Airport Check-In Time</th>
-<th style="width: 16%;">Departure (local time)</th>
-<th style="width: 16%;">Arrival (local time)</th>
-<th style="width: 14%;">Booking Ref</th>
-</tr>
-</thead>
-<tbody><tr><td>Date: 23 May 2025</td><td><a href="https://www.google.com/search?q=FD9161&amp;sca_esv=16fb234a3036915d&amp;rlz=1C1CHBF_enAU1117AU1118&amp;sxsrf=AHTn8zpyuG5krqhawj32DNWHIxC1m4XAjA%3A1744531516984&amp;ei=PHD7Z7_gO6fh2roPw_Cs0Q0&amp;ved=0ahUKEwi_7vmqxtSMAxWnsFYBHUM4K9oQ4dUDCBA&amp;uact=5&amp;oq=FD9161&amp;gs_lp=Egxnd3Mtd2l6LXNlcnAiBkZEOTE2MTIKECMYgAQYJxiKBTIFEAAY7wUyCBAAGIAEGKIEMggQABiABBiiBDIFEAAY7wUyCBAAGIAEGKIESIciUABYyhdwAHgBkAEAmAHGAaABkQSqAQMwLjO4AQPIAQD4AQL4AQGYAgOgAqQEmAMAkgcFMC4yLjGgB4MLsgcFMC4yLjG4B6QE&amp;sclient=gws-wiz-serp" rel="noopener noreferrer" target="_blank">AirAsia FD9161</a></td><td><a href="https://www.airasia.com/flightstatus/en/GB" rel="noopener noreferrer" target="_blank">AirAsia Flight Status</a></td><td><a href="https://www.airasia.com/check-in/en/GB" rel="noopener noreferrer" target="_blank">AirAsia Check In</a></td><td>Bag drop: 23 May 2025 – 10:00am</td><td>Departure (local): 23 May 2025 – 11:40am</td><td>Arrival (local): 23 May 2025 – 1:05pm</td><td>Booking – DE3G4K</td></tr></tbody></table></details><details><summary style="color: crimson; font-weight: normal; cursor: pointer;">3. Bangkok (DMK) <span style="color: crimson;"> ➔ </span> Phuket (HKT)</summary><table>
-<thead>
-<tr><th style="width: 8%;">Date</th>
-<th style="width: 8%;">Flight</th>
-<th style="width: 8%;">Status</th>
-<th style="width: 15%;">Check-in</th>
-<th style="width: 16%;">Airport Check-In Time</th>
-<th style="width: 16%;">Departure (local time)</th>
-<th style="width: 16%;">Arrival (local time)</th>
-<th style="width: 14%;">Booking Ref</th>
-</tr>
-</thead>
-<tbody><tr><td>Date: 25 May 2025</td><td><a href="https://www.google.com/search?q=DD526&amp;sca_esv=16fb234a3036915d&amp;rlz=1C1CHBF_enAU1117AU1118&amp;sxsrf=AHTn8zrfczk4WnmhBhC2I_c-yE2JBB2aig%3A1744531596098&amp;ei=jHD7Z-rQBf-m2roPivPGIQ&amp;ved=0ahUKEwjqxtbQxtSMAxV_k1YBHYq5MQQQ4dUDCBA&amp;uact=5&amp;oq=DD526&amp;gs_lp=Egxnd3Mtd2l6LXNlcnAiBURENTI2MgYQABgHGB4yBBAAGB4yCBAAGIAEGKIEMggQABiABBiiBDIFEAAY7wUyCBAAGIAEGKIESKIdUABYiBBwAHgAkAEAmAGxAaAB3gOqAQMwLjO4AQPIAQD4AQL4AQGYAgOgAuoDwgIFEAAYgASYAwCSBwMwLjOgB7AHsgcDMC4zuAfqAw&amp;sclient=gws-wiz-serp" rel="noopener noreferrer" target="_blank">Nok Air DD526</a></td><td><a href="https://booking.nokair.com/en/flight-status" rel="noopener noreferrer" target="_blank">Nok Air Flight Status</a></td><td><a href="https://booking.nokair.com/en/checkin" rel="noopener noreferrer" target="_blank">Nok Air Check In</a></td><td>Bag drop: 25 May 2025 – 12:10pm</td><td>Departure (local): 25 May 2025 – 1:40pm</td><td>Arrival (local): 25 May 2025 – 3:05pm</td><td>Booking – 5TIH3U</td></tr></tbody></table></details><details><summary style="color: crimson; font-weight: normal; cursor: pointer;">4. Phuket (HKT) <span style="color: crimson;"> ➔ </span> Sydney (SYD)</summary><table>
-<thead>
-<tr><th style="width: 8%;">Date</th>
-<th style="width: 8%;">Flight</th>
-<th style="width: 8%;">Status</th>
-<th style="width: 15%;">Check-in</th>
-<th style="width: 16%;">Airport Check-In Time</th>
-<th style="width: 16%;">Departure (local time)</th>
-<th style="width: 16%;">Arrival (local time)</th>
-<th style="width: 14%;">Booking Ref</th>
-</tr>
-</thead>
-<tbody><tr><td>Date: 28 May 2025</td><td><a href="https://www.google.com/search?q=JQ28&amp;sca_esv=8f80ef324e22cd0c&amp;rlz=1C1CHBF_enAU1117AU1118&amp;sxsrf=AHTn8zpOpVs2FbjtLN8-UwWMM_rQbYhWBg%3A1741891986195&amp;ei=kinTZ5nOC82Avr0PkNLm4Ac&amp;ved=0ahUKEwiZ38uo3YeMAxVNgK8BHRCpGXwQ4dUDCBA&amp;uact=5&amp;oq=JQ28&amp;gs_lp=Egxnd3Mtd2l6LXNlcnAiBEpRMjgyCxAAGIAEGJECGIoFMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAEMgUQABiABDIFEAAYgAQyBRAAGIAESMoEUABYAHAAeAGQAQCYAZUCoAGVAqoBAzItMbgBA8gBAPgBAvgBAZgCAaACnAKYAwCSBwMyLTGgB-UD&amp;sclient=gws-wiz-serp" rel="noopener noreferrer" target="_blank">Jetstar JQ28</a></td><td><a href="https://booking.jetstar.com/flight-status/?culture=en-AU" rel="noopener noreferrer" target="_blank">Jetstar Flight Status</a></td><td><a href="https://check-in.jetstar.com/au/en/checkin" rel="noopener noreferrer" target="_blank">Jetstar Check In</a></td><td>Bag drop: 28 May 2025 – 7:25pm</td><td>Departure (local): 28 May 2025 – 10:25pm</td><td>Arrival (local): 29 May 2025 – 10:10am</td><td>Booking – ZGFQNB</td></tr></tbody></table></details></details>
+  <div class="page">
+    <header>
+      <div class="trip-flag">JP · GJN-2024-Sep · Japan Trip</div>
+      <h1 class="trip-title">Accommodation & Flights</h1>
+      <div class="trip-dates">31 Aug 2024 → 10 Sep 2024</div>
+
+      <div class="status-row">
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span class="pill-label-strong">Secure section</span>
+          <span>Cloudflare sign in required</span>
+        </div>
+        <div class="pill">
+          <span class="pill-label-strong">Currency:</span>
+          <span>AUD</span>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <a href="../index.html">← Back to Trip Home</a>
+        <a href="/public-pwa/JP/GJN-2024-Sep/" target="_blank" rel="noopener">Open Installable Trip App</a>
+        <a href="#accommodation">Hotels</a>
+        <a href="#flights">Flights</a>
+        <a href="#insurance">Insurance</a>
+      </div>
+    </header>
+
+    <main>
+      <!-- Accommodation -->
+      <section class="section" id="accommodation">
+        <div class="section-header">
+          <div>
+            <div class="section-title">
+              <span class="emoji">🏨</span>
+              <span>Accommodation</span>
+            </div>
+            <div class="section-subtitle">
+              All hotel bookings for this trip. Amounts are shown in Australian dollars (AUD).
+            </div>
+          </div>
+          <div class="section-badge">Total: <strong class="amount">$1,933.07 AUD</strong> · 7 stays</div>
+        </div>
+
+        <div class="card-list">
+
+          <!-- Osaka 1 -->
+          <article class="hotel-card">
+            <div class="hotel-header">
+              <div class="hotel-main">
+                <span class="city-pill">🏙 Osaka</span>
+                Candeo Hotels Osaka The Tower
+              </div>
+              <div class="chip">2 nights · $392.50 AUD</div>
+            </div>
+            <div class="hotel-meta">
+              <div class="meta-group">
+                <span class="meta-label">Check-in:</span>
+                <span>31 Aug 2024 · 3:00pm</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Check-out:</span>
+                <span>02 Sep 2024 · 11:00am</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Room:</span>
+                <span>Run of House – Room</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Confirmation:</span>
+                <span>72057076255371</span>
+              </div>
+            </div>
+            <table class="detail-table">
+              <tr>
+                <th>Address</th>
+                <td>1-1-5 Dojimahama, Kita Ward, Osaka 530-0004, Japan</td>
+              </tr>
+              <tr>
+                <th>Phone</th>
+                <td><a href="tel:+81661317714">+81 6 6131 7714</a></td>
+              </tr>
+            </table>
+          </article>
+
+          <!-- Hiroshima -->
+          <article class="hotel-card">
+            <div class="hotel-header">
+              <div class="hotel-main">
+                <span class="city-pill">🏙 Hiroshima</span>
+                Rihga Royal Hotel Hiroshima
+              </div>
+              <div class="chip">1 night · $141.28 AUD</div>
+            </div>
+            <div class="hotel-meta">
+              <div class="meta-group">
+                <span class="meta-label">Check-in:</span>
+                <span>02 Sep 2024 · 3:00pm</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Check-out:</span>
+                <span>03 Sep 2024 · 11:00am</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Room:</span>
+                <span>Standard Double Non-Smoking</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Confirmation:</span>
+                <span>1338199705</span>
+              </div>
+            </div>
+            <table class="detail-table">
+              <tr>
+                <th>Address</th>
+                <td>6-78 Motomachi, Naka-ku, Hiroshima 730-0011, Japan</td>
+              </tr>
+              <tr>
+                <th>Phone</th>
+                <td><a href="tel:+81825021121">+81 8 2502 1121</a></td>
+              </tr>
+            </table>
+          </article>
+
+          <!-- Tokyo 1 -->
+          <article class="hotel-card">
+            <div class="hotel-header">
+              <div class="hotel-main">
+                <span class="city-pill">🏙 Tokyo</span>
+                Hotel Amanek Shinjuku-Kabukicho
+              </div>
+              <div class="chip">2 nights · $501.88 AUD</div>
+            </div>
+            <div class="hotel-meta">
+              <div class="meta-group">
+                <span class="meta-label">Check-in:</span>
+                <span>03 Sep 2024 · 3:00pm</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Check-out:</span>
+                <span>05 Sep 2024 · 10:00am</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Room:</span>
+                <span>1 King Non Smoking</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Confirmation:</span>
+                <span>1336658561</span>
+              </div>
+            </div>
+            <table class="detail-table">
+              <tr>
+                <th>Address</th>
+                <td>2-4-10 Kabukicho, Shinjuku-ku, Tokyo 160-0021, Japan</td>
+              </tr>
+              <tr>
+                <th>Phone</th>
+                <td><a href="tel:+81362659140">+81 3 6265 9140</a></td>
+              </tr>
+            </table>
+          </article>
+
+          <!-- Yudanaka -->
+          <article class="hotel-card">
+            <div class="hotel-header">
+              <div class="hotel-main">
+                <span class="city-pill">🏞 Yudanaka</span>
+                Yudanaka Tawaraya Ryokan
+              </div>
+              <div class="chip">1 night · $213.00 AUD</div>
+            </div>
+            <div class="hotel-meta">
+              <div class="meta-group">
+                <span class="meta-label">Check-in:</span>
+                <span>05 Sep 2024 · 3:00pm</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Check-out:</span>
+                <span>06 Sep 2024 · 10:00am</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Room:</span>
+                <span>Japanese Style Superior</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Confirmation:</span>
+                <span>1354673721</span>
+              </div>
+            </div>
+            <table class="detail-table">
+              <tr>
+                <th>Address</th>
+                <td>4115 Hirao, Yamanouchi, Shimotakai-gun, Yudanaka, Nagano 381-0401, Japan</td>
+              </tr>
+              <tr>
+                <th>Phone</th>
+                <td><a href="tel:+81269333525">+81 2 6933 3525</a></td>
+              </tr>
+            </table>
+          </article>
+
+          <!-- Tokyo 2 -->
+          <article class="hotel-card">
+            <div class="hotel-header">
+              <div class="hotel-main">
+                <span class="city-pill">🏙 Tokyo</span>
+                Daiwa Roynet Hotel Ginza PREMIER
+              </div>
+              <div class="chip">1 night · $294.13 AUD</div>
+            </div>
+            <div class="hotel-meta">
+              <div class="meta-group">
+                <span class="meta-label">Check-in:</span>
+                <span>06 Sep 2024 · 2:00pm</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Check-out:</span>
+                <span>07 Sep 2024 · 11:00am</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Room:</span>
+                <span>Superior Double Room – Non-Smoking</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Confirmation:</span>
+                <span>1359474653</span>
+              </div>
+            </div>
+            <table class="detail-table">
+              <tr>
+                <th>Address</th>
+                <td>1-13-15, Chuo-ku, Ginza, Tokyo 104-0061, Japan</td>
+              </tr>
+              <tr>
+                <th>Phone</th>
+                <td><a href="tel:+81351591380">+81 3 5159 1380</a></td>
+              </tr>
+            </table>
+          </article>
+
+          <!-- Kyoto -->
+          <article class="hotel-card">
+            <div class="hotel-header">
+              <div class="hotel-main">
+                <span class="city-pill">🏯 Kyoto</span>
+                DoubleTree by Hilton Kyoto Higashiyama
+              </div>
+              <div class="chip">1 night · $250.00 AUD</div>
+            </div>
+            <div class="hotel-meta">
+              <div class="meta-group">
+                <span class="meta-label">Check-in:</span>
+                <span>07 Sep 2024 · 2:00pm</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Check-out:</span>
+                <span>08 Sep 2024 · 12:00pm</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Room:</span>
+                <span>Twin Guest Room</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Confirmation:</span>
+                <span>3118131657</span>
+              </div>
+            </div>
+            <table class="detail-table">
+              <tr>
+                <th>Address</th>
+                <td>1-4-5, Honmachi Higashiyama-ku, Kyoto 6050981, Japan</td>
+              </tr>
+              <tr>
+                <th>Phone</th>
+                <td><a href="tel:+81755337070">+81 75 533 7070</a></td>
+              </tr>
+            </table>
+          </article>
+
+          <!-- Osaka 2 -->
+          <article class="hotel-card">
+            <div class="hotel-header">
+              <div class="hotel-main">
+                <span class="city-pill">🏙 Osaka</span>
+                Quintessa Hotel Osaka Bay
+              </div>
+              <div class="chip">1 night · $140.28 AUD</div>
+            </div>
+            <div class="hotel-meta">
+              <div class="meta-group">
+                <span class="meta-label">Check-in:</span>
+                <span>08 Sep 2024 · 3:00pm</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Check-out:</span>
+                <span>09 Sep 2024 · 11:00am</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Room:</span>
+                <span>1× Corner Suite Room twin beds</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Confirmation:</span>
+                <span>1348027997</span>
+              </div>
+            </div>
+            <table class="detail-table">
+              <tr>
+                <th>Address</th>
+                <td>1-13-65 Nankokita, Suminoe-ku, Bay Area, Osaka, 559-0034, Japan</td>
+              </tr>
+              <tr>
+                <th>Phone</th>
+                <td><a href="tel:+81666137007">+81 6 6613 7007</a></td>
+              </tr>
+            </table>
+          </article>
+
+        </div>
+
+        <div class="total-row">
+          Trip accommodation total: <span class="amount">$1,933.07 AUD</span>
+        </div>
+      </section>
+
+      <!-- Flights -->
+      <section class="section" id="flights">
+        <div class="section-header">
+          <div>
+            <div class="section-title">
+              <span class="emoji">✈️</span>
+              <span>Flights</span>
+            </div>
+            <div class="section-subtitle">
+              International flights for this trip. Times are shown in local time at departure / arrival.
+            </div>
+          </div>
+          <div class="section-badge">Carrier: Jetstar</div>
+        </div>
+
+        <div class="card-list">
+          <!-- Outbound -->
+          <article class="flight-card">
+            <div class="flight-header">
+              <div class="flight-main">
+                JQ13 · Sydney (SYD) → Osaka (KIX)
+              </div>
+              <div class="chip">31 Aug 2024</div>
+            </div>
+            <div class="flight-meta">
+              <div class="meta-group">
+                <span class="meta-label">Depart:</span>
+                <span>31 Aug 2024 · 10:20am · Sydney</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Arrive:</span>
+                <span>31 Aug 2024 · 7:00pm · Osaka</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Return -->
+          <article class="flight-card">
+            <div class="flight-header">
+              <div class="flight-main">
+                JQ14 · Osaka (KIX) → Sydney (SYD)
+              </div>
+              <div class="chip">09–10 Sep 2024</div>
+            </div>
+            <div class="flight-meta">
+              <div class="meta-group">
+                <span class="meta-label">Depart:</span>
+                <span>09 Sep 2024 · 9:25pm · Osaka</span>
+              </div>
+              <div class="meta-group">
+                <span class="meta-label">Arrive:</span>
+                <span>10 Sep 2024 · 8:10am · Sydney</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Insurance (summary only) -->
+      <section class="section" id="insurance">
+        <div class="section-header">
+          <div>
+            <div class="section-title">
+              <span class="emoji">🛡️</span>
+              <span>Travel Insurance (Japan)</span>
+            </div>
+            <div class="section-subtitle">
+              Quick reference for insurance covering this trip.
+            </div>
+          </div>
+          <div class="section-badge">Policy: 53180941</div>
+        </div>
+
+        <div class="info-card">
+          <p><strong>Cover period:</strong> 31 Aug 2024 – 10 Sep 2024</p>
+          <p><strong>Stay:</strong> 2 nights (policy wording), country: Japan</p>
+          <p><strong>Company:</strong> World2Cover Travel Insurance</p>
+          <p><strong>Policy type:</strong> Top cover</p>
+          <p><strong>Excess:</strong> AUD $200</p>
+          <p><strong>Premium paid:</strong> $251.61 AUD</p>
+          <p><strong>PDS:</strong>
+            <a href="https://shorturl.at/RoG42" target="_blank" rel="noopener">
+              Policy disclosure statement
+            </a>
+          </p>
+          <p><strong>Emergency (Japan):</strong> 0800 800 9117</p>
+          <p><strong>Emergency (Alt):</strong> 03 6228 5881</p>
+        </div>
+      </section>
+
+      <div class="footer-note">
+        For trains and other ground transport, see the
+        <a href="../road-transport-guide/index.html">Road Transport Guide</a>.  
+        For packing details, see the
+        <a href="../travel-packing-guide/index.html">Travel Packing Guide</a>.
+      </div>
+    </main>
+  </div>
 </body>
 </html>
