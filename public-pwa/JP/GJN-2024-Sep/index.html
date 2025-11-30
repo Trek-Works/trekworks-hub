@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>JP GJN-2024 (Japan) – Trip App</title>
+
+  <!-- PWA hooks -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="assets/icons/icon-192x192.png" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" />
+  <meta name="theme-color" content="#05060b" />
+
+  <style>
+    :root {
+      --bg-main: #05060b;
+      --bg-gradient-top: #181c2f;
+      --card-bg-1: #1d2028;
+      --card-bg-2: #181b22;
+      --text-main: #f5f7ff;
+      --text-muted: #a7afc3;
+      --accent-green: #1fd38c;
+      --accent-red: #ff4b5c;
+      --pill-bg: #151824;
+      --border-soft: rgba(255,255,255,0.06);
+      --border-strong: rgba(255,255,255,0.12);
+      --radius-card: 20px;
+      --radius-pill: 999px;
+      --shadow-card: 0 12px 24px rgba(0,0,0,0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Ubuntu, sans-serif;
+      background:
+        radial-gradient(circle at top, var(--bg-gradient-top) 0, var(--bg-main) 46%);
+      color: var(--text-main);
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 900px;
+      padding: 32px 14px 40px;
+    }
+
+    header {
+      padding: 8px 0 10px;
+    }
+
+    .trip-title {
+      font-size: clamp(24px, 3.4vw, 30px);
+      font-weight: 650;
+      letter-spacing: 0.4px;
+      margin-bottom: 4px;
+    }
+
+    .trip-title span.flag {
+      margin-right: 8px;
+    }
+
+    .trip-dates {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 26px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: var(--radius-pill);
+      background: var(--pill-bg);
+      border: 1px solid var(--border-soft);
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .pill-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--accent-green);
+      box-shadow: 0 0 0 3px rgba(31,211,140,0.38);
+      flex-shrink: 0;
+    }
+
+    .pill-dot.offline {
+      background: var(--accent-red);
+      box-shadow: 0 0 0 3px rgba(255,75,92,0.35);
+    }
+
+    .section-list {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .section-card {
+      width: 100%;
+      border: none;
+      outline: none;
+      text-align: left;
+      padding: 18px 22px;
+      border-radius: var(--radius-card);
+      background: linear-gradient(135deg, var(--card-bg-1), var(--card-bg-2));
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.55);
+      border: 1px solid var(--border-soft);
+      transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        border-color 0.16s ease,
+        background 0.16s ease;
+    }
+
+    .section-card:hover,
+    .section-card:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+      border-color: var(--border-strong);
+      background: radial-gradient(circle at top left, #232834 0, var(--card-bg-2) 54%);
+    }
+
+    .section-emoji {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .section-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .section-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    .section-pill {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-soft);
+      background: rgba(0,0,0,0.4);
+      color: var(--text-muted);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .section-pill.primary {
+      border-color: rgba(79,178,255,0.45);
+      background: rgba(79,178,255,0.22);
+      color: #e5f2ff;
+    }
+
+    .section-hint {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    footer {
+      margin-top: 28px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: #6eb7ff;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 26px 10px 32px;
+      }
+
+      .section-card {
+        padding: 16px 18px;
+        border-radius: 18px;
+      }
+
+      .section-title {
+        font-size: 16px;
+      }
+
+      .section-hint {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="trip-title">
+        <span class="flag">🇯🇵</span>
+        JP GJN-2024 (Japan)
+      </div>
+      <div class="trip-dates">31 Aug 2024 → 10 Sep 2024</div>
+    </header>
+
+    <div class="status-row">
+      <div class="pill" id="online-pill">
+        <span class="pill-dot" id="online-dot"></span>
+        <span id="online-text">Online</span>
+      </div>
+      <div class="pill" id="auth-pill">
+        Cloudflare sign in status: checking
+      </div>
+    </div>
+
+    <main>
+      <div class="section-list" id="section-list">
+        <!-- Cards injected by JS -->
+      </div>
+    </main>
+
+    <footer>
+      Secure trip details are hosted at
+      <a href="https://trekworks.org/JP/GJN-2024-Sep/" target="_blank" rel="noopener">
+        trekworks.org/JP/GJN-2024-Sep/
+      </a>.
+      The app shell can work offline, but secure trip content always requires an internet connection and Cloudflare Access.
+    </footer>
+  </div>
+
+  <script>
+    // ------------------------------------
+    // CONFIG
+    // ------------------------------------
+    const SECURE_BASE = "https://trekworks.org/JP/GJN-2024-Sep/";
+
+    // Sections: existing + standard future elements
+    const SECTIONS = [
+      {
+        id: "home",
+        emoji: "🏠",
+        label: "Trip Home",
+        hint: "Overview and main links",
+        path: ""
+      },
+      {
+        id: "accommodation",
+        emoji: "🏨",
+        label: "Accommodation",
+        hint: "Hotels and stays",
+        path: "accommodation/"
+      },
+      {
+        id: "activities",
+        emoji: "🎟️",
+        label: "Activities",
+        hint: "Tours and attractions",
+        path: "activities/"
+      },
+      {
+        id: "flights",
+        emoji: "✈️",
+        label: "Flights",
+        hint: "All flights for this trip",
+        path: "flights/"
+      },
+      {
+        id: "transport",
+        emoji: "🚍",
+        label: "Transport",
+        hint: "Local transport and passes",
+        path: "transport/"
+      },
+      {
+        id: "maps",
+        emoji: "🗺️",
+        label: "Maps",
+        hint: "Key locations and routes",
+        path: "maps/"
+      },
+      {
+        id: "itinerary",
+        emoji: "📃",
+        label: "Itinerary",
+        hint: "Day by day planning",
+        path: "itinerary/"
+      },
+      {
+        id: "packing",
+        emoji: "📦",
+        label: "Packing",
+        hint: "Packing lists and checks",
+        path: "packing/"
+      },
+      {
+        id: "esim",
+        emoji: "📶",
+        label: "eSIM",
+        hint: "Connectivity and SIM details",
+        path: "esim/"
+      }
+    ];
+
+    // ------------------------------------
+    // UI rendering
+    // ------------------------------------
+    function createCard(section) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "section-card";
+      btn.setAttribute("data-id", section.id);
+
+      btn.innerHTML = `
+        <div class="section-emoji">${section.emoji}</div>
+        <div class="section-content">
+          <div class="section-title-row">
+            <div class="section-title">${section.label}</div>
+            <div class="section-pill ${section.id === "home" ? "primary" : ""}">
+              ${section.id === "home" ? "Secure overview" : "Secure section"}
+            </div>
+          </div>
+          <div class="section-hint">${section.hint}</div>
+        </div>
+      `;
+
+      btn.addEventListener("click", () => {
+        const target = SECURE_BASE + section.path;
+        window.location.href = target;
+      });
+
+      return btn;
+    }
+
+    function renderSections() {
+      const container = document.getElementById("section-list");
+      SECTIONS.forEach(sec => container.appendChild(createCard(sec)));
+    }
+
+    // ------------------------------------
+    // Status indicators
+    // ------------------------------------
+    function updateOnlineStatus() {
+      const dot = document.getElementById("online-dot");
+      const text = document.getElementById("online-text");
+      if (!dot || !text) return;
+
+      if (navigator.onLine) {
+        dot.classList.remove("offline");
+        text.textContent = "Online";
+      } else {
+        dot.classList.add("offline");
+        text.textContent = "Offline";
+      }
+    }
+
+    function checkCloudflareAuth() {
+      const pill = document.getElementById("auth-pill");
+      if (!pill) return;
+
+      const hasCFAuth = document.cookie.includes("CF_Authorization=");
+      if (hasCFAuth) {
+        pill.textContent = "Cloudflare sign in status: signed in";
+      } else {
+        pill.textContent = "Cloudflare sign in status: sign in required for secure sections";
+      }
+    }
+
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+
+    // ------------------------------------
+    // Service worker registration
+    // ------------------------------------
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("service-worker.js")
+        .catch(err => console.log("Service worker error:", err));
+    }
+
+    // ------------------------------------
+    // Init
+    // ------------------------------------
+    renderSections();
+    updateOnlineStatus();
+    checkCloudflareAuth();
+  </script>
+</body>
+</html>
