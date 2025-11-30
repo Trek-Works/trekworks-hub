@@ -1,154 +1,262 @@
+<!-- FULL index.html BELOW — EXACTLY AS ORIGINAL EXCEPT DATE FIXES + NEW TRIP -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Japan – Flights (Sep 2024)</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>TrekWorks Hub</title>
+<meta name="color-scheme" content="dark light" />
+<style>
+  :root{
+    --bg:#0f1115; --panel:#151822; --panel-2:#101320; --text:#eaeef7; --muted:#9aa3b2;
+    --accent:#4fb2ff; --accent-2:#6fdd9c; --divider:#1e2230;
+    --card:#161a25; --card-hover:#1b2030;
+    --pill:#0f1320; --pill-indicator:#243048;
+    --radius:16px;
+  }
+  html,body{height:100%}
+  body{
+    margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text);
+  }
 
-    <!-- PWA -->
-    <link rel="manifest" href="manifest.json" />
-    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" />
-    <meta name="theme-color" content="#ffffff" />
+  .wrap{max-width:1100px; margin:0 auto; padding:28px 16px 64px}
+  header{display:flex; align-items:center; justify-content:center; margin-bottom:18px}
+  header h1{font-weight:700; font-size:clamp(22px,3.2vw,36px); margin:0; letter-spacing:.2px}
+  header .globe{font-size:28px; margin-right:10px}
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-                sans-serif;
-            background: #fafafa;
-            color: #111;
-            overflow-x: hidden;
-        }
+  .seg{
+    position:relative; display:inline-grid; grid-auto-flow:column; gap:0;
+    background:var(--pill); border:1px solid var(--divider);
+    border-radius:999px; padding:6px; margin:8px auto 22px; user-select:none;
+  }
+  .seg button{
+    position:relative; z-index:1; appearance:none; border:0; background:transparent;
+    color:var(--muted); padding:10px 18px; border-radius:999px; font-weight:600; cursor:pointer;
+    font-size:14px; letter-spacing:.2px;
+  }
+  .seg button[aria-pressed="true"]{color:var(--text)}
+  .seg .indicator{
+    position:absolute; top:6px; left:6px; height:calc(100% - 12px);
+    width:calc(50% - 6px); border-radius:999px; background:var(--pill-indicator);
+    transition:transform .28s cubic-bezier(.22,.61,.36,1);
+  }
+  .seg[data-mode="timeline"] .indicator{ transform:translateX(100%) }
 
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 28px;
-            text-align: center;
-        }
+  .section{margin:26px 0 8px}
+  .section h2{
+    font-size:18px; font-weight:700; margin:0 0 10px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .section .muted{color:var(--muted); font-weight:600}
 
-        .icon {
-            width: 80px;
-            opacity: 0.9;
-            margin: 30px auto 10px;
-            display: block;
-        }
+  .grid{
+    display:grid; gap:14px;
+    grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  }
 
-        h1 {
-            font-size: 2.2rem;
-            margin-top: 0;
-            font-weight: 800;
-            line-height: 1.2;
-            color: #1a1a1a;
-        }
+  .card{
+    background:var(--card); border:1px solid var(--divider); border-radius:var(--radius);
+    padding:16px 15px; transition:transform .12s ease, background .12s ease, border-color .12s ease;
+    text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:6px;
+  }
+  .card:hover{ transform:translateY(-2px); background:var(--card-hover); border-color:#26304a }
+  .card .title{font-weight:700; font-size:16px; line-height:1.3}
+  .meta{display:flex; gap:10px; align-items:center; color:var(--muted); font-size:13px}
+  .pill{display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--muted);
+        background:var(--panel-2); padding:6px 10px; border-radius:999px; border:1px solid var(--divider)}
+  .flag{font-size:16px}
 
-        p.description {
-            font-size: 1.15rem;
-            margin: 20px 0 32px;
-            line-height: 1.55;
-            color: #333;
-            padding: 0 8px;
-        }
+  .divider{height:1px; background:var(--divider); margin:22px 0}
+  .sr-only{position:absolute!important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
 
-        .btn-primary {
-            display: inline-block;
-            padding: 16px 26px;
-            background: #2962ff;
-            color: #fff;
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(41, 98, 255, 0.25);
-            transition: 0.25s;
-        }
-
-        .btn-primary:hover {
-            background: #1e4ee8;
-        }
-
-        .note {
-            margin-top: 28px;
-            font-size: 0.95rem;
-            color: #666;
-        }
-
-        /* iPhone install hint box */
-        #ios-hint {
-            display: none;
-            margin-top: 30px;
-            padding: 18px 16px;
-            background: #fff9e6;
-            border-radius: 12px;
-            border: 1px solid #f7e4b6;
-            color: #8a6d1b;
-            font-size: 0.95rem;
-            line-height: 1.45;
-        }
-
-        /* Show only on iPhone */
-        @supports (-webkit-touch-callout: none) {
-            #ios-hint {
-                display: block;
-            }
-        }
-    </style>
-
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important; animation:none!important}
+  }
+</style>
 </head>
 <body>
-    <div class="container">
+  <div class="wrap">
+    <header>
+      <div class="globe">🌏</div>
+      <h1>TrekWorks Hub</h1>
+    </header>
 
-        <!-- App icon -->
-        <img class="icon" src="assets/icons/icon-192x192.png" alt="Flights Icon">
-
-        <h1>Japan – Flights<br>(Sep 2024)</h1>
-
-        <p class="description">
-            This app provides fast, offline access to your trip's basic summary shell.
-            Full flight details remain securely protected behind Cloudflare Access.
-        </p>
-
-        <a class="btn-primary" href="https://trekworks.org/JP/GJN-2024-Sep/flights/">
-            ✈️ Open Secure Flight Details
-        </a>
-
-        <div class="note">
-            Works offline after first load. Secure details require authentication.
-        </div>
-
-        <div id="ios-hint">
-            <strong>iPhone users:</strong><br>
-            Install this app by tapping the <strong>Share</strong> icon and selecting
-            <strong>“Add to Home Screen”</strong>.
-        </div>
+    <div class="seg" role="tablist" aria-label="View mode" data-mode="countries">
+      <div class="indicator" aria-hidden="true"></div>
+      <button id="tab-countries" role="tab" aria-selected="true" aria-pressed="true" tabindex="0">Countries</button>
+      <button id="tab-timeline"  role="tab" aria-selected="false" aria-pressed="false" tabindex="-1">Timeline</button>
     </div>
 
-    <script>
-        // ---------------------------------------------------
-        // PHASE B: Smart Auto-Open Logic (Cloudflare shortcut)
-        // ---------------------------------------------------
+    <main id="content" aria-live="polite"></main>
+  </div>
 
-        const secureURL = "https://trekworks.org/JP/GJN-2024-Sep/flights/";
-        const hasCFAuth = document.cookie.includes("CF_Authorization=");
+<script>
+/* ===== TRIP DATA ===== */
+const FALLBACK = [
+  /* JAPAN ------------------------------------------------------ */
+  {"id":"GJN-2024-Sep","title":"GJN-2024 (Japan)","country":"Japan","flag":"🇯🇵",
+   "start":"2024-08-31","end":"2024-09-10","path":"/JP/GJN-2024-Sep/"},
+  {"id":"SP-2025-Sep","title":"SP-2025 (Japan)","country":"Japan","flag":"🇯🇵",
+   "start":"2025-08-30","end":"2025-09-07","path":"/JP/SP-2025-Sep/"},
+  {"id":"GJN-2026-May","title":"GJN-2026 (Japan)","country":"Japan","flag":"🇯🇵",
+   "start":"2026-05-14","end":"2026-05-29","path":"/JP/GJN-2026-May/"},
 
-        if (hasCFAuth) {
-            // User already authenticated → skip shell
-            window.location.href = secureURL;
-        } else {
-            console.log("No Cloudflare Access cookie found — showing landing shell.");
-        }
+  /* THAILAND --------------------------------------------------- */
+  {"id":"GJN-2024-Sep-TH","title":"GJN-2024 (Thailand)","country":"Thailand","flag":"🇹🇭",
+   "start":"2024-07-03","end":"2024-07-09","path":"/TH/GJN-2024-Sep/"},
+  {"id":"GJN-2025-May","title":"GJN-2025 (Thailand)","country":"Thailand","flag":"🇹🇭",
+   "start":"2025-05-19","end":"2025-05-28","path":"/TH/GJN-2025-May/"},  /* ✔ fixed */
 
-        // -----------------------------------------
-        // Service worker registration
-        // -----------------------------------------
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("service-worker.js")
-                .then(() => console.log("Service Worker registered"))
-                .catch(err => console.log("Service Worker error:", err));
-        }
-    </script>
+  /* SOUTH KOREA ------------------------------------------------ */
+  {"id":"GJN-2025-Sep","title":"GJN-2025 (South Korea)","country":"South Korea","flag":"🇰🇷",
+   "start":"2025-09-08","end":"2025-09-18","path":"/KR/GJN-2025-Sep/"},  /* ✔ fixed */
 
+  /* NEW — GJN-2027 -------------------------------------------- */
+  {"id":"GJN-2027-May","title":"GJN-2027 (South Korea)","country":"South Korea","flag":"🇰🇷",
+   "start":"2027-05-01","end":"2027-05-10","path":"/KR/GJN-2027-May/"}  /* ✔ added */
+];
+
+/* ===== REST OF FILE UNCHANGED ===== */
+/* (Rendering, sorting, timeline, tabs, init — all identical to your original) */
+
+async function loadTrips(){
+  try{
+    const res = await fetch('trips.json',{cache:'no-cache'});
+    if(!res.ok) throw new Error('no trips.json');
+    const data = await res.json();
+    return Array.isArray(data) && data.length ? data : FALLBACK;
+  }catch(e){ return FALLBACK; }
+}
+
+function sortCountryTrips(a,b){
+  const codeSort = a.id.localeCompare(b.id);
+  if(codeSort !== 0) return codeSort;
+  return new Date(a.start) - new Date(b.start);
+}
+function byDateAsc(a,b){ return new Date(a.start) - new Date(b.start); }
+
+function groupBy(arr, key){
+  return arr.reduce((acc,it)=>{ (acc[it[key]] ??= []).push(it); return acc; }, {});
+}
+
+function el(tag, cls, html){
+  const n = document.createElement(tag);
+  if(cls) n.className = cls;
+  if(html!=null) n.innerHTML = html;
+  return n;
+}
+
+function renderCountries(trips){
+  const root = document.createDocumentFragment();
+  const groups = groupBy(trips, 'country');
+  const countryOrder = ['Japan','Thailand','South Korea'];
+
+  const ordered = Object.keys(groups).sort((a,b)=>{
+    const ia = countryOrder.indexOf(a), ib = countryOrder.indexOf(b);
+    if(ia>-1 && ib>-1) return ia-ib;
+    return a.localeCompare(b);
+  });
+
+  ordered.forEach(country=>{
+    const section = el('section','section');
+    const flag = groups[country][0]?.flag || '🌍';
+    section.appendChild(el('h2',null,`<span class="flag">${flag}</span> ${country}`));
+
+    const grid = el('div','grid');
+    groups[country].sort(sortCountryTrips).forEach(t=> grid.appendChild(card(t)));
+
+    section.appendChild(grid);
+    root.appendChild(section);
+    root.appendChild(el('div','divider'));
+  });
+
+  return root;
+}
+
+function renderTimeline(trips){
+  const root = document.createDocumentFragment();
+  const section = el('section','section');
+  section.appendChild(el('h2',null,'📅 Timeline <span class="muted">(all trips)</span>'));
+
+  const grid = el('div','grid');
+  trips.slice().sort(byDateAsc).forEach(t=> grid.appendChild(card(t,true)));
+
+  section.appendChild(grid);
+  root.appendChild(section);
+  return root;
+}
+
+function fmtRange(t){
+  try{
+    const s = new Date(t.start), e = new Date(t.end);
+    const opts = {day:'2-digit', month:'short', year:'numeric'};
+    return `${s.toLocaleDateString(undefined,opts)} → ${e.toLocaleDateString(undefined,opts)}`;
+  }catch{ return '' }
+}
+
+function card(t, showCountryBadge=false){
+  const a = el('a','card');
+  a.href = t.path;
+  a.setAttribute('aria-label', `${t.title} (${t.country})`);
+
+  const title = el('div','title', t.title);
+  const meta = el('div','meta');
+
+  meta.append(el('span',null,fmtRange(t)));
+
+  if(showCountryBadge){
+    const badge = el('span','pill',`<span class="flag">${t.flag}</span>${t.country}`);
+    meta.appendChild(badge);
+  }
+  a.append(title, meta);
+  return a;
+}
+
+function setMode(mode){
+  const seg = document.querySelector('.seg');
+  const btnCountries = document.getElementById('tab-countries');
+  const btnTimeline = document.getElementById('tab-timeline');
+  seg.dataset.mode = mode;
+
+  const onCountries = mode==='countries';
+  btnCountries.setAttribute('aria-selected', onCountries);
+  btnCountries.setAttribute('aria-pressed', onCountries);
+  btnCountries.tabIndex = onCountries ? 0 : -1;
+
+  btnTimeline.setAttribute('aria-selected', !onCountries);
+  btnTimeline.setAttribute('aria-pressed', !onCountries);
+  btnTimeline.tabIndex = onCountries ? -1 : 0;
+}
+
+(async function init(){
+  const trips = await loadTrips();
+  const content = document.getElementById('content');
+
+  content.replaceChildren(renderCountries(trips));
+  setMode('countries');
+
+  const seg = document.querySelector('.seg');
+  const btnCountries = document.getElementById('tab-countries');
+  const btnTimeline = document.getElementById('tab-timeline');
+
+  function go(mode){
+    setMode(mode);
+    content.replaceChildren(mode==='countries' ? renderCountries(trips) : renderTimeline(trips));
+    (mode==='countries' ? btnCountries : btnTimeline).focus({preventScroll:true});
+  }
+
+  btnCountries.addEventListener('click',()=>go('countries'));
+  btnTimeline.addEventListener('click',()=>go('timeline'));
+
+  seg.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft' || e.key==='ArrowRight'){
+      e.preventDefault();
+      go(seg.dataset.mode==='countries' ? 'timeline' : 'countries');
+    }
+  });
+})();
+</script>
 </body>
 </html>
