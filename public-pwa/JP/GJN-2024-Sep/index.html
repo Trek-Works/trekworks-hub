@@ -1,286 +1,351 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>JP GJN-2024 (Japan) – Trip App</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GJN-JP-2024-Sep · Trip Home</title>
 
-    <!-- Manifest -->
-    <link rel="manifest" href="manifest.json" />
+  <style>
+    :root {
+      --bg-main: #050816;
+      --bg-card: #0b1020;
+      --bg-card-soft: #111827;
+      --border-soft: rgba(148, 163, 184, 0.35);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --accent-blue: #60a5fa;
+      --accent-green: #22c55e;
+      --accent-purple: #a855f7;
+      --accent-amber: #fbbf24;
+      --radius-card: 18px;
+      --radius-pill: 999px;
+      --shadow-card: 0 20px 40px rgba(15, 23, 42, 0.8);
+    }
 
-    <!-- Icons -->
-    <link rel="icon" type="image/png" href="assets/icons/icon-192x192.png" />
-    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png" />
-    <meta name="theme-color" content="#000000" />
+    * { box-sizing: border-box; }
 
-    <style>
-        :root {
-            --bg-main: #0d1117;
-            --bg-card: #161b22;
-            --text-main: #ffffff;
-            --text-muted: #b9c0d0;
-            --border-soft: rgba(255,255,255,0.06);
-            --border-strong: rgba(255,255,255,0.12);
-            --radius-card: 18px;
-            --radius-pill: 999px;
-            --accent-green: #24d282;
-            --accent-red: #ff6b6b;
-            --accent-blue: #4da6ff;
-        }
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #020617 100%);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+    }
 
-        body {
-            margin: 0;
-            background: var(--bg-main);
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-        }
+    .page {
+      width: 100%;
+      max-width: 960px;
+      padding: 26px 14px 40px;
+    }
 
-        .page {
-            width: 100%;
-            max-width: 860px;
-            padding: 32px 18px 80px;
-        }
+    header {
+      text-align: center;
+      margin-bottom: 26px;
+    }
 
-        header {
-            text-align: center;
-            margin-bottom: 16px;
-        }
+    .trip-flag {
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
 
-        .trip-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-top: 8px;
-        }
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 3.2vw, 30px);
+      letter-spacing: 0.04em;
+    }
 
-        .trip-dates {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
+    .trip-dates {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
 
-        .status-row {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 26px;
-            flex-wrap: wrap;
-        }
+    .pill-row {
+      margin-top: 14px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            border-radius: var(--radius-pill);
-            font-size: 13px;
-            border: 1px solid var(--border-soft);
-            background: rgba(255,255,255,0.04);
-            color: var(--text-muted);
-        }
+    .pill {
+      border-radius: var(--radius-pill);
+      padding: 6px 12px;
+      font-size: 12px;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top left, #1f2937, #020617);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-        .pill-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-        #online-dot { background: var(--accent-green); }
-        #auth-dot { background: var(--accent-blue); }
+    .pill span {
+      font-size: 14px;
+    }
 
-        .section-list {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
+    main {
+      margin-top: 24px;
+    }
 
-        .section-card {
-            width: 100%;
-            background: var(--bg-card);
-            border-radius: var(--radius-card);
-            padding: 22px 22px;
-            border: 1px solid var(--border-soft);
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 12px rgba(0,0,0,0.55);
-        }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
 
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 4px;
-        }
+    .card {
+      background: radial-gradient(circle at top, var(--bg-card), var(--bg-card-soft));
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-card);
+      padding: 16px 17px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
 
-        .section-desc {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
+    .card-emoji {
+      font-size: 26px;
+      flex-shrink: 0;
+    }
 
-        .secure-pill {
-            font-size: 12px;
-            padding: 4px 8px;
-            border-radius: var(--radius-pill);
-            border: 1px solid var(--border-soft);
-            background: rgba(255,255,255,0.04);
-            color: var(--text-muted);
-            white-space: nowrap;
-        }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
+    .card-tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
 
-        footer {
-            margin-top: 26px;
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
-            line-height: 1.45;
-        }
+    .card-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
 
-        footer a {
-            color: #6eb6ff;
-        }
-    </style>
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .secure-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-muted);
+    }
+
+    .secure-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .card-link {
+      text-decoration: none;
+      font-size: 13px;
+      color: var(--accent-blue);
+    }
+
+    .card-link span {
+      font-size: 14px;
+    }
+
+    footer {
+      margin-top: 26px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      .page { padding: 20px 12px 28px; }
+      .grid { gap: 14px; }
+      .card { padding: 14px 14px 12px; }
+    }
+  </style>
 </head>
 
 <body>
-<div class="page">
-
-    <!-- HEADER -->
+  <div class="page">
     <header>
-        <div style="font-size:14px; opacity:0.9;">JP &nbsp; GJN-2024-Sep · Japan Trip</div>
-        <div class="trip-title">JP GJN-2024 (Japan)</div>
-        <div class="trip-dates">31 Aug 2024 → 10 Sep 2024</div>
+      <div class="trip-flag">JP · GJN-JP-2024-Sep</div>
+      <h1>Trip Home</h1>
+      <p class="trip-dates">Japan · September 2024 · Secure trip guide</p>
+
+      <div class="pill-row">
+        <div class="pill">
+          <span>📱</span>
+          Installable PWA – public shell, secure content
+        </div>
+        <div class="pill">
+          <span>🔒</span>
+          Access controlled via Cloudflare (GJN travellers)
+        </div>
+      </div>
     </header>
 
-    <!-- STATUS -->
-    <div class="status-row">
-        <div class="pill">
-            <div class="pill-dot" id="online-dot"></div>
-            Online
-        </div>
-        <div class="pill">
-            <div class="pill-dot" id="auth-dot"></div>
-            Cloudflare sign in: required
-        </div>
-    </div>
-
-    <!-- MAIN SECTION LIST -->
     <main>
-        <div class="section-list">
+      <div class="grid">
 
-            <!-- TRIP HOME -->
-            <a href="https://trekworks.org/JP/GJN-2024-Sep/">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">🏠 Trip Home</div>
-                        <div class="secure-pill">Secure section</div>
-                    </div>
-                    <div class="section-desc">Overview and main links</div>
-                </div>
+        <!-- Accommodation & Flights -->
+        <article class="card">
+          <div>
+            <div class="card-tag">TRIP ELEMENT</div>
+            <div class="card-header">
+              <div class="card-emoji">🛏️</div>
+              <div class="card-title">Accommodation & Flights</div>
+            </div>
+            <div class="card-text">
+              Hotel stays and flight details for the full Japan 2024 September itinerary.
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="secure-label">
+              <span class="secure-dot"></span>
+              Secure section
+            </div>
+            <a class="card-link" href="https://trekworks.org/JP/GJN-2024-Sep/accommodation-flights-guide/">
+              Open <span>↗</span>
             </a>
+          </div>
+        </article>
 
-            <!-- 1: Accommodation & Flights -->
-            <a href="https://trekworks.org/JP/GJN-2024-Sep/accommodation-flights-guide/">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">🏨 Accommodation & Flights</div>
-                        <div class="secure-pill">Secure section</div>
-                    </div>
-                    <div class="section-desc">Hotels and flights</div>
-                </div>
+        <!-- Attractions Guide -->
+        <article class="card">
+          <div>
+            <div class="card-tag">TRIP ELEMENT</div>
+            <div class="card-header">
+              <div class="card-emoji">🎡</div>
+              <div class="card-title">Attractions Guide</div>
+            </div>
+            <div class="card-text">
+              Key attractions, timings and links for Tokyo, Osaka, Kyoto, Hiroshima and Yudanaka.
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="secure-label">
+              <span class="secure-dot"></span>
+              Secure section
+            </div>
+            <a class="card-link" href="https://trekworks.org/JP/GJN-2024-Sep/attractions-guide/">
+              Open <span>↗</span>
             </a>
+          </div>
+        </article>
 
-            <!-- 2: Attractions Guide -->
-            <a href="https://trekworks.org/JP/GJN-2024-Sep/attractions-guide/">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">🎟️ Attractions Guide</div>
-                        <div class="secure-pill">Secure section</div>
-                    </div>
-                    <div class="section-desc">Tours, sightseeing, and experiences</div>
-                </div>
+        <!-- Train Guide -->
+        <article class="card">
+          <div>
+            <div class="card-tag">TRIP ELEMENT</div>
+            <div class="card-header">
+              <div class="card-emoji">🚄</div>
+              <div class="card-title">Train Guide</div>
+            </div>
+            <div class="card-text">
+              Shinkansen and rail segments, times, lines and Green Class fares for two travellers.
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="secure-label">
+              <span class="secure-dot"></span>
+              Secure section
+            </div>
+            <a class="card-link" href="https://trekworks.org/JP/GJN-2024-Sep/train-guide/">
+              Open <span>↗</span>
             </a>
+          </div>
+        </article>
 
-            <!-- 3: Road Transport Guide -->
-            <a href="https://trekworks.org/JP/GJN-2024-Sep/road-transport-guide/">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">🚌 Road Transport Guide</div>
-                        <div class="secure-pill">Secure section</div>
-                    </div>
-                    <div class="section-desc">Local transport and transfers</div>
-                </div>
+        <!-- Task List -->
+        <article class="card">
+          <div>
+            <div class="card-tag">TRIP ELEMENT</div>
+            <div class="card-header">
+              <div class="card-emoji">📝</div>
+              <div class="card-title">Task List</div>
+            </div>
+            <div class="card-text">
+              Pre-trip and on-trip checklist: admin, money, tech, documents, packing and home.
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="secure-label">
+              <span class="secure-dot"></span>
+              Secure section
+            </div>
+            <a class="card-link" href="https://trekworks.org/JP/GJN-2024-Sep/task-list-guide/">
+              Open <span>↗</span>
             </a>
+          </div>
+        </article>
 
-            <!-- 4: Trip Summary -->
-            <a href="https://trekworks.org/JP/GJN-2024-Sep/summary/">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">📝 Trip Summary</div>
-                        <div class="secure-pill">Secure section</div>
-                    </div>
-                    <div class="section-desc">Overview and essential details</div>
-                </div>
+        <!-- Travel Packing Guide -->
+        <article class="card">
+          <div>
+            <div class="card-tag">TRIP ELEMENT</div>
+            <div class="card-header">
+              <div class="card-emoji">🎒</div>
+              <div class="card-title">Travel Packing Guide</div>
+            </div>
+            <div class="card-text">
+              Shared packing checklist for Sema and Gavin – clothing, toiletries, tech and extras.
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="secure-label">
+              <span class="secure-dot"></span>
+              Secure section
+            </div>
+            <a class="card-link" href="https://trekworks.org/JP/GJN-2024-Sep/travel-packing-guide/">
+              Open <span>↗</span>
             </a>
+          </div>
+        </article>
 
-            <!-- 5: Task List -->
-            <a href="https://trekworks.org/JP/GJN-2024-Sep/task-list-guide/">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">📋 Task List</div>
-                        <div class="secure-pill">Secure section</div>
-                    </div>
-                    <div class="section-desc">Pre-trip and on-trip tasks</div>
-                </div>
-            </a>
-
-            <!-- 6: Travel Packing Guide -->
-            <a href="https://trekworks.org/JP/GJN-2024-Sep/travel-packing-guide/">
-                <div class="section-card">
-                    <div class="section-header">
-                        <div class="section-title">🧳 Travel Packing Guide</div>
-                        <div class="secure-pill">Secure section</div>
-                    </div>
-                    <div class="section-desc">Packing lists and checklist</div>
-                </div>
-            </a>
-
-        </div>
+      </div>
     </main>
 
-    <!-- FOOTER -->
     <footer>
-        Secure trip details are hosted at
-        <a href="https://trekworks.org/JP/GJN-2024-Sep/" target="_blank">trekworks.org/JP/GJN-2024-Sep/</a>.
-        The app shell can work offline, but secure trip content requires Cloudflare Access.
+      This PWA shell is public; all trip content is secured under
+      <a href="https://trekworks.org/JP/GJN-2024-Sep/">trekworks.org/JP/GJN-2024-Sep/</a> via Cloudflare Access.
     </footer>
-
-</div>
-
-<script>
-    // online/offline indicator
-    function updateOnlineStatus() {
-        document.getElementById("online-dot").style.background =
-            navigator.onLine ? "#24d282" : "#ff6b6b";
-    }
-    window.addEventListener("online", updateOnlineStatus);
-    window.addEventListener("offline", updateOnlineStatus);
-    updateOnlineStatus();
-</script>
-
+  </div>
 </body>
 </html>
