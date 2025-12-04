@@ -21,7 +21,6 @@
       --radius-pill: 999px;
       --shadow-card: 0 20px 40px rgba(15, 23, 42, 0.8);
     }
-
     * { box-sizing: border-box; }
 
     body {
@@ -90,9 +89,7 @@
       font-size: 14px;
     }
 
-    main {
-      margin-top: 24px;
-    }
+    main { margin-top: 24px; }
 
     .grid {
       display: grid;
@@ -118,15 +115,8 @@
       margin-bottom: 10px;
     }
 
-    .card-emoji {
-      font-size: 26px;
-      flex-shrink: 0;
-    }
-
-    .card-title {
-      font-size: 16px;
-      font-weight: 600;
-    }
+    .card-emoji { font-size: 26px; }
+    .card-title { font-size: 16px; font-weight: 600; }
 
     .card-tag {
       font-size: 11px;
@@ -173,10 +163,7 @@
       font-size: 13px;
       color: var(--accent-blue);
     }
-
-    .card-link span {
-      font-size: 14px;
-    }
+    .card-link span { font-size: 14px; }
 
     footer {
       margin-top: 26px;
@@ -190,9 +177,7 @@
       text-decoration: none;
     }
 
-    footer a:hover {
-      text-decoration: underline;
-    }
+    footer a:hover { text-decoration: underline; }
 
     @media (max-width: 640px) {
       .page { padding: 20px 12px 28px; }
@@ -233,7 +218,7 @@
               <div class="card-title">Accommodation & Flights</div>
             </div>
             <div class="card-text">
-              Hotel stays and flight details for the full Japan 2024 September itinerary.
+              Hotels and flight bookings for the full Japan 2024 September itinerary.
             </div>
           </div>
           <div class="card-footer">
@@ -256,7 +241,7 @@
               <div class="card-title">Attractions Guide</div>
             </div>
             <div class="card-text">
-              Key attractions, timings and links for Tokyo, Osaka, Kyoto, Hiroshima and Yudanaka.
+              Key attractions, timings, links, and locations for Tokyo, Osaka, Kyoto & Hiroshima.
             </div>
           </div>
           <div class="card-footer">
@@ -279,7 +264,7 @@
               <div class="card-title">Train Guide</div>
             </div>
             <div class="card-text">
-              Shinkansen and rail segments, times, lines and Green Class fares for two travellers.
+              Shinkansen segments, travel durations, departure/arrival times and fare details.
             </div>
           </div>
           <div class="card-footer">
@@ -293,7 +278,7 @@
           </div>
         </article>
 
-        <!-- Task List -->
+        <!-- Task List Guide -->
         <article class="card">
           <div>
             <div class="card-tag">TRIP ELEMENT</div>
@@ -302,7 +287,7 @@
               <div class="card-title">Task List</div>
             </div>
             <div class="card-text">
-              Pre-trip and on-trip checklist: admin, money, tech, documents, packing and home.
+              Pre-trip and on-trip checklist: money, home, tech, packing, documents & planning.
             </div>
           </div>
           <div class="card-footer">
@@ -325,7 +310,7 @@
               <div class="card-title">Travel Packing Guide</div>
             </div>
             <div class="card-text">
-              Shared packing checklist for Sema and Gavin – clothing, toiletries, tech and extras.
+              Complete packing checklist for Sema and Gavin – clothing, tech, toiletries and more.
             </div>
           </div>
           <div class="card-footer">
@@ -344,8 +329,21 @@
 
     <footer>
       This PWA shell is public; all trip content is secured under
-      <a href="https://trekworks.org/JP/GJN-2024-Sep/">trekworks.org/JP/GJN-2024-Sep/</a> via Cloudflare Access.
+      <a href="https://trekworks.org/JP/GJN-2024-Sep/">trekworks.org/JP/GJN-2024-Sep/</a>
+      via Cloudflare Access.
     </footer>
   </div>
+
+  <!-- ############# SERVICE-WORKER FORCE-UPDATE SCRIPT (CRITICAL) ############# -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        for (let reg of regs) {
+          reg.update();
+        }
+      });
+    }
+  </script>
+
 </body>
 </html>
