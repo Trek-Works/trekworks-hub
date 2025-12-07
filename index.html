@@ -1,5 +1,3 @@
-<!-- FULL index.html BELOW — EXACTLY AS ORIGINAL EXCEPT DATE FIXES + NEW TRIP -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,52 +91,110 @@
   </div>
 
 <script>
-/* ===== TRIP DATA ===== */
-const FALLBACK = [
-  /* JAPAN ------------------------------------------------------ */
-  {"id":"GJN-2024-Sep","title":"GJN-2024 (Japan)","country":"Japan","flag":"🇯🇵",
-   "start":"2024-08-31","end":"2024-09-10","path":"/JP/GJN-2024-Sep/"},
-  {"id":"SP-2025-Sep","title":"SP-2025 (Japan)","country":"Japan","flag":"🇯🇵",
-   "start":"2025-08-30","end":"2025-09-07","path":"/JP/SP-2025-Sep/"},
-  {"id":"GJN-2026-May","title":"GJN-2026 (Japan)","country":"Japan","flag":"🇯🇵",
-   "start":"2026-05-14","end":"2026-05-29","path":"/JP/GJN-2026-May/"},
+/* ===========================================================
+   TRIP DATA — FULL EXPLICIT URLS (NO trips.json dependency)
+   =========================================================== */
 
-  /* THAILAND --------------------------------------------------- */
-  {"id":"GJN-2024-Sep-TH","title":"GJN-2024 (Thailand)","country":"Thailand","flag":"🇹🇭",
-   "start":"2024-07-03","end":"2024-07-09","path":"/TH/GJN-2024-Sep/"},
-  {"id":"GJN-2025-May","title":"GJN-2025 (Thailand)","country":"Thailand","flag":"🇹🇭",
-   "start":"2025-05-19","end":"2025-05-28","path":"/TH/GJN-2025-May/"},  /* ✔ fixed */
+const TRIPS = [
 
-  /* SOUTH KOREA ------------------------------------------------ */
-  {"id":"GJN-2025-Sep","title":"GJN-2025 (South Korea)","country":"South Korea","flag":"🇰🇷",
-   "start":"2025-09-08","end":"2025-09-18","path":"/KR/GJN-2025-Sep/"},  /* ✔ fixed */
+  /* ===== JAPAN ===== */
+  {
+    id: "GJN-2024-Sep",
+    title: "GJN-2024 (Japan)",
+    country: "Japan",
+    flag: "🇯🇵",
+    start: "2024-08-31",
+    end: "2024-09-10",
+    path: "https://trekworks.org/public-pwa/JP/GJN-2024-Sep/"
+  },
+  {
+    id: "SP-2025-Sep",
+    title: "SP-2025 (Japan)",
+    country: "Japan",
+    flag: "🇯🇵",
+    start: "2025-08-30",
+    end: "2025-09-07",
+    path: "https://trekworks.org/public-pwa/JP/SP-2025-Sep/"
+  },
+  {
+    id: "GJN-2026-May",
+    title: "GJN-2026 (Japan)",
+    country: "Japan",
+    flag: "🇯🇵",
+    start: "2026-05-14",
+    end: "2026-05-29",
+    path: "https://trekworks.org/public-pwa/JP/GJN-2026-May/"
+  },
 
-  /* NEW — GJN-2027 -------------------------------------------- */
-  {"id":"GJN-2027-May","title":"GJN-2027 (South Korea)","country":"South Korea","flag":"🇰🇷",
-   "start":"2027-05-01","end":"2027-05-10","path":"/KR/GJN-2027-May/"}  /* ✔ added */
+  /* ===== THAILAND ===== */
+  {
+    id: "GJN-2024-Jul",
+    title: "GJN-2024 (Thailand)",
+    country: "Thailand",
+    flag: "🇹🇭",
+    start: "2024-07-03",
+    end: "2024-07-09",
+    path: "https://trekworks.org/public-pwa/TH/GJN-2024-Jul/"
+  },
+  {
+    id: "GJN-2025-May",
+    title: "GJN-2025 (Thailand)",
+    country: "Thailand",
+    flag: "🇹🇭",
+    start: "2025-05-19",
+    end: "2025-05-28",
+    path: "https://trekworks.org/public-pwa/TH/GJN-2025-May/"
+  },
+
+  /* ===== SOUTH KOREA ===== */
+  {
+    id: "GJN-2025-Sep",
+    title: "GJN-2025 (South Korea)",
+    country: "South Korea",
+    flag: "🇰🇷",
+    start: "2025-09-08",
+    end: "2025-09-18",
+    path: "https://trekworks.org/public-pwa/KR/GJN-2025-Sep/"
+  },
+  {
+    id: "GJN-2027-May",
+    title: "GJN-2027 (South Korea)",
+    country: "South Korea",
+    flag: "🇰🇷",
+    start: "2027-05-01",
+    end: "2027-05-10",
+    path: "https://trekworks.org/public-pwa/KR/GJN-2027-May/"
+  },
+
+  /* ===== FIJI ===== */
+  {
+    id: "GJN-2026-Aug",
+    title: "GJN-2026 (Fiji)",
+    country: "Fiji",
+    flag: "🇫🇯",
+    start: "2026-08-01",
+    end: "2026-08-10",
+    path: "https://trekworks.org/public-pwa/FJ/GJN-2026-Aug/"
+  }
 ];
 
-/* ===== REST OF FILE UNCHANGED ===== */
-/* (Rendering, sorting, timeline, tabs, init — all identical to your original) */
-
-async function loadTrips(){
-  try{
-    const res = await fetch('trips.json',{cache:'no-cache'});
-    if(!res.ok) throw new Error('no trips.json');
-    const data = await res.json();
-    return Array.isArray(data) && data.length ? data : FALLBACK;
-  }catch(e){ return FALLBACK; }
-}
+/* ============ RENDERING ENGINE (unchanged structure) ============ */
 
 function sortCountryTrips(a,b){
-  const codeSort = a.id.localeCompare(b.id);
-  if(codeSort !== 0) return codeSort;
+  const code = a.id.localeCompare(b.id);
+  if(code !== 0) return code;
   return new Date(a.start) - new Date(b.start);
 }
-function byDateAsc(a,b){ return new Date(a.start) - new Date(b.start); }
+
+function byDateAsc(a,b){
+  return new Date(a.start) - new Date(b.start);
+}
 
 function groupBy(arr, key){
-  return arr.reduce((acc,it)=>{ (acc[it[key]] ??= []).push(it); return acc; }, {});
+  return arr.reduce((acc,it)=>{
+    (acc[it[key]] ??= []).push(it);
+    return acc;
+  }, {});
 }
 
 function el(tag, cls, html){
@@ -151,10 +207,10 @@ function el(tag, cls, html){
 function renderCountries(trips){
   const root = document.createDocumentFragment();
   const groups = groupBy(trips, 'country');
-  const countryOrder = ['Japan','Thailand','South Korea'];
+  const order = ['Japan','Thailand','South Korea','Fiji'];
 
   const ordered = Object.keys(groups).sort((a,b)=>{
-    const ia = countryOrder.indexOf(a), ib = countryOrder.indexOf(b);
+    const ia = order.indexOf(a), ib = order.indexOf(b);
     if(ia>-1 && ib>-1) return ia-ib;
     return a.localeCompare(b);
   });
@@ -165,7 +221,9 @@ function renderCountries(trips){
     section.appendChild(el('h2',null,`<span class="flag">${flag}</span> ${country}`));
 
     const grid = el('div','grid');
-    groups[country].sort(sortCountryTrips).forEach(t=> grid.appendChild(card(t)));
+    groups[country].sort(sortCountryTrips).forEach(t =>
+      grid.appendChild(card(t))
+    );
 
     section.appendChild(grid);
     root.appendChild(section);
@@ -181,7 +239,9 @@ function renderTimeline(trips){
   section.appendChild(el('h2',null,'📅 Timeline <span class="muted">(all trips)</span>'));
 
   const grid = el('div','grid');
-  trips.slice().sort(byDateAsc).forEach(t=> grid.appendChild(card(t,true)));
+  trips.slice().sort(byDateAsc).forEach(t =>
+    grid.appendChild(card(t,true))
+  );
 
   section.appendChild(grid);
   root.appendChild(section);
@@ -190,10 +250,10 @@ function renderTimeline(trips){
 
 function fmtRange(t){
   try{
-    const s = new Date(t.start), e = new Date(t.end);
-    const opts = {day:'2-digit', month:'short', year:'numeric'};
-    return `${s.toLocaleDateString(undefined,opts)} → ${e.toLocaleDateString(undefined,opts)}`;
-  }catch{ return '' }
+    const s=new Date(t.start), e=new Date(t.end);
+    const opt={day:'2-digit',month:'short',year:'numeric'};
+    return `${s.toLocaleDateString(undefined,opt)} → ${e.toLocaleDateString(undefined,opt)}`;
+  }catch{return ''}
 }
 
 function card(t, showCountryBadge=false){
@@ -201,59 +261,62 @@ function card(t, showCountryBadge=false){
   a.href = t.path;
   a.setAttribute('aria-label', `${t.title} (${t.country})`);
 
-  const title = el('div','title', t.title);
+  const title = el('div','title',t.title);
   const meta = el('div','meta');
-
   meta.append(el('span',null,fmtRange(t)));
 
   if(showCountryBadge){
     const badge = el('span','pill',`<span class="flag">${t.flag}</span>${t.country}`);
     meta.appendChild(badge);
   }
+
   a.append(title, meta);
   return a;
 }
 
 function setMode(mode){
-  const seg = document.querySelector('.seg');
-  const btnCountries = document.getElementById('tab-countries');
-  const btnTimeline = document.getElementById('tab-timeline');
-  seg.dataset.mode = mode;
+  const seg=document.querySelector('.seg');
+  const btnCountries=document.getElementById('tab-countries');
+  const btnTimeline=document.getElementById('tab-timeline');
+  seg.dataset.mode=mode;
 
-  const onCountries = mode==='countries';
-  btnCountries.setAttribute('aria-selected', onCountries);
-  btnCountries.setAttribute('aria-pressed', onCountries);
-  btnCountries.tabIndex = onCountries ? 0 : -1;
+  const on = (mode==='countries');
 
-  btnTimeline.setAttribute('aria-selected', !onCountries);
-  btnTimeline.setAttribute('aria-pressed', !onCountries);
-  btnTimeline.tabIndex = onCountries ? -1 : 0;
+  btnCountries.setAttribute('aria-selected',on);
+  btnCountries.setAttribute('aria-pressed',on);
+  btnCountries.tabIndex = on ? 0 : -1;
+
+  btnTimeline.setAttribute('aria-selected',!on);
+  btnTimeline.setAttribute('aria-pressed',!on);
+  btnTimeline.tabIndex = on ? -1 : 0;
 }
 
-(async function init(){
-  const trips = await loadTrips();
+/* ================ INITIALISE ================ */
+(function init(){
+  const trips = TRIPS;
   const content = document.getElementById('content');
 
   content.replaceChildren(renderCountries(trips));
   setMode('countries');
 
-  const seg = document.querySelector('.seg');
-  const btnCountries = document.getElementById('tab-countries');
-  const btnTimeline = document.getElementById('tab-timeline');
+  const seg=document.querySelector('.seg');
+  const btnCountries=document.getElementById('tab-countries');
+  const btnTimeline=document.getElementById('tab-timeline');
 
   function go(mode){
     setMode(mode);
-    content.replaceChildren(mode==='countries' ? renderCountries(trips) : renderTimeline(trips));
-    (mode==='countries' ? btnCountries : btnTimeline).focus({preventScroll:true});
+    content.replaceChildren(mode==='countries' ? renderCountries(trips)
+                                               : renderTimeline(trips));
+    (mode==='countries'?btnCountries:btnTimeline).focus({preventScroll:true});
   }
 
   btnCountries.addEventListener('click',()=>go('countries'));
   btnTimeline.addEventListener('click',()=>go('timeline'));
 
   seg.addEventListener('keydown',e=>{
-    if(e.key==='ArrowLeft' || e.key==='ArrowRight'){
+    if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
       e.preventDefault();
-      go(seg.dataset.mode==='countries' ? 'timeline' : 'countries');
+      go(seg.dataset.mode==='countries'?'timeline':'countries');
     }
   });
 })();
