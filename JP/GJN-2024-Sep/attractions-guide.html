@@ -113,19 +113,15 @@
 <body>
 <div class="page">
 
-  <!-- Header -->
   <div class="trip-flag">JP · GJN-2024-Sep · Japan Trip</div>
   <h1>Attractions Guide</h1>
 
-  <!-- Back to Trip Home -->
   <div class="nav-row">
     <a href="https://trekworks.org/public-pwa/JP/GJN-2024-Sep/">← Back to Trip Home</a>
   </div>
 
-  <!-- HIROSHIMA -->
   <div class="city-title">🕊️ Hiroshima</div>
 
-  <!-- Peace Memorial Park -->
   <div class="card">
     <h3>Peace Memorial Park</h3>
     <div class="meta"><span>Admission:</span>200 YEN</div>
@@ -139,7 +135,6 @@
     </div>
   </div>
 
-  <!-- Mazda Museum (unchanged) -->
   <div class="card">
     <h3>Mazda Museum</h3>
     <div class="meta"><span>Admission:</span>Free</div>
@@ -153,7 +148,6 @@
     </div>
   </div>
 
-  <!-- Shukkeien Garden (unchanged) -->
   <div class="card">
     <h3>Shukkeien Garden</h3>
     <div class="meta"><span>Admission:</span>260 YEN</div>
@@ -167,7 +161,6 @@
     </div>
   </div>
 
-  <!-- Hiroshima Castle -->
   <div class="card">
     <h3>Hiroshima Castle</h3>
     <div class="meta"><span>Admission:</span>370 YEN</div>
@@ -181,7 +174,6 @@
     </div>
   </div>
 
-  <!-- KYOTO -->
   <div class="city-title">🎎 Kyoto</div>
 
   <div class="card">
@@ -196,12 +188,8 @@
     </div>
   </div>
 
-  <!-- Many Kyoto entries unchanged -->
-
-  <!-- TOKYO -->
   <div class="city-title">🗼 Tokyo</div>
 
-  <!-- Asakusa Sensoji Temple -->
   <div class="card">
     <h3>Asakusa Sensoji Temple</h3>
     <div class="meta"><span>Admission:</span>Free</div>
@@ -211,11 +199,9 @@
     <div class="comment">Best visited early morning to avoid crowds.</div>
     <div class="btn-row">
       <a class="btn" href="https://www.japan-guide.com/e/e3001.html" target="_blank">Official Site</a>
-      <!-- Temple Info button removed -->
     </div>
   </div>
 
-  <!-- Imperial Palace -->
   <div class="card">
     <h3>Imperial Palace</h3>
     <div class="meta"><span>Admission:</span>Free</div>
@@ -229,7 +215,6 @@
     </div>
   </div>
 
-  <!-- TeamLab Planets -->
   <div class="card">
     <h3>TeamLab Planets</h3>
     <div class="meta"><span>Admission:</span>3,200 YEN</div>
@@ -239,11 +224,9 @@
     <div class="comment">Immersive digital art experience.</div>
     <div class="btn-row">
       <a class="btn" href="https://planets.teamlab.art/tokyo/" target="_blank">Official Site</a>
-      <!-- Tickets button removed -->
     </div>
   </div>
 
-  <!-- Ghibli Museum (unchanged) -->
   <div class="card">
     <h3>Ghibli Museum</h3>
     <div class="meta"><span>Admission:</span>1,000 YEN</div>
@@ -257,5 +240,30 @@
   </div>
 
 </div>
+
+<script>
+(function () {
+  function isExternalLink(anchor) {
+    try {
+      const url = new URL(anchor.href, window.location.href);
+      return url.origin !== window.location.origin;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  document.addEventListener("click", function (event) {
+    const anchor = event.target.closest("a[href]");
+    if (!anchor) return;
+    if (!isExternalLink(anchor)) return;
+
+    if (navigator.onLine === false) {
+      event.preventDefault();
+      window.location.href = "./offline.html";
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
