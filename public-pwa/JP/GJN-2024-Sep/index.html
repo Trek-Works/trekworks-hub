@@ -182,9 +182,12 @@
 
 <script>
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.getRegistrations().then(regs=>{
-    for (let reg of regs) reg.update();
-  });
+  navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
+    .then(() => {
+      navigator.serviceWorker.getRegistrations().then(regs=>{
+        for (let reg of regs) reg.update();
+      });
+    });
 }
 </script>
 
