@@ -197,42 +197,17 @@
 
 <script>
 // ===============================
-// TrekWorks Trip Mode – IndexedDB
+// TrekWorks Trip Mode – localStorage (shared)
 // ===============================
-const TW_DB_NAME = "trekworks";
-const TW_DB_VERSION = 1;
-const TW_STORE = "settings";
-const TRIP_MODE_KEY = "tripMode";
+const TRIP_MODE_LS_KEY = "trekworks.tripMode";
 const DEFAULT_TRIP_MODE = "online";
 
-function openTWDB() {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(TW_DB_NAME, TW_DB_VERSION);
-    req.onupgradeneeded = () => {
-      const db = req.result;
-      if (!db.objectStoreNames.contains(TW_STORE)) {
-        db.createObjectStore(TW_STORE);
-      }
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
+function getTripMode() {
+  return localStorage.getItem(TRIP_MODE_LS_KEY) || DEFAULT_TRIP_MODE;
 }
 
-async function getTripMode() {
-  const db = await openTWDB();
-  return new Promise(resolve => {
-    const tx = db.transaction(TW_STORE, "readonly");
-    const req = tx.objectStore(TW_STORE).get(TRIP_MODE_KEY);
-    req.onsuccess = () => resolve(req.result || DEFAULT_TRIP_MODE);
-    req.onerror = () => resolve(DEFAULT_TRIP_MODE);
-  });
-}
-
-async function setTripMode(mode) {
-  const db = await openTWDB();
-  const tx = db.transaction(TW_STORE, "readwrite");
-  tx.objectStore(TW_STORE).put(mode, TRIP_MODE_KEY);
+function setTripMode(mode) {
+  localStorage.setItem(TRIP_MODE_LS_KEY, mode);
 }
 
 // ===============================
@@ -241,8 +216,8 @@ async function setTripMode(mode) {
 const tripPill = document.getElementById("tripModePill");
 const helpPill = document.getElementById("tripModeHelp");
 
-async function refreshTripModeUI() {
-  const mode = await getTripMode();
+function refreshTripModeUI() {
+  const mode = getTripMode();
   if (mode === "offline") {
     tripPill.textContent = "Trip Mode: Offline";
     tripPill.classList.add("trip-offline");
@@ -252,10 +227,10 @@ async function refreshTripModeUI() {
   }
 }
 
-tripPill.addEventListener("click", async () => {
-  const current = await getTripMode();
+tripPill.addEventListener("click", () => {
+  const current = getTripMode();
   const next = current === "offline" ? "online" : "offline";
-  await setTripMode(next);
+  setTripMode(next);
   refreshTripModeUI();
 });
 
@@ -267,6 +242,7 @@ helpPill.addEventListener("click", () => {
   );
 });
 
+// Initialise on load
 refreshTripModeUI();
 
 // ===============================
