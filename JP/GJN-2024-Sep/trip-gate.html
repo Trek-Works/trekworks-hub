@@ -7,7 +7,6 @@
 
   <style>
     :root {
-      --bg-main: #050816;
       --bg-card: #0b1020;
       --bg-card-soft: #111827;
       --border-soft: rgba(148,163,184,0.35);
@@ -35,7 +34,7 @@
     }
 
     .card {
-      max-width: 520px;
+      max-width: 560px;
       width: 100%;
       background: radial-gradient(circle at top, var(--bg-card), var(--bg-card-soft));
       border: 1px solid var(--border-soft);
@@ -78,7 +77,7 @@
     .message {
       font-size: 14px;
       color: var(--text-muted);
-      margin-bottom: 22px;
+      margin-bottom: 18px;
       line-height: 1.5;
     }
 
@@ -87,6 +86,7 @@
       gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
+      margin-top: 6px;
     }
 
     .btn {
@@ -119,110 +119,177 @@
       font-size: 11px;
       color: var(--text-muted);
       word-break: break-all;
+      opacity: 0.95;
+    }
+
+    .small-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
     }
   </style>
 </head>
 
 <body>
+  <div class="card">
+    <h1>Leaving TrekWorks</h1>
+    <div class="subtitle">You’re about to open an external website</div>
 
-<div class="card">
-  <h1>Leaving TrekWorks</h1>
-  <div class="subtitle">You’re about to open an external website</div>
+    <div id="modePill" class="pill">Trip Mode</div>
 
-  <div id="modePill" class="pill">Trip Mode</div>
+    <div id="message" class="message"></div>
+    <div class="actions" id="actions"></div>
 
-  <div id="message" class="message"></div>
+    <div id="urlPreview" class="url-preview"></div>
+    <div id="note" class="small-note" style="display:none;"></div>
+  </div>
 
-  <div class="actions" id="actions"></div>
+  <script>
+  (function () {
+    const STORAGE_KEY = "trekworks.tripMode";
+    const MODE_ONLINE = "online";
+    const MODE_OFFLINE = "offline";
 
-  <div id="urlPreview" class="url-preview"></div>
-</div>
+    // Public PWA shell home (safe fallback if there's no history/referrer)
+    const PWA_HOME_FALLBACK = "/public-pwa/JP/GJN-2024-Sep/";
 
-<script>
-(function () {
-  const STORAGE_KEY = "trekworks.tripMode";
-  const MODE_ONLINE = "online";
-  const MODE_OFFLINE = "offline";
+    const params = new URLSearchParams(window.location.search);
+    const rawTarget = params.get("url");
 
-  const params = new URLSearchParams(window.location.search);
-  const targetUrl = params.get("url");
+    const pill = document.getElementById("modePill");
+    const message = document.getElementById("message");
+    const actions = document.getElementById("actions");
+    const preview = document.getElementById("urlPreview");
+    const note = document.getElementById("note");
 
-  const pill = document.getElementById("modePill");
-  const message = document.getElementById("message");
-  const actions = document.getElementById("actions");
-  const preview = document.getElementById("urlPreview");
+    const tripMode = (localStorage.getItem(STORAGE_KEY) || MODE_ONLINE).toLowerCase();
+    const mode = (tripMode === MODE_OFFLINE) ? MODE_OFFLINE : MODE_ONLINE;
 
-  const tripMode = localStorage.getItem(STORAGE_KEY) || MODE_ONLINE;
+    pill.textContent = mode === MODE_ONLINE ? "Trip Mode: Online" : "Trip Mode: Offline";
+    pill.classList.add(mode === MODE_ONLINE ? "online" : "offline");
 
-  pill.textContent = tripMode === MODE_ONLINE
-    ? "Trip Mode: Online"
-    : "Trip Mode: Offline";
+    // Parse and validate the target URL (must be http/https absolute)
+    const targetUrl = normaliseTargetUrl(rawTarget);
 
-  pill.classList.add(tripMode === MODE_ONLINE ? "online" : "offline");
+    // Always show what we received (useful for debugging)
+    preview.textContent = rawTarget ? rawTarget : "";
 
-  if (!targetUrl) {
+    // Helper: reliable "Back" that does NOT depend on any domain
+    function safeBack() {
+      // Prefer to go back to where the user came from (guide page)
+      try {
+        if (window.history.length > 1) {
+          window.history.back();
+          return;
+        }
+      } catch (_) {}
+
+      // If referrer is same-origin, go there
+      try {
+        if (document.referrer) {
+          const ref = new URL(document.referrer);
+          if (ref.origin === window.location.origin) {
+            window.location.href = ref.href;
+            return;
+          }
+        }
+      } catch (_) {}
+
+      // Final fallback: public PWA home
+      window.location.href = PWA_HOME_FALLBACK;
+    }
+
+    function switchToOnline() {
+      localStorage.setItem(STORAGE_KEY, MODE_ONLINE);
+      window.location.reload();
+    }
+
+    // If URL is missing or invalid, explain clearly (this is likely your current issue)
+    if (!targetUrl) {
+      message.textContent =
+        "This link did not include an external destination. Please return to your trip.";
+
+      addButton("Back", safeBack, "primary");
+
+      note.style.display = "block";
+      note.innerHTML =
+        "Tip: external buttons should link to <code>trip-gate.html?url=</code> followed by an encoded URL.";
+      return;
+    }
+
+    // OFFLINE TRIP MODE — always block
+    if (mode === MODE_OFFLINE) {
+      message.textContent =
+        "Trip Mode is set to Offline. External websites are blocked to keep all trip content available and uninterrupted.";
+
+      addButton("Back", safeBack, "primary");
+      addButton("Switch to Online Mode", switchToOnline);
+      return;
+    }
+
+    // ONLINE TRIP MODE — if the browser reports offline, don't attempt DNS/redirect loops
+    if (!navigator.onLine) {
+      message.textContent =
+        "You’re currently offline. This external website can’t be reached right now.";
+
+      addButton("Back", safeBack, "primary");
+      return;
+    }
+
+    // ONLINE + CONNECTED — allow exit
     message.textContent =
-      "No external destination was provided. Please return to your trip.";
-    actions.appendChild(makeButton("Back to Trip Home", backToTrip));
-    return;
-  }
+      "You’re in Online Trip Mode. Continue to the external website when ready.";
 
-  preview.textContent = targetUrl;
+    addLink("Continue to site", targetUrl, "primary");
+    addButton("Cancel", safeBack);
 
-  // OFFLINE TRIP MODE — always block
-  if (tripMode === MODE_OFFLINE) {
-    message.textContent =
-      "Trip Mode is currently set to Offline. External websites are blocked to keep all trip content available and uninterrupted.";
+    // ---------- helpers ----------
+    function addButton(label, handler, cls) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      btn.className = "btn" + (cls ? " " + cls : "");
+      btn.addEventListener("click", handler);
+      actions.appendChild(btn);
+    }
 
-    actions.appendChild(makeButton("Back to Trip Home", backToTrip));
-    actions.appendChild(makeButton("Switch to Online Mode", switchToOnline, "primary"));
-    return;
-  }
+    function addLink(label, href, cls) {
+      const a = document.createElement("a");
+      a.textContent = label;
+      a.href = href;
+      a.className = "btn" + (cls ? " " + cls : "");
+      a.rel = "noopener noreferrer";
+      actions.appendChild(a);
+    }
 
-  // ONLINE TRIP MODE
-  if (!navigator.onLine) {
-    message.textContent =
-      "You’re currently offline. This external website can’t be reached right now.";
+    function normaliseTargetUrl(input) {
+      if (!input) return null;
 
-    actions.appendChild(makeButton("Back to Trip Home", backToTrip));
-    return;
-  }
+      let decoded = input;
+      try {
+        decoded = decodeURIComponent(input);
+      } catch (_) {
+        // If it's not encoded, keep as-is
+      }
 
-  // ONLINE + CONNECTED — allow exit
-  message.textContent =
-    "You’re in Online Trip Mode. You can continue to the external website.";
+      // Only allow absolute http/https URLs
+      try {
+        const u = new URL(decoded);
+        if (u.protocol === "http:" || u.protocol === "https:") {
+          return u.href;
+        }
+      } catch (_) {}
 
-  actions.appendChild(makeLink("Continue to site", targetUrl, "primary"));
-  actions.appendChild(makeButton("Cancel", backToTrip));
-
-  // helpers
-  function backToTrip() {
-    window.location.href = "https://trekworks.org/JP/GJN-2024-Sep/";
-  }
-
-  function switchToOnline() {
-    localStorage.setItem(STORAGE_KEY, MODE_ONLINE);
-    window.location.reload();
-  }
-
-  function makeButton(label, handler, cls) {
-    const btn = document.createElement("button");
-    btn.textContent = label;
-    btn.className = "btn" + (cls ? " " + cls : "");
-    btn.addEventListener("click", handler);
-    return btn;
-  }
-
-  function makeLink(label, href, cls) {
-    const a = document.createElement("a");
-    a.textContent = label;
-    a.href = href;
-    a.className = "btn" + (cls ? " " + cls : "");
-    a.rel = "noopener noreferrer";
-    return a;
-  }
-})();
-</script>
-
+      return null;
+    }
+  })();
+  </script>
 </body>
 </html>
