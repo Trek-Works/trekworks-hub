@@ -34,18 +34,29 @@
     .trip-dates{margin-top:4px; font-size:13px; color:var(--text-muted);}
     .pill-row{margin-top:14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
     .pill{
-      border-radius:var(--radius-pill); padding:6px 12px; font-size:12px;
+      border-radius:var(--radius-pill);
+      padding:6px 12px;
+      font-size:12px;
       border:1px solid var(--border-soft);
       background:radial-gradient(circle at top left,#1f2937,#020617);
-      color:var(--text-muted); display:inline-flex; align-items:center; gap:6px;
+      color:var(--text-muted);
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      cursor:pointer;
+      user-select:none;
     }
     .pill.install{
       color:var(--text-main);
-      cursor:pointer;
+    }
+    .pill.trip-offline{
+      color:#fbbf24;
+      border-color:#fbbf24;
     }
     .grid{
       margin-top:24px;
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
       gap:18px;
     }
     .card{
@@ -54,7 +65,9 @@
       border-radius:var(--radius-card);
       box-shadow:var(--shadow-card);
       padding:16px 17px 14px;
-      display:flex; flex-direction:column; justify-content:space-between;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
     }
     .card-header{display:flex; gap:10px; align-items:center; margin-bottom:10px;}
     .card-emoji{font-size:26px;}
@@ -72,7 +85,7 @@
     .card-link{text-decoration:none; color:var(--accent-blue); font-size:13px;}
     .card-link span{font-size:14px;}
 
-    .hub-btn {
+    .hub-btn{
       margin-top:40px;
       display:inline-block;
       padding:10px 22px;
@@ -84,12 +97,12 @@
       text-decoration:none;
       letter-spacing:0.3px;
     }
-    .hub-btn:hover {
+    .hub-btn:hover{
       background:radial-gradient(circle at top left,#263445,#0b0f19);
       border-color:#4b5563;
     }
 
-    .hub-container { text-align:center; margin-top:36px; }
+    .hub-container{text-align:center; margin-top:36px;}
   </style>
 </head>
 
@@ -102,6 +115,8 @@
     <p class="trip-dates">Japan · September 2024 · Secure trip guide</p>
 
     <div class="pill-row">
+      <div class="pill" id="tripModePill">Trip Mode: Online</div>
+      <div class="pill" id="tripModeHelp">?</div>
       <div class="pill install" id="installPill" style="display:none;">
         <span>⬇️</span>Install App
       </div>
@@ -176,7 +191,6 @@
     <div class="hub-container">
       <a href="https://trekworks.org/" class="hub-btn">← Back to TrekWorks Hub</a>
     </div>
-
   </main>
 
 </div>
@@ -184,9 +198,7 @@
 <script>
 // ===============================
 // TrekWorks Trip Mode – IndexedDB
-// Phase 3A: State only (no UI yet)
 // ===============================
-
 const TW_DB_NAME = "trekworks";
 const TW_DB_VERSION = 1;
 const TW_STORE = "settings";
@@ -209,13 +221,10 @@ function openTWDB() {
 
 async function getTripMode() {
   const db = await openTWDB();
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const tx = db.transaction(TW_STORE, "readonly");
-    const store = tx.objectStore(TW_STORE);
-    const req = store.get(TRIP_MODE_KEY);
-    req.onsuccess = () => {
-      resolve(req.result || DEFAULT_TRIP_MODE);
-    };
+    const req = tx.objectStore(TW_STORE).get(TRIP_MODE_KEY);
+    req.onsuccess = () => resolve(req.result || DEFAULT_TRIP_MODE);
     req.onerror = () => resolve(DEFAULT_TRIP_MODE);
   });
 }
@@ -224,18 +233,45 @@ async function setTripMode(mode) {
   const db = await openTWDB();
   const tx = db.transaction(TW_STORE, "readwrite");
   tx.objectStore(TW_STORE).put(mode, TRIP_MODE_KEY);
-  return tx.complete;
 }
 
-// Initialise default Trip Mode if missing
-getTripMode().then((mode) => {
-  if (!mode) setTripMode(DEFAULT_TRIP_MODE);
+// ===============================
+// Trip Mode Pill UI
+// ===============================
+const tripPill = document.getElementById("tripModePill");
+const helpPill = document.getElementById("tripModeHelp");
+
+async function refreshTripModeUI() {
+  const mode = await getTripMode();
+  if (mode === "offline") {
+    tripPill.textContent = "Trip Mode: Offline";
+    tripPill.classList.add("trip-offline");
+  } else {
+    tripPill.textContent = "Trip Mode: Online";
+    tripPill.classList.remove("trip-offline");
+  }
+}
+
+tripPill.addEventListener("click", async () => {
+  const current = await getTripMode();
+  const next = current === "offline" ? "online" : "offline";
+  await setTripMode(next);
+  refreshTripModeUI();
 });
 
-// ===============================
-// Existing install + SW logic
-// ===============================
+helpPill.addEventListener("click", () => {
+  alert(
+    "Trip Mode controls how external links behave while travelling.\n\n" +
+    "Offline: keeps you inside the app.\n" +
+    "Online: allows external sites."
+  );
+});
 
+refreshTripModeUI();
+
+// ===============================
+// Install App logic (unchanged)
+// ===============================
 let deferredInstallPrompt = null;
 
 window.addEventListener("beforeinstallprompt", (e) => {
@@ -265,7 +301,7 @@ if (installPill) {
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
     .then(() => {
-      navigator.serviceWorker.getRegistrations().then(regs=>{
+      navigator.serviceWorker.getRegistrations().then(regs => {
         for (let reg of regs) reg.update();
       });
     });
