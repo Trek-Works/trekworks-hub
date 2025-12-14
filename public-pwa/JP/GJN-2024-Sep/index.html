@@ -105,6 +105,11 @@
       <div class="pill install" id="installPill" style="display:none;">
         <span>⬇️</span>Install App
       </div>
+
+      <!-- Trip Mode pill (Phase 3 — Step 1 scaffold only) -->
+      <div class="pill" id="tripModePill" style="cursor:pointer;">
+        Trip Mode: —
+      </div>
     </div>
   </header>
 
@@ -216,6 +221,48 @@ if ("serviceWorker" in navigator) {
       });
     });
 }
+
+/* ===============================
+   TrekWorks Trip Mode — Phase 3 Step 1
+   State + UI scaffold only
+   =============================== */
+(function () {
+  const STORAGE_KEY = "trekworks.tripMode";
+  const DEFAULT_MODE = "online";
+
+  const pill = document.getElementById("tripModePill");
+  if (!pill) return;
+
+  function getTripMode() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === "online" || stored === "offline") {
+      return stored;
+    }
+    localStorage.setItem(STORAGE_KEY, DEFAULT_MODE);
+    return DEFAULT_MODE;
+  }
+
+  function setTripMode(mode) {
+    localStorage.setItem(STORAGE_KEY, mode);
+    render();
+  }
+
+  function render() {
+    const mode = getTripMode();
+    pill.textContent =
+      mode === "online"
+        ? "Trip Mode: Online"
+        : "Trip Mode: Offline";
+  }
+
+  pill.addEventListener("click", () => {
+    const current = getTripMode();
+    const next = current === "online" ? "offline" : "online";
+    setTripMode(next);
+  });
+
+  render();
+})();
 </script>
 
 </body>

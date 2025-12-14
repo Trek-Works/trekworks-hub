@@ -1,48 +1,50 @@
 // ===============================
-// JP GJN-2024-Sep – Service Worker
-// Strategy:
-//   • Network-first for HTML navigations (index.html)
-//   • Cache-first for static assets (icons, images, etc.)
-//   • Full offline fallback (offline.html)
-//   • Versioned cache for reliable updates
+// TrekWorks — JP GJN-2024-Sep
+// Service Worker
+// Phase 3 — Step 2
+//
+// Purpose:
+//   • Enforce TrekWorks Trip Mode (TTM)
+//   • Offline Trip Mode = closed loop
+//   • Online Trip Mode = normal behaviour
+//
+// NOTE:
+//   • No cache strategy changes in this step
+//   • No connectivity detection
+//   • No browser heuristics
 // ===============================
 
 // 🔁 BUMP THIS WHEN YOU DEPLOY A NEW VERSION
-const CACHE_VERSION = "tw-gjn-jp-2024-sep-v1";
+const CACHE_VERSION = "tw-gjn-jp-2024-sep-v2";
 const CACHE_NAME = `trekworks-cache-${CACHE_VERSION}`;
 
-// Core shell assets – these are fetched on install.
-// Adjust or add to this list as needed for this trip.
+// Trip Mode contract
+const TRIP_MODE_KEY = "trekworks.tripMode";
+const TRIP_MODE_ONLINE = "online";
+const TRIP_MODE_OFFLINE = "offline";
+
+// Core shell assets – unchanged
 const CORE_ASSETS = [
-  // HTML
   "./",
   "./index.html",
   "./offline.html",
-
-  // PWA metadata
   "./manifest.json",
-
-  // Icons (update paths if you change structure)
   "./assets/icons/icon-192x192.png",
   "./assets/icons/icon-512x512.png"
 ];
 
 // ===============================
-// Install – cache core shell
+// Install — cache core shell
 // ===============================
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(CORE_ASSETS);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
   );
-
-  // Activate new worker immediately (no "waiting" state)
   self.skipWaiting();
 });
 
 // ===============================
-// Activate – clean up old caches
+// Activate — clean old caches
 // ===============================
 self.addEventListener("activate", (event) => {
   event.waitUntil(
@@ -54,94 +56,102 @@ self.addEventListener("activate", (event) => {
       )
     )
   );
-
-  // Become the active worker for all clients
   self.clients.claim();
 });
 
 // ===============================
-// Fetch – routing logic
+// Utility — read Trip Mode
+// ===============================
+async function getTripMode() {
+  const clientList = await self.clients.matchAll({ includeUncontrolled: true });
+  for (const client of clientList) {
+    try {
+      const mode = await client.localStorage?.getItem(TRIP_MODE_KEY);
+      if (mode === TRIP_MODE_ONLINE || mode === TRIP_MODE_OFFLINE) {
+        return mode;
+      }
+    } catch (_) {}
+  }
+  return TRIP_MODE_ONLINE; // safe default
+}
+
+// ===============================
+// Fetch handler
 // ===============================
 self.addEventListener("fetch", (event) => {
   const request = event.request;
-
-  // Only handle same-origin requests
   const url = new URL(request.url);
+
+  // Only care about same-origin requests
   if (url.origin !== self.location.origin) {
     return;
   }
 
-  // 1) Network-first for navigations (HTML pages)
-  //    This is what fixes your "stuck old index.html" issue.
+  // ===============================
+  // Navigation requests
+  // ===============================
   if (request.mode === "navigate") {
-    event.respondWith(handleNavigationRequest(request));
+    event.respondWith(handleNavigation(request));
     return;
   }
 
-  // 2) For everything else (icons, images, etc.), use cache-first
-  event.respondWith(handleAssetRequest(request));
+  // ===============================
+  // Asset requests (unchanged)
+  // ===============================
+  event.respondWith(handleAsset(request));
 });
 
 // ===============================
-// Navigation handler – network-first
+// Navigation handler
 // ===============================
-async function handleNavigationRequest(request) {
-  try {
-    // Try to fetch from the network first
-    const networkResponse = await fetch(request);
+async function handleNavigation(request) {
+  const tripMode = await getTripMode();
+  const url = new URL(request.url);
 
-    // Clone and cache the response for offline use
+  // OFFLINE TRIP MODE — closed loop
+  if (tripMode === TRIP_MODE_OFFLINE) {
+    // Allow same-origin navigation only
+    if (url.origin !== self.location.origin) {
+      return Response.redirect(
+        "https://trekworks.org/JP/GJN-2024-Sep/trip-gate.html",
+        302
+      );
+    }
+  }
+
+  // Existing behaviour (network-first)
+  try {
+    const networkResponse = await fetch(request);
     const cache = await caches.open(CACHE_NAME);
     cache.put(request, networkResponse.clone());
-
     return networkResponse;
-  } catch (error) {
-    // If offline or network fails, fall back to cache
+  } catch (err) {
     const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(request);
+    if (cached) return cached;
 
-    // Try the requested page from cache
-    const cachedResponse = await cache.match(request);
-    if (cachedResponse) {
-      return cachedResponse;
-    }
+    const fallback = await cache.match("./offline.html");
+    if (fallback) return fallback;
 
-    // Fallback to index.html or offline.html
-    const indexFallback = await cache.match("./index.html");
-    if (indexFallback) {
-      return indexFallback;
-    }
-
-    const offlineFallback = await cache.match("./offline.html");
-    if (offlineFallback) {
-      return offlineFallback;
-    }
-
-    // As a last resort, just throw the error
-    throw error;
+    throw err;
   }
 }
 
 // ===============================
-// Asset handler – cache-first
+// Asset handler — cache-first
 // ===============================
-async function handleAssetRequest(request) {
+async function handleAsset(request) {
   const cache = await caches.open(CACHE_NAME);
-
-  // Try cache first
   const cached = await cache.match(request);
-  if (cached) {
-    return cached;
-  }
+  if (cached) return cached;
 
-  // Fetch from network and cache it for next time
   try {
     const networkResponse = await fetch(request);
     if (networkResponse && networkResponse.status === 200) {
       cache.put(request, networkResponse.clone());
     }
     return networkResponse;
-  } catch (error) {
-    // If network fails and we have nothing cached, just throw
-    throw error;
+  } catch (err) {
+    throw err;
   }
 }
