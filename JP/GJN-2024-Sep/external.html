@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>External link</title>
+
+  <meta http-equiv="cache-control" content="no-store" />
+  <meta http-equiv="pragma" content="no-cache" />
+  <meta http-equiv="expires" content="0" />
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #050a14;
+      color: #e6ebf2;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .panel {
+      max-width: 420px;
+      padding: 24px;
+    }
+    .msg {
+      font-size: 15px;
+      color: #cfd7e6;
+      margin-bottom: 18px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    button {
+      background: #111a2e;
+      border: 1px solid #2a3a5c;
+      color: #e6ebf2;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    button.primary {
+      background: #1d4ed8;
+      border-color: #1d4ed8;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="panel" id="panel">
+    <div class="msg">Opening link…</div>
+  </div>
+
+<script>
+(async function () {
+  const params = new URLSearchParams(location.search);
+  const targetUrl = params.get("url");
+
+  if (!targetUrl) {
+    location.replace("./offline.html");
+    return;
+  }
+
+  // ===============================
+  // Trip Mode (IndexedDB)
+  // ===============================
+  const DB_NAME = "trekworks";
+  const STORE = "settings";
+  const KEY = "tripMode";
+  const DEFAULT_MODE = "online";
+
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(STORE)) {
+          db.createObjectStore(STORE);
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function getTripMode() {
+    try {
+      const db = await openDB();
+      return new Promise(resolve => {
+        const tx = db.transaction(STORE, "readonly");
+        const req = tx.objectStore(STORE).get(KEY);
+        req.onsuccess = () => resolve(req.result || DEFAULT_MODE);
+        req.onerror = () => resolve(DEFAULT_MODE);
+      });
+    } catch {
+      return DEFAULT_MODE;
+    }
+  }
+
+  async function setTripMode(mode) {
+    const db = await openDB();
+    const tx = db.transaction(STORE, "readwrite");
+    tx.objectStore(STORE).put(mode, KEY);
+  }
+
+  const panel = document.getElementById("panel");
+  const tripMode = await getTripMode();
+
+  // ===============================
+  // Trip Mode: OFFLINE
+  // ===============================
+  if (tripMode === "offline") {
+    panel.innerHTML = `
+      <div class="msg">
+        You’re in Trip Mode: Offline.<br>
+        External sites are unavailable right now.
+      </div>
+      <div class="actions">
+        <button onclick="history.back()">Go back</button>
+        <button class="primary" id="goOnline">Switch to Online & Continue</button>
+      </div>
+    `;
+
+    document.getElementById("goOnline").onclick = async () => {
+      await setTripMode("online");
+      location.replace(targetUrl);
+    };
+    return;
+  }
+
+  // ===============================
+  // Trip Mode: ONLINE (existing behaviour)
+  // ===============================
+  if (navigator.onLine === false) {
+    location.replace("./offline.html");
+    return;
+  }
+
+  try {
+    await fetch(targetUrl, { method: "HEAD", mode: "no-cors", cache: "no-store" });
+    location.replace(targetUrl);
+  } catch {
+    location.replace("./offline.html");
+  }
+})();
+</script>
+</body>
+</html>
