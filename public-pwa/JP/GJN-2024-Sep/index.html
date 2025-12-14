@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GJN-JP-2024-Sep · Trip Home</title>
 
-  <link rel="manifest" href="./manifest.json" />
-
   <style>
     :root {
       --bg-main: #050816;
@@ -39,10 +37,6 @@
       background:radial-gradient(circle at top left,#1f2937,#020617);
       color:var(--text-muted); display:inline-flex; align-items:center; gap:6px;
     }
-    .pill.install{
-      color:var(--text-main);
-      cursor:pointer;
-    }
     .grid{
       margin-top:24px;
       display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -72,6 +66,7 @@
     .card-link{text-decoration:none; color:var(--accent-blue); font-size:13px;}
     .card-link span{font-size:14px;}
 
+    /* HUB BUTTON */
     .hub-btn {
       margin-top:40px;
       display:inline-block;
@@ -102,15 +97,15 @@
     <p class="trip-dates">Japan · September 2024 · Secure trip guide</p>
 
     <div class="pill-row">
-      <div class="pill install" id="installPill" style="display:none;">
-        <span>⬇️</span>Install App
-      </div>
+      <div class="pill"><span>📱</span>Installable PWA – public shell</div>
+      <div class="pill"><span>🔒</span>Cloudflare-controlled secure content</div>
     </div>
   </header>
 
   <main>
     <div class="grid">
 
+      <!-- Accommodation & Flights -->
       <article class="card">
         <div>
           <div class="card-tag">TRIP ELEMENT</div>
@@ -123,6 +118,7 @@
         </div>
       </article>
 
+      <!-- Attractions Guide -->
       <article class="card">
         <div>
           <div class="card-tag">TRIP ELEMENT</div>
@@ -135,6 +131,7 @@
         </div>
       </article>
 
+      <!-- Train Guide -->
       <article class="card">
         <div>
           <div class="card-tag">TRIP ELEMENT</div>
@@ -147,6 +144,7 @@
         </div>
       </article>
 
+      <!-- Task List -->
       <article class="card">
         <div>
           <div class="card-tag">TRIP ELEMENT</div>
@@ -159,6 +157,7 @@
         </div>
       </article>
 
+      <!-- Travel Packing -->
       <article class="card">
         <div>
           <div class="card-tag">TRIP ELEMENT</div>
@@ -182,93 +181,10 @@
 </div>
 
 <script>
-// ===============================
-// TrekWorks Trip Mode – IndexedDB
-// Phase 3A: State only (no UI yet)
-// ===============================
-
-const TW_DB_NAME = "trekworks";
-const TW_DB_VERSION = 1;
-const TW_STORE = "settings";
-const TRIP_MODE_KEY = "tripMode";
-const DEFAULT_TRIP_MODE = "online";
-
-function openTWDB() {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(TW_DB_NAME, TW_DB_VERSION);
-    req.onupgradeneeded = () => {
-      const db = req.result;
-      if (!db.objectStoreNames.contains(TW_STORE)) {
-        db.createObjectStore(TW_STORE);
-      }
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-async function getTripMode() {
-  const db = await openTWDB();
-  return new Promise((resolve) => {
-    const tx = db.transaction(TW_STORE, "readonly");
-    const store = tx.objectStore(TW_STORE);
-    const req = store.get(TRIP_MODE_KEY);
-    req.onsuccess = () => {
-      resolve(req.result || DEFAULT_TRIP_MODE);
-    };
-    req.onerror = () => resolve(DEFAULT_TRIP_MODE);
-  });
-}
-
-async function setTripMode(mode) {
-  const db = await openTWDB();
-  const tx = db.transaction(TW_STORE, "readwrite");
-  tx.objectStore(TW_STORE).put(mode, TRIP_MODE_KEY);
-  return tx.complete;
-}
-
-// Initialise default Trip Mode if missing
-getTripMode().then((mode) => {
-  if (!mode) setTripMode(DEFAULT_TRIP_MODE);
-});
-
-// ===============================
-// Existing install + SW logic
-// ===============================
-
-let deferredInstallPrompt = null;
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredInstallPrompt = e;
-  const pill = document.getElementById("installPill");
-  if (pill) pill.style.display = "inline-flex";
-});
-
-window.addEventListener("appinstalled", () => {
-  const pill = document.getElementById("installPill");
-  if (pill) pill.style.display = "none";
-  deferredInstallPrompt = null;
-});
-
-const installPill = document.getElementById("installPill");
-if (installPill) {
-  installPill.addEventListener("click", async () => {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    await deferredInstallPrompt.userChoice;
-    deferredInstallPrompt = null;
-    installPill.style.display = "none";
-  });
-}
-
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
-    .then(() => {
-      navigator.serviceWorker.getRegistrations().then(regs=>{
-        for (let reg of regs) reg.update();
-      });
-    });
+  navigator.serviceWorker.getRegistrations().then(regs=>{
+    for (let reg of regs) reg.update();
+  });
 }
 </script>
 
