@@ -43,15 +43,29 @@
         return;
       }
 
-      if (navigator.onLine === false) {
+      function goOffline() {
         window.location.replace("./offline.html");
+      }
+
+      if (navigator.onLine === false) {
+        goOffline();
         return;
       }
 
       try {
-        window.location.replace(targetUrl);
+        fetch(targetUrl, {
+          method: "HEAD",
+          mode: "no-cors",
+          cache: "no-store"
+        })
+        .then(function () {
+          window.location.replace(targetUrl);
+        })
+        .catch(function () {
+          goOffline();
+        });
       } catch (e) {
-        window.location.replace("./offline.html");
+        goOffline();
       }
     })();
   </script>
