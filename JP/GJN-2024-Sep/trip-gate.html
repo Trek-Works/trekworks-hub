@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leaving TrekWorks</title>
+
+  <style>
+    :root {
+      --bg-card: #0b1020;
+      --bg-card-soft: #111827;
+      --border-soft: rgba(148,163,184,0.35);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --accent-blue: #60a5fa;
+      --accent-red: #f87171;
+      --radius-card: 18px;
+      --radius-pill: 999px;
+      --shadow-card: 0 20px 40px rgba(15,23,42,0.8);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #020617 100%);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      max-width: 560px;
+      width: 100%;
+      background: radial-gradient(circle at top, var(--bg-card), var(--bg-card-soft));
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      padding: 22px 24px 24px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 22px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      border: 1px solid var(--border-soft);
+      margin-bottom: 14px;
+    }
+
+    .pill.online {
+      color: var(--accent-blue);
+      border-color: rgba(96,165,250,0.5);
+    }
+
+    .pill.offline {
+      color: var(--accent-red);
+      border-color: rgba(248,113,113,0.5);
+    }
+
+    .message {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .btn {
+      padding: 9px 18px;
+      border-radius: var(--radius-pill);
+      font-size: 14px;
+      text-decoration: none;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top left, #1f2937, #020617);
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      border-color: rgba(96,165,250,0.6);
+      color: var(--accent-blue);
+    }
+
+    .btn.danger {
+      border-color: rgba(248,113,113,0.6);
+      color: var(--accent-red);
+    }
+
+    .btn:hover {
+      background: radial-gradient(circle at top left, #263445, #0b0f19);
+    }
+
+    .url-preview {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--text-muted);
+      word-break: break-all;
+      opacity: 0.95;
+    }
+
+    .small-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Leaving TrekWorks</h1>
+    <div class="subtitle">You’re about to open an external website</div>
+
+    <div id="modePill" class="pill">Trip Mode</div>
+
+    <div id="message" class="message"></div>
+    <div class="actions" id="actions"></div>
+
+    <div id="urlPreview" class="url-preview"></div>
+    <div id="note" class="small-note" style="display:none;"></div>
+  </div>
+
+  <script>
+  (function () {
+    const STORAGE_KEY = "trekworks.tripMode";
+    const MODE_ONLINE = "online";
+    const MODE_OFFLINE = "offline";
+
+    // Public PWA shell home (safe fallback if there's no history/referrer)
+    const PWA_HOME_FALLBACK = "/public-pwa/JP/GJN-2024-Sep/";
+
+    const params = new URLSearchParams(window.location.search);
+    const rawTarget = params.get("url");
+
+    const pill = document.getElementById("modePill");
+    const message = document.getElementById("message");
+    const actions = document.getElementById("actions");
+    const preview = document.getElementById("urlPreview");
+    const note = document.getElementById("note");
+
+    const tripMode = (localStorage.getItem(STORAGE_KEY) || MODE_ONLINE).toLowerCase();
+    const mode = (tripMode === MODE_OFFLINE) ? MODE_OFFLINE : MODE_ONLINE;
+
+    pill.textContent = mode === MODE_ONLINE ? "Trip Mode: Online" : "Trip Mode: Offline";
+    pill.classList.add(mode === MODE_ONLINE ? "online" : "offline");
+
+    // Parse and validate the target URL (must be http/https absolute)
+    const targetUrl = normaliseTargetUrl(rawTarget);
+
+    // Always show what we received (useful for debugging)
+    preview.textContent = rawTarget ? rawTarget : "";
+
+    // Helper: reliable "Back" that does NOT depend on any domain
+    function safeBack() {
+      // Prefer to go back to where the user came from (guide page)
+      try {
+        if (window.history.length > 1) {
+          window.history.back();
+          return;
+        }
+      } catch (_) {}
+
+      // If referrer is same-origin, go there
+      try {
+        if (document.referrer) {
+          const ref = new URL(document.referrer);
+          if (ref.origin === window.location.origin) {
+            window.location.href = ref.href;
+            return;
+          }
+        }
+      } catch (_) {}
+
+      // Final fallback: public PWA home
+      window.location.href = PWA_HOME_FALLBACK;
+    }
+
+    function switchToOnline() {
+      localStorage.setItem(STORAGE_KEY, MODE_ONLINE);
+      window.location.reload();
+    }
+
+    // If URL is missing or invalid, explain clearly (this is likely your current issue)
+    if (!targetUrl) {
+      message.textContent =
+        "This link did not include an external destination. Please return to your trip.";
+
+      addButton("Back", safeBack, "primary");
+
+      note.style.display = "block";
+      note.innerHTML =
+        "Tip: external buttons should link to <code>trip-gate.html?url=</code> followed by an encoded URL.";
+      return;
+    }
+
+    // OFFLINE TRIP MODE — always block
+    if (mode === MODE_OFFLINE) {
+      message.textContent =
+        "Trip Mode is set to Offline. External websites are blocked to keep all trip content available and uninterrupted.";
+
+      addButton("Back", safeBack, "primary");
+      addButton("Switch to Online Mode", switchToOnline);
+      return;
+    }
+
+    // ONLINE TRIP MODE — if the browser reports offline, don't attempt DNS/redirect loops
+    if (!navigator.onLine) {
+      message.textContent =
+        "You’re currently offline. This external website can’t be reached right now.";
+
+      addButton("Back", safeBack, "primary");
+      return;
+    }
+
+    // ONLINE + CONNECTED — allow exit
+    message.textContent =
+      "You’re in Online Trip Mode. Continue to the external website when ready.";
+
+    addLink("Continue to site", targetUrl, "primary");
+    addButton("Cancel", safeBack);
+
+    // ---------- helpers ----------
+    function addButton(label, handler, cls) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      btn.className = "btn" + (cls ? " " + cls : "");
+      btn.addEventListener("click", handler);
+      actions.appendChild(btn);
+    }
+
+    function addLink(label, href, cls) {
+      const a = document.createElement("a");
+      a.textContent = label;
+      a.href = href;
+      a.className = "btn" + (cls ? " " + cls : "");
+      a.rel = "noopener noreferrer";
+      actions.appendChild(a);
+    }
+
+    function normaliseTargetUrl(input) {
+      if (!input) return null;
+
+      let decoded = input;
+      try {
+        decoded = decodeURIComponent(input);
+      } catch (_) {
+        // If it's not encoded, keep as-is
+      }
+
+      // Only allow absolute http/https URLs
+      try {
+        const u = new URL(decoded);
+        if (u.protocol === "http:" || u.protocol === "https:") {
+          return u.href;
+        }
+      } catch (_) {}
+
+      return null;
+    }
+  })();
+  </script>
+</body>
+</html>
