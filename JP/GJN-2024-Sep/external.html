@@ -53,10 +53,8 @@
 <body>
 
 <div class="card">
-  <h1>External link unavailable</h1>
-  <p id="message">
-    Checking connection…
-  </p>
+  <h1 id="title">External link unavailable</h1>
+  <p id="message">Checking connection…</p>
 
   <div class="actions">
     <a class="button secondary" href="./index.html">Back to Trip</a>
@@ -88,9 +86,9 @@
           const r = store.get("tripMode");
 
           r.onsuccess = () => {
-            if (r.result === undefined && localStorage.getItem("trekworks.tripMode"))
+            if (r.result === undefined && localStorage.getItem("trekworks.tripMode")) {
               store.put(localStorage.getItem("trekworks.tripMode"), "tripMode");
-
+            }
             resolve(r.result || "offline");
           };
 
@@ -103,6 +101,7 @@
   }
 
   (async () => {
+    const title = document.getElementById("title");
     const msg = document.getElementById("message");
 
     if (!target) {
@@ -112,20 +111,22 @@
 
     const tripMode = await getTripMode();
 
-    // 🔒 Offline Trip Mode ALWAYS wins
+    // 🔒 OFFLINE TRIP MODE — ABSOLUTE AUTHORITY
     if (tripMode !== "online") {
-      document.querySelector("h1").textContent = "External link unavailable";
+      title.textContent = "External link unavailable";
       msg.textContent =
         "You are currently in Offline Trip Mode. External websites are unavailable.";
       return;
     }
 
-    // Online Trip Mode → probe network
+    // ONLINE MODE — PROBE CONNECTIVITY
     try {
       await fetch(target, { mode: "no-cors", cache: "no-store" });
       location.replace(target);
     } catch {
-      location.replace("./offline.html");
+      title.textContent = "You’re offline";
+      msg.textContent =
+        "You appear to be offline. External websites cannot be opened right now.";
     }
   })();
 </script>
