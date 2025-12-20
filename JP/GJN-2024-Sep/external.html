@@ -120,10 +120,13 @@
       return;
     }
 
-    // Trip Mode = Online → attempt redirect, browser decides outcome
-    setTimeout(() => {
+    // Trip Mode = Online → probe network BEFORE leaving app
+    try {
+      await fetch(target, { mode: "no-cors", cache: "no-store" });
       location.replace(target);
-    }, 0);
+    } catch {
+      location.replace("./offline.html");
+    }
   })();
 </script>
 
