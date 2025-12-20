@@ -67,7 +67,7 @@
   <h1 id="title">External link unavailable</h1>
   <p id="message">Checking connection…</p>
 
-  <div class="actions" id="actions">
+  <div class="actions">
     <a class="button secondary" href="./index.html">Back to Trip</a>
   </div>
 </div>
@@ -111,7 +111,7 @@
     });
   }
 
-  // ADDITIVE — authoritative offline renderer (matches offline.html content)
+  // ADDITIVE — authoritative offline renderer (matches offline.html)
   function renderOfflineScreen() {
     const card = document.getElementById("card");
     card.innerHTML = `
@@ -142,17 +142,29 @@
     `;
   }
 
-  (async () => {
-    const title = document.getElementById("title");
-    const msg = document.getElementById("message");
+  // ADDITIVE — do not trust navigator.onLine
+  async function hasUsableData() {
+    try {
+      await fetch("https://www.google.com/generate_204", {
+        method: "GET",
+        mode: "no-cors",
+        cache: "no-store"
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
 
+  (async () => {
     if (!target) {
-      msg.textContent = "Invalid external link.";
+      document.getElementById("message").textContent = "Invalid external link.";
       return;
     }
 
-    // ADDITIVE — hard stop for no-data scenarios
-    if (!navigator.onLine) {
+    // ADDITIVE — absolute guard for no-data states
+    const online = await hasUsableData();
+    if (!online) {
       renderOfflineScreen();
       return;
     }
@@ -161,13 +173,13 @@
 
     // 🔒 OFFLINE TRIP MODE — ABSOLUTE AUTHORITY (unchanged)
     if (tripMode !== "online") {
-      title.textContent = "External link unavailable";
-      msg.textContent =
+      document.getElementById("title").textContent = "External link unavailable";
+      document.getElementById("message").textContent =
         "You are currently in Offline Trip Mode. External websites are unavailable.";
       return;
     }
 
-    // ONLINE MODE — PROBE CONNECTIVITY (unchanged)
+    // ONLINE MODE — navigation only after proven data
     try {
       await fetch(target, { mode: "no-cors", cache: "no-store" });
       location.replace(target);
