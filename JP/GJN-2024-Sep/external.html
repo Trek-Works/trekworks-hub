@@ -70,14 +70,35 @@
   function getTripMode() {
     return new Promise((resolve) => {
       const req = indexedDB.open("trekworks", 1);
-      req.onerror = () => resolve("online");
-      req.onsuccess = () => {
+
+      req.onerror = () => resolve("offline");
+
+      req.onupgradeneeded = () => {
         const db = req.result;
-        const tx = db.transaction("settings", "readonly");
-        const store = tx.objectStore("settings");
-        const r = store.get("tripMode");
-        r.onsuccess = () => resolve(r.result || "online");
-        r.onerror = () => resolve("online");
+        if (!db.objectStoreNames.contains("settings")) {
+          db.createObjectStore("settings");
+        }
+      };
+
+      req.onsuccess = () => {
+        try {
+          const db = req.result;
+          const tx = db.transaction("settings", "readonly");
+          const store = tx.objectStore("settings");
+          const r = store.get("tripMode");
+
+          r.onsuccess = () => {
+            // 🔒 Defensive assertion: seed IndexedDB if missing but localStorage exists
+            if (r.result === undefined && localStorage.getItem("trekworks.tripMode"))
+              store.put(localStorage.getItem("trekworks.tripMode"), "tripMode");
+
+            resolve(r.result || "offline");
+          };
+
+          r.onerror = () => resolve("offline");
+        } catch {
+          resolve("offline");
+        }
       };
     });
   }
@@ -90,16 +111,25 @@
       return;
     }
 
+    // Default = BLOCK until proven otherwise
     const tripMode = await getTripMode();
 
-    if (tripMode === "offline" || !navigator.onLine) {
+    if (tripMode !== "online") {
       msg.textContent =
         "You are currently in Offline Trip Mode. External websites are unavailable.";
       return;
     }
 
-    // Online and allowed → redirect
-    location.replace(target);
+    if (!navigator.onLine) {
+      msg.textContent =
+        "You are currently offline. External websites are unavailable.";
+      return;
+    }
+
+    // Policy explicitly allows → redirect (after paint)
+    setTimeout(() => {
+      location.replace(target);
+    }, 0);
   })();
 </script>
 
