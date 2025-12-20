@@ -48,15 +48,26 @@
     a.secondary {
       background: rgba(255,255,255,0.1);
     }
+
+    /* ADDITIVE — offline screen styling (mirrors offline.html) */
+    .offline-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .offline-footer {
+      margin-top: 18px;
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <h1>External link unavailable</h1>
+<div class="card" id="card">
+  <h1 id="title">External link unavailable</h1>
   <p id="message">Checking connection…</p>
 
-  <div class="actions">
+  <div class="actions" id="actions">
     <a class="button secondary" href="./index.html">Back to Trip</a>
   </div>
 </div>
@@ -84,7 +95,14 @@
           const tx = db.transaction("settings", "readonly");
           const store = tx.objectStore("settings");
           const r = store.get("tripMode");
-          r.onsuccess = () => resolve(r.result || "offline");
+
+          r.onsuccess = () => {
+            if (r.result === undefined && localStorage.getItem("trekworks.tripMode")) {
+              store.put(localStorage.getItem("trekworks.tripMode"), "tripMode");
+            }
+            resolve(r.result || "offline");
+          };
+
           r.onerror = () => resolve("offline");
         } catch {
           resolve("offline");
@@ -93,7 +111,39 @@
     });
   }
 
+  // ADDITIVE — authoritative offline renderer (matches offline.html content)
+  function renderOfflineScreen() {
+    const card = document.getElementById("card");
+    card.innerHTML = `
+      <div class="offline-icon">📴</div>
+      <h1>You’re offline</h1>
+
+      <p>
+        This Japan trip app is available offline, but some sections need an
+        internet connection to load.
+      </p>
+
+      <p>
+        Reconnect when you can and the app will refresh automatically.
+      </p>
+
+      <p>
+        If you were trying to open an external website and lost connection,
+        go back to Trip Home and switch Trip Mode to Offline to continue using the app.
+      </p>
+
+      <div class="actions">
+        <a class="button secondary" href="./index.html">Back to Trip Home</a>
+      </div>
+
+      <div class="offline-footer">
+        JP · GJN-2024-Sep · Japan
+      </div>
+    `;
+  }
+
   (async () => {
+    const title = document.getElementById("title");
     const msg = document.getElementById("message");
 
     if (!target) {
@@ -101,37 +151,29 @@
       return;
     }
 
-    // Default = BLOCK until proven otherwise
+    // ADDITIVE — hard stop for no-data scenarios
+    if (!navigator.onLine) {
+      renderOfflineScreen();
+      return;
+    }
+
     const tripMode = await getTripMode();
 
+    // 🔒 OFFLINE TRIP MODE — ABSOLUTE AUTHORITY (unchanged)
     if (tripMode !== "online") {
+      title.textContent = "External link unavailable";
       msg.textContent =
         "You are currently in Offline Trip Mode. External websites are unavailable.";
       return;
     }
 
-    if (!navigator.onLine) {
-      // ⬇⬇⬇ ONLY ADDITIVE CHANGE — offline.html messaging reused ⬇⬇⬇
-      msg.innerHTML = `
-        <p>
-          This Japan trip app is available offline, but some sections need an
-          internet connection to load.
-        </p>
-        <p>
-          Reconnect when you can and the app will refresh automatically.
-        </p>
-        <p>
-          If you were trying to open an external website and lost connection,
-          go back to Trip Home and switch Trip Mode to Offline to continue using the app.
-        </p>
-      `;
-      return;
-    }
-
-    // Policy explicitly allows → redirect (after paint)
-    setTimeout(() => {
+    // ONLINE MODE — PROBE CONNECTIVITY (unchanged)
+    try {
+      await fetch(target, { mode: "no-cors", cache: "no-store" });
       location.replace(target);
-    }, 0);
+    } catch {
+      renderOfflineScreen();
+    }
   })();
 </script>
 
