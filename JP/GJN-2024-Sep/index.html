@@ -103,6 +103,46 @@
     }
 
     .hub-container{text-align:center; margin-top:36px;}
+
+    /* ===============================
+       iOS Install Helper (additive)
+       =============================== */
+    .ios-install-helper{
+      position:fixed;
+      bottom:14px;
+      left:50%;
+      transform:translateX(-50%);
+      max-width:520px;
+      width:calc(100% - 28px);
+      background:rgba(15,23,42,.97);
+      border:1px solid var(--border-soft);
+      border-radius:14px;
+      padding:12px 14px;
+      display:none;
+      z-index:999;
+      box-shadow:0 20px 40px rgba(0,0,0,.6);
+    }
+    .ios-install-helper p{
+      margin:0;
+      font-size:13px;
+      color:var(--text-muted);
+      line-height:1.4;
+    }
+    .ios-install-helper strong{
+      color:var(--text-main);
+      font-weight:600;
+    }
+    .ios-install-actions{
+      margin-top:8px;
+      display:flex;
+      justify-content:flex-end;
+    }
+    .ios-install-dismiss{
+      font-size:12px;
+      color:var(--accent-blue);
+      cursor:pointer;
+      user-select:none;
+    }
   </style>
 </head>
 
@@ -195,6 +235,17 @@
 
 </div>
 
+<!-- iOS Install Helper (HTML additive) -->
+<div class="ios-install-helper" id="iosInstallHelper">
+  <p>
+    <strong>Install this trip for offline use</strong><br>
+    Tap <strong>Share</strong> then <strong>Add to Home Screen</strong> in Safari.
+  </p>
+  <div class="ios-install-actions">
+    <span class="ios-install-dismiss" id="iosInstallDismiss">Dismiss</span>
+  </div>
+</div>
+
 <script>
 // ===============================
 // TrekWorks Trip Mode – localStorage (shared)
@@ -282,6 +333,35 @@ if ("serviceWorker" in navigator) {
       });
     });
 }
+
+// ===============================
+// iOS Install Helper logic (additive)
+// ===============================
+(function () {
+  const DISMISS_KEY = "trekworks.iosInstallDismissed";
+  const helper = document.getElementById("iosInstallHelper");
+  const dismissBtn = document.getElementById("iosInstallDismiss");
+
+  if (!helper || !dismissBtn) return;
+
+  const ua = window.navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua);
+  const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+  const isStandalone =
+    window.navigator.standalone === true ||
+    window.matchMedia("(display-mode: standalone)").matches;
+
+  const dismissed = localStorage.getItem(DISMISS_KEY) === "true";
+
+  if (isIOS && isSafari && !isStandalone && !dismissed) {
+    helper.style.display = "block";
+  }
+
+  dismissBtn.addEventListener("click", () => {
+    localStorage.setItem(DISMISS_KEY, "true");
+    helper.style.display = "none";
+  });
+})();
 </script>
 
 </body>
