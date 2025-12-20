@@ -111,7 +111,7 @@
       return;
     }
 
-    // Default = BLOCK until proven otherwise
+    // Authoritative Trip Mode policy
     const tripMode = await getTripMode();
 
     if (tripMode !== "online") {
@@ -120,13 +120,7 @@
       return;
     }
 
-    if (!navigator.onLine) {
-      msg.textContent =
-        "You are currently offline. External websites are unavailable.";
-      return;
-    }
-
-    // Policy explicitly allows → redirect (after paint)
+    // Trip Mode = Online → attempt redirect, browser decides outcome
     setTimeout(() => {
       location.replace(target);
     }, 0);
