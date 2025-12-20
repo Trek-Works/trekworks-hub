@@ -86,7 +86,15 @@
           const tx = db.transaction("settings", "readonly");
           const store = tx.objectStore("settings");
           const r = store.get("tripMode");
-          r.onsuccess = () => resolve(r.result || "offline");
+
+          r.onsuccess = () => {
+            // 🔒 Defensive assertion: seed IndexedDB if missing but localStorage exists
+            if (r.result === undefined && localStorage.getItem("trekworks.tripMode"))
+              store.put(localStorage.getItem("trekworks.tripMode"), "tripMode");
+
+            resolve(r.result || "offline");
+          };
+
           r.onerror = () => resolve("offline");
         } catch {
           resolve("offline");
