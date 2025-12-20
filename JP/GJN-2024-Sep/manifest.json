@@ -1,8 +1,9 @@
 {
+  "id": "/JP/GJN-2024-Sep@2024-09",
   "name": "GJN-JP-2024-Sep – Japan Trip",
   "short_name": "JP GJN-2024",
   "description": "Unified trip app for JP GJN-2024 (Japan) with quick access to secure trip sections.",
-  "start_url": "/JP/GJN-2024-Sep/",
+  "start_url": "/JP/GJN-2024-Sep/?v=2024-09",
   "scope": "/JP/GJN-2024-Sep/",
   "display": "standalone",
   "orientation": "portrait-primary",

@@ -4,7 +4,7 @@
 // Scope: /JP/GJN-2024-Sep/
 // =====================================================
 
-const CACHE_VERSION = "tw-jp-gjn-2024-sep-v4";
+const CACHE_VERSION = "tw-jp-gjn-2024-sep-2024-09";
 const CACHE_NAME = `trekworks-${CACHE_VERSION}`;
 
 // -----------------------------------------------------
@@ -110,24 +110,20 @@ async function handleNavigation(request) {
   // Trip Mode: OFFLINE (closed loop, but never "lie")
   // ---------------------------------------------------
   if (tripMode === "offline") {
-    // If user somehow navigates outside scope, show offline message
     if (!inTripScope) {
       const offline = await cache.match("/JP/GJN-2024-Sep/offline.html");
       if (offline) return offline;
       return Response.error();
     }
 
-    // Trip Home always allowed
     if (isTripHome) {
       const home = await cache.match("/JP/GJN-2024-Sep/index.html");
       if (home) return home;
     }
 
-    // Any other page: serve cached version only
     const cached = await cache.match(request);
     if (cached) return cached;
 
-    // Not cached: show offline page (NOT index.html)
     const offline = await cache.match("/JP/GJN-2024-Sep/offline.html");
     if (offline) return offline;
 
@@ -140,18 +136,15 @@ async function handleNavigation(request) {
   try {
     const response = await fetch(request);
 
-    // Only cache successful same-origin pages within this trip scope
     if (inTripScope && response && response.ok) {
       cache.put(request, response.clone());
     }
 
     return response;
   } catch {
-    // Network failed: try cache
     const cached = await cache.match(request);
     if (cached) return cached;
 
-    // Otherwise show offline page
     const offline = await cache.match("/JP/GJN-2024-Sep/offline.html");
     if (offline) return offline;
 
