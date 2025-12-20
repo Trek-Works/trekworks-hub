@@ -88,7 +88,6 @@
           const r = store.get("tripMode");
 
           r.onsuccess = () => {
-            // 🔒 Defensive assertion: seed IndexedDB if missing but localStorage exists
             if (r.result === undefined && localStorage.getItem("trekworks.tripMode"))
               store.put(localStorage.getItem("trekworks.tripMode"), "tripMode");
 
@@ -111,16 +110,17 @@
       return;
     }
 
-    // Authoritative Trip Mode policy
     const tripMode = await getTripMode();
 
+    // 🔒 Offline Trip Mode ALWAYS wins
     if (tripMode !== "online") {
+      document.querySelector("h1").textContent = "External link unavailable";
       msg.textContent =
         "You are currently in Offline Trip Mode. External websites are unavailable.";
       return;
     }
 
-    // Trip Mode = Online → probe network BEFORE leaving app
+    // Online Trip Mode → probe network
     try {
       await fetch(target, { mode: "no-cors", cache: "no-store" });
       location.replace(target);
