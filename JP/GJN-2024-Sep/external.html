@@ -53,7 +53,7 @@
 <body>
 
 <div class="card">
-  <h1 id="title">External link unavailable</h1>
+  <h1>External link unavailable</h1>
   <p id="message">Checking connection…</p>
 
   <div class="actions">
@@ -84,14 +84,7 @@
           const tx = db.transaction("settings", "readonly");
           const store = tx.objectStore("settings");
           const r = store.get("tripMode");
-
-          r.onsuccess = () => {
-            if (r.result === undefined && localStorage.getItem("trekworks.tripMode")) {
-              store.put(localStorage.getItem("trekworks.tripMode"), "tripMode");
-            }
-            resolve(r.result || "offline");
-          };
-
+          r.onsuccess = () => resolve(r.result || "offline");
           r.onerror = () => resolve("offline");
         } catch {
           resolve("offline");
@@ -101,7 +94,6 @@
   }
 
   (async () => {
-    const title = document.getElementById("title");
     const msg = document.getElementById("message");
 
     if (!target) {
@@ -109,25 +101,37 @@
       return;
     }
 
+    // Default = BLOCK until proven otherwise
     const tripMode = await getTripMode();
 
-    // 🔒 OFFLINE TRIP MODE — ABSOLUTE AUTHORITY
     if (tripMode !== "online") {
-      title.textContent = "External link unavailable";
       msg.textContent =
         "You are currently in Offline Trip Mode. External websites are unavailable.";
       return;
     }
 
-    // ONLINE MODE — PROBE CONNECTIVITY
-    try {
-      await fetch(target, { mode: "no-cors", cache: "no-store" });
-      location.replace(target);
-    } catch {
-      title.textContent = "You’re offline";
-      msg.textContent =
-        "You appear to be offline. External websites cannot be opened right now.";
+    if (!navigator.onLine) {
+      // ⬇⬇⬇ ONLY ADDITIVE CHANGE — offline.html messaging reused ⬇⬇⬇
+      msg.innerHTML = `
+        <p>
+          This Japan trip app is available offline, but some sections need an
+          internet connection to load.
+        </p>
+        <p>
+          Reconnect when you can and the app will refresh automatically.
+        </p>
+        <p>
+          If you were trying to open an external website and lost connection,
+          go back to Trip Home and switch Trip Mode to Offline to continue using the app.
+        </p>
+      `;
+      return;
     }
+
+    // Policy explicitly allows → redirect (after paint)
+    setTimeout(() => {
+      location.replace(target);
+    }, 0);
   })();
 </script>
 
