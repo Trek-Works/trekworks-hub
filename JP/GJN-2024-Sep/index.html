@@ -253,12 +253,67 @@
 const TRIP_MODE_LS_KEY = "trekworks.tripMode";
 const DEFAULT_TRIP_MODE = "online";
 
+/* ===============================
+   IndexedDB Trip Mode (authoritative)
+   =============================== */
+const DB_NAME = "trekworks";
+const DB_VERSION = 1;
+const STORE_NAME = "settings";
+const TRIP_MODE_KEY = "tripMode";
+
+function openTripDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function persistTripModeToDB(mode) {
+  try {
+    const db = await openTripDB();
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    tx.objectStore(STORE_NAME).put(mode, TRIP_MODE_KEY);
+  } catch {
+    // fail silently
+  }
+}
+
+// ===============================
+// Trip Mode IndexedDB initialisation (first load only)
+// ===============================
+(async () => {
+  try {
+    const db = await openTripDB();
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const req = store.get(TRIP_MODE_KEY);
+
+    req.onsuccess = () => {
+      if (req.result === undefined) {
+        const mode =
+          localStorage.getItem(TRIP_MODE_LS_KEY) || DEFAULT_TRIP_MODE;
+        persistTripModeToDB(mode);
+      }
+    };
+  } catch {
+    // fail silently
+  }
+})();
+
 function getTripMode() {
   return localStorage.getItem(TRIP_MODE_LS_KEY) || DEFAULT_TRIP_MODE;
 }
 
 function setTripMode(mode) {
   localStorage.setItem(TRIP_MODE_LS_KEY, mode);
+  persistTripModeToDB(mode);
 }
 
 // ===============================
