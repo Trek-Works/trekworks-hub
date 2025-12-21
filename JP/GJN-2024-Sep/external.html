@@ -4,6 +4,12 @@
   <meta charset="utf-8" />
   <title>Leaving TrekWorks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ADDITIVE — force fresh load (no cache, no SW reuse) -->
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
   <style>
     body {
       margin: 0;
@@ -78,6 +84,17 @@
 </div>
 
 <script>
+  // ADDITIVE — explicitly opt out of Service Worker control
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.getRegistrations().then(regs => {
+      regs.forEach(reg => {
+        if (reg.scope.includes("JP/GJN-2024-Sep")) {
+          reg.unregister();
+        }
+      });
+    });
+  }
+
   const params = new URLSearchParams(location.search);
   const target = params.get("url");
 
