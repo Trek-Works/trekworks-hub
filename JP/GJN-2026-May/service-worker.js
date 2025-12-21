@@ -1,5 +1,5 @@
 // ===============================
-// JP GJN-2024-Sep – Service Worker
+// JP GJN-2026-May – Service Worker
 // Strategy:
 //   • Network-first for HTML navigations (index.html)
 //   • Cache-first for static assets (icons, images, etc.)
@@ -8,7 +8,7 @@
 // ===============================
 
 // 🔁 BUMP THIS WHEN YOU DEPLOY A NEW VERSION
-const CACHE_VERSION = "tw-gjn-jp-2024-sep-v1";
+const CACHE_VERSION = "tw-gjn-jp-2026-may-v1";
 const CACHE_NAME = `trekworks-cache-${CACHE_VERSION}`;
 
 // Core shell assets – these are fetched on install.
@@ -18,6 +18,7 @@ const CORE_ASSETS = [
   "./",
   "./index.html",
   "./offline.html",
+  "./external.html",
 
   // PWA metadata
   "./manifest.json",
@@ -49,7 +50,11 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key.startsWith("trekworks-cache-") && key !== CACHE_NAME)
+          .filter(
+            (key) =>
+              key.startsWith("trekworks-cache-") &&
+              key !== CACHE_NAME
+          )
           .map((key) => caches.delete(key))
       )
     )
@@ -72,7 +77,6 @@ self.addEventListener("fetch", (event) => {
   }
 
   // 1) Network-first for navigations (HTML pages)
-  //    This is what fixes your "stuck old index.html" issue.
   if (request.mode === "navigate") {
     event.respondWith(handleNavigationRequest(request));
     return;
@@ -116,7 +120,6 @@ async function handleNavigationRequest(request) {
       return offlineFallback;
     }
 
-    // As a last resort, just throw the error
     throw error;
   }
 }
@@ -141,7 +144,6 @@ async function handleAssetRequest(request) {
     }
     return networkResponse;
   } catch (error) {
-    // If network fails and we have nothing cached, just throw
     throw error;
   }
 }
