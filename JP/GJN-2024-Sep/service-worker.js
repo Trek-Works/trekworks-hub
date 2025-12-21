@@ -4,7 +4,7 @@
 // Scope: /JP/GJN-2024-Sep/
 // =====================================================
 
-const CACHE_VERSION = "tw-jp-gjn-2024-sep-2024-09";
+const CACHE_VERSION = "tw-jp-gjn-2024-sep-2024-12-21";
 const CACHE_NAME = `trekworks-${CACHE_VERSION}`;
 
 // -----------------------------------------------------
@@ -104,16 +104,26 @@ async function handleNavigation(request) {
     url.pathname === "/JP/GJN-2024-Sep/" ||
     url.pathname === "/JP/GJN-2024-Sep/index.html";
 
+  const isExternalRouter =
+    url.pathname === "/JP/GJN-2024-Sep/external.html";
+
+  const canonicalExternalRequest = new Request(
+    "/JP/GJN-2024-Sep/external.html"
+  );
+
   const tripMode = await getTripMode();
 
   // ---------------------------------------------------
-  // Trip Mode: OFFLINE (closed loop, but never "lie")
+  // Trip Mode: OFFLINE
   // ---------------------------------------------------
   if (tripMode === "offline") {
+    if (isExternalRouter) {
+      const cached = await cache.match(canonicalExternalRequest);
+      if (cached) return cached;
+    }
+
     if (!inTripScope) {
-      const offline = await cache.match("/JP/GJN-2024-Sep/offline.html");
-      if (offline) return offline;
-      return Response.error();
+      return cache.match("/JP/GJN-2024-Sep/offline.html");
     }
 
     if (isTripHome) {
@@ -124,10 +134,7 @@ async function handleNavigation(request) {
     const cached = await cache.match(request);
     if (cached) return cached;
 
-    const offline = await cache.match("/JP/GJN-2024-Sep/offline.html");
-    if (offline) return offline;
-
-    return Response.error();
+    return cache.match("/JP/GJN-2024-Sep/offline.html");
   }
 
   // ---------------------------------------------------
@@ -136,18 +143,24 @@ async function handleNavigation(request) {
   try {
     const response = await fetch(request);
 
-    if (inTripScope && response && response.ok) {
-      cache.put(request, response.clone());
+    if (response && response.ok && inTripScope) {
+      if (isExternalRouter) {
+        cache.put(canonicalExternalRequest, response.clone());
+      } else {
+        cache.put(request, response.clone());
+      }
     }
 
     return response;
   } catch {
+    if (isExternalRouter) {
+      const cached = await cache.match(canonicalExternalRequest);
+      if (cached) return cached;
+    }
+
     const cached = await cache.match(request);
     if (cached) return cached;
 
-    const offline = await cache.match("/JP/GJN-2024-Sep/offline.html");
-    if (offline) return offline;
-
-    return Response.error();
+    return cache.match("/JP/GJN-2024-Sep/offline.html");
   }
 }
