@@ -4,12 +4,6 @@
   <meta charset="utf-8" />
   <title>Leaving TrekWorks</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- ADDITIVE — force fresh load (no cache, no SW reuse) -->
-  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-
   <style>
     body {
       margin: 0;
@@ -42,6 +36,7 @@
       display: flex;
       gap: 12px;
       justify-content: center;
+      flex-wrap: wrap;
     }
     a.button {
       text-decoration: none;
@@ -55,6 +50,7 @@
       background: rgba(255,255,255,0.1);
     }
 
+    /* ADDITIVE — offline screen styling (mirrors offline.html) */
     .offline-icon {
       font-size: 48px;
       margin-bottom: 12px;
@@ -73,28 +69,18 @@
   <p id="message">Checking connection…</p>
 
   <div class="actions">
-    <a class="button secondary" href="./index.html">Back to Trip Home</a>
-    <a
-      class="button secondary"
-      href="https://trekworks.org/JP/GJN-2024-Sep/attractions-guide.html"
-    >
+    <a class="button secondary" href="./index.html">
+      Back to Trip Home
+    </a>
+
+    <a class="button secondary"
+       href="https://trekworks.org/JP/GJN-2024-Sep/attractions-guide.html">
       Go Back
     </a>
   </div>
 </div>
 
 <script>
-  // ADDITIVE — explicitly opt out of Service Worker control
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.getRegistrations().then(regs => {
-      regs.forEach(reg => {
-        if (reg.scope.includes("JP/GJN-2024-Sep")) {
-          reg.unregister();
-        }
-      });
-    });
-  }
-
   const params = new URLSearchParams(location.search);
   const target = params.get("url");
 
@@ -133,26 +119,7 @@
     });
   }
 
-  function renderOfflineTripMode() {
-    const card = document.getElementById("card");
-    card.innerHTML = `
-      <h1>External link unavailable</h1>
-      <p>
-        You are currently in Offline Trip Mode. External websites are unavailable.
-      </p>
-
-      <div class="actions">
-        <a class="button secondary" href="./index.html">Back to Trip Home</a>
-        <a
-          class="button secondary"
-          href="https://trekworks.org/JP/GJN-2024-Sep/attractions-guide.html"
-        >
-          Go Back
-        </a>
-      </div>
-    `;
-  }
-
+  /* ADDITIVE — authoritative offline renderer (matches offline.html) */
   function renderOfflineScreen() {
     const card = document.getElementById("card");
     card.innerHTML = `
@@ -174,11 +141,12 @@
       </p>
 
       <div class="actions">
-        <a class="button secondary" href="./index.html">Back to Trip Home</a>
-        <a
-          class="button secondary"
-          href="https://trekworks.org/JP/GJN-2024-Sep/attractions-guide.html"
-        >
+        <a class="button secondary" href="./index.html">
+          Back to Trip Home
+        </a>
+
+        <a class="button secondary"
+           href="https://trekworks.org/JP/GJN-2024-Sep/attractions-guide.html">
           Go Back
         </a>
       </div>
@@ -189,6 +157,7 @@
     `;
   }
 
+  /* ADDITIVE — do not trust navigator.onLine */
   async function hasUsableData() {
     try {
       await fetch("https://www.google.com/generate_204", {
@@ -217,7 +186,9 @@
     const tripMode = await getTripMode();
 
     if (tripMode !== "online") {
-      renderOfflineTripMode();
+      document.getElementById("title").textContent = "External link unavailable";
+      document.getElementById("message").textContent =
+        "You are currently in Offline Trip Mode. External websites are unavailable.";
       return;
     }
 
