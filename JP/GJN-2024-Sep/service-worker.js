@@ -4,7 +4,7 @@
 // Scope: /JP/GJN-2024-Sep/
 // =====================================================
 
-const CACHE_VERSION = "tw-jp-gjn-2024-sep-2024-12-21";
+const CACHE_VERSION = "tw-jp-gjn-2024-sep-2024-12-22";
 const CACHE_NAME = `trekworks-${CACHE_VERSION}`;
 
 // -----------------------------------------------------
@@ -46,7 +46,7 @@ async function getTripMode() {
 }
 
 // -----------------------------------------------------
-// Core assets (absolute)
+// Core assets
 // -----------------------------------------------------
 const CORE_ASSETS = [
   "/JP/GJN-2024-Sep/",
@@ -100,12 +100,13 @@ async function handleNavigation(request) {
   const cache = await caches.open(CACHE_NAME);
 
   const inTripScope = url.pathname.startsWith("/JP/GJN-2024-Sep/");
-  const isTripHome =
-    url.pathname === "/JP/GJN-2024-Sep/" ||
-    url.pathname === "/JP/GJN-2024-Sep/index.html";
-
   const isExternalRouter =
     url.pathname === "/JP/GJN-2024-Sep/external.html";
+
+  const isTripDocument =
+    inTripScope &&
+    request.destination === "document" &&
+    !isExternalRouter;
 
   const canonicalExternalRequest = new Request(
     "/JP/GJN-2024-Sep/external.html"
@@ -113,33 +114,30 @@ async function handleNavigation(request) {
 
   const tripMode = await getTripMode();
 
-  // ---------------------------------------------------
+  // =====================================================
   // Trip Mode: OFFLINE
-  // ---------------------------------------------------
+  // =====================================================
   if (tripMode === "offline") {
+
+    // External router stays special
     if (isExternalRouter) {
       const cached = await cache.match(canonicalExternalRequest);
       if (cached) return cached;
-    }
-
-    if (!inTripScope) {
       return cache.match("/JP/GJN-2024-Sep/offline.html");
     }
 
-    if (isTripHome) {
-      const home = await cache.match("/JP/GJN-2024-Sep/index.html");
-      if (home) return home;
+    // Any normal trip HTML page → serve from cache if available
+    if (isTripDocument) {
+      const cached = await cache.match(request);
+      if (cached) return cached;
     }
-
-    const cached = await cache.match(request);
-    if (cached) return cached;
 
     return cache.match("/JP/GJN-2024-Sep/offline.html");
   }
 
-  // ---------------------------------------------------
+  // =====================================================
   // Trip Mode: ONLINE
-  // ---------------------------------------------------
+  // =====================================================
   try {
     const response = await fetch(request);
 
