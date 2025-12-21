@@ -49,7 +49,6 @@
       background: rgba(255,255,255,0.1);
     }
 
-    /* ADDITIVE — offline screen styling (mirrors offline.html) */
     .offline-icon {
       font-size: 48px;
       margin-bottom: 12px;
@@ -117,7 +116,26 @@
     });
   }
 
-  // ADDITIVE — authoritative offline renderer (matches offline.html)
+  function renderOfflineTripMode() {
+    const card = document.getElementById("card");
+    card.innerHTML = `
+      <h1>External link unavailable</h1>
+      <p>
+        You are currently in Offline Trip Mode. External websites are unavailable.
+      </p>
+
+      <div class="actions">
+        <a class="button secondary" href="./index.html">Back to Trip Home</a>
+        <a
+          class="button secondary"
+          href="https://trekworks.org/JP/GJN-2024-Sep/attractions-guide.html"
+        >
+          Go Back
+        </a>
+      </div>
+    `;
+  }
+
   function renderOfflineScreen() {
     const card = document.getElementById("card");
     card.innerHTML = `
@@ -154,7 +172,6 @@
     `;
   }
 
-  // ADDITIVE — do not trust navigator.onLine
   async function hasUsableData() {
     try {
       await fetch("https://www.google.com/generate_204", {
@@ -174,7 +191,6 @@
       return;
     }
 
-    // ADDITIVE — absolute guard for no-data states
     const online = await hasUsableData();
     if (!online) {
       renderOfflineScreen();
@@ -183,15 +199,11 @@
 
     const tripMode = await getTripMode();
 
-    // 🔒 OFFLINE TRIP MODE — ABSOLUTE AUTHORITY (unchanged)
     if (tripMode !== "online") {
-      document.getElementById("title").textContent = "External link unavailable";
-      document.getElementById("message").textContent =
-        "You are currently in Offline Trip Mode. External websites are unavailable.";
+      renderOfflineTripMode();
       return;
     }
 
-    // ONLINE MODE — navigation only after proven data
     try {
       await fetch(target, { mode: "no-cors", cache: "no-store" });
       location.replace(target);
