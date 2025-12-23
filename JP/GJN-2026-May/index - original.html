@@ -31,26 +31,6 @@
     h1{margin:0; font-size:clamp(24px,3.2vw,30px);}
     .trip-dates{margin-top:4px; font-size:13px; color:var(--text-muted);}
 
-    /* ===== Trip Mode pills (additive, matched to 2024-Sep) ===== */
-    .pill-row{margin-top:14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
-    .pill{
-      border-radius:var(--radius-pill);
-      padding:6px 12px;
-      font-size:12px;
-      border:1px solid var(--border-soft);
-      background:radial-gradient(circle at top left,#1f2937,#020617);
-      color:var(--text-muted);
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .pill.trip-offline{
-      color:#fbbf24;
-      border-color:#fbbf24;
-    }
-
     .grid{
       margin-top:24px;
       display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -111,18 +91,11 @@
     <div class="trip-flag">JP · GJN-JP-2026-May</div>
     <h1>Trip Home</h1>
     <p class="trip-dates">Japan · May 2026 · Secure trip guide</p>
-
-    <!-- Trip Mode pills (additive only) -->
-    <div class="pill-row">
-      <div class="pill" id="tripModePill">Trip Mode: Online</div>
-      <div class="pill" id="tripModeHelp">?</div>
-    </div>
   </header>
 
   <main>
     <div class="grid">
 
-      <!-- A -->
       <article class="card">
         <div>
           <div class="card-tag">TRIP ELEMENT</div>
@@ -159,7 +132,6 @@
         </div>
       </article>
 
-      <!-- F -->
       <article class="card">
         <div>
           <div class="card-tag">TRIP ELEMENT</div>
@@ -172,7 +144,6 @@
         </div>
       </article>
 
-      <!-- G -->
       <article class="card">
         <div>
           <div class="card-tag">TRIP ELEMENT</div>
@@ -185,7 +156,6 @@
         </div>
       </article>
 
-      <!-- M -->
       <article class="card">
         <div>
           <div class="card-tag">TRIP ELEMENT</div>
@@ -198,7 +168,6 @@
         </div>
       </article>
 
-      <!-- S -->
       <article class="card">
         <div>
           <div class="card-tag">TRIP ELEMENT</div>
@@ -208,19 +177,6 @@
         <div class="card-footer">
           <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
           <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/shopping.html">Open <span>↗</span></a>
-        </div>
-      </article>
-
-      <!-- T -->
-      <article class="card">
-        <div>
-          <div class="card-tag">TRIP ELEMENT</div>
-          <div class="card-header"><div class="card-emoji">📝</div><div class="card-title">Task List</div></div>
-          <div class="card-text">Trip organisation and preparation checklists.</div>
-        </div>
-        <div class="card-footer">
-          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/task-list-guide.html">Open <span>↗</span></a>
         </div>
       </article>
 
@@ -236,18 +192,6 @@
         </div>
       </article>
 
-      <article class="card">
-        <div>
-          <div class="card-tag">TRIP ELEMENT</div>
-          <div class="card-header"><div class="card-emoji">🎒</div><div class="card-title">Travel Packing Guide</div></div>
-          <div class="card-text">Packing checklist for Sema & Gavin.</div>
-        </div>
-        <div class="card-footer">
-          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/travel-packing-guide.html">Open <span>↗</span></a>
-        </div>
-      </article>
-
     </div>
 
     <div class="hub-container">
@@ -259,50 +203,6 @@
 </div>
 
 <script>
-/* ===============================
-   TrekWorks Trip Mode – identical to GJN-2024-Sep
-   =============================== */
-const TRIP_MODE_LS_KEY="trekworks.tripMode";
-const DEFAULT_TRIP_MODE="online";
-
-const tripPill=document.getElementById("tripModePill");
-const helpPill=document.getElementById("tripModeHelp");
-
-function getTripMode(){
-  return localStorage.getItem(TRIP_MODE_LS_KEY)||DEFAULT_TRIP_MODE;
-}
-
-function setTripMode(mode){
-  localStorage.setItem(TRIP_MODE_LS_KEY,mode);
-}
-
-function refreshTripModeUI(){
-  const mode=getTripMode();
-  if(mode==="offline"){
-    tripPill.textContent="Trip Mode: Offline";
-    tripPill.classList.add("trip-offline");
-  }else{
-    tripPill.textContent="Trip Mode: Online";
-    tripPill.classList.remove("trip-offline");
-  }
-}
-
-tripPill.addEventListener("click",()=>{
-  setTripMode(getTripMode()==="offline"?"online":"offline");
-  refreshTripModeUI();
-});
-
-helpPill.addEventListener("click",()=>{
-  alert(
-    "Trip Mode controls how external links behave while travelling.\n\n"+
-    "Offline: keeps you inside the app.\n"+
-    "Online: allows external sites."
-  );
-});
-
-refreshTripModeUI();
-
-/* Existing service worker refresh logic preserved */
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.getRegistrations().then(regs=>{
     for (let reg of regs) reg.update();
