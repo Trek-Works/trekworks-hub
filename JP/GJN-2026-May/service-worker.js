@@ -1,29 +1,42 @@
 // ===============================
 // JP GJN-2026-May – Service Worker
 // Strategy:
-//   • Network-first for HTML navigations (index.html)
-//   • Cache-first for static assets (icons, images, etc.)
-//   • Full offline fallback (offline.html)
-//   • Versioned cache for reliable updates
+//   • Network-first for HTML navigations
+//   • Cache-first for static assets
+//   • Deterministic offline behaviour
+//   • Explicit pre-cache for all trip elements
 // ===============================
 
-// 🔁 BUMP THIS WHEN YOU DEPLOY A NEW VERSION
-const CACHE_VERSION = "tw-gjn-jp-2026-may-v1";
+// 🔁 BUMP VERSION ON DEPLOY
+const CACHE_VERSION = "tw-gjn-jp-2026-may-v3";
 const CACHE_NAME = `trekworks-cache-${CACHE_VERSION}`;
 
-// Core shell assets – these are fetched on install.
-// Adjust or add to this list as needed for this trip.
+// ===============================
+// Core assets (pre-cached)
+// ===============================
 const CORE_ASSETS = [
-  // HTML
+  // Root + shell
   "./",
   "./index.html",
   "./offline.html",
   "./external.html",
 
+  // Trip elements (FULL, EXPLICIT)
+  "./accommodation.html",
+  "./activities.html",
+  "./airport-limousine-bus.html",
+  "./flights.html",
+  "./guides.html",
+  "./maps.html",
+  "./shopping.html",
+  "./task-list.html",
+  "./trains.html",
+  "./travel-packing-guide.html",
+
   // PWA metadata
   "./manifest.json",
 
-  // Icons (update paths if you change structure)
+  // Icons
   "./assets/icons/icon-192x192.png",
   "./assets/icons/icon-512x512.png"
 ];
@@ -33,17 +46,14 @@ const CORE_ASSETS = [
 // ===============================
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(CORE_ASSETS);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
   );
 
-  // Activate new worker immediately (no "waiting" state)
   self.skipWaiting();
 });
 
 // ===============================
-// Activate – clean up old caches
+// Activate – clean old caches
 // ===============================
 self.addEventListener("activate", (event) => {
   event.waitUntil(
@@ -60,90 +70,71 @@ self.addEventListener("activate", (event) => {
     )
   );
 
-  // Become the active worker for all clients
   self.clients.claim();
 });
 
 // ===============================
-// Fetch – routing logic
+// Fetch handling
 // ===============================
 self.addEventListener("fetch", (event) => {
   const request = event.request;
-
-  // Only handle same-origin requests
   const url = new URL(request.url);
+
+  // Same-origin only
   if (url.origin !== self.location.origin) {
     return;
   }
 
-  // 1) Network-first for navigations (HTML pages)
+  // HTML navigations – network first
   if (request.mode === "navigate") {
     event.respondWith(handleNavigationRequest(request));
     return;
   }
 
-  // 2) For everything else (icons, images, etc.), use cache-first
+  // Assets – cache first
   event.respondWith(handleAssetRequest(request));
 });
 
 // ===============================
-// Navigation handler – network-first
+// Navigation handler
 // ===============================
 async function handleNavigationRequest(request) {
   try {
-    // Try to fetch from the network first
     const networkResponse = await fetch(request);
 
-    // Clone and cache the response for offline use
     const cache = await caches.open(CACHE_NAME);
     cache.put(request, networkResponse.clone());
 
     return networkResponse;
   } catch (error) {
-    // If offline or network fails, fall back to cache
     const cache = await caches.open(CACHE_NAME);
 
-    // Try the requested page from cache
-    const cachedResponse = await cache.match(request);
-    if (cachedResponse) {
-      return cachedResponse;
-    }
+    const cached = await cache.match(request);
+    if (cached) return cached;
 
-    // Fallback to index.html or offline.html
     const indexFallback = await cache.match("./index.html");
-    if (indexFallback) {
-      return indexFallback;
-    }
+    if (indexFallback) return indexFallback;
 
     const offlineFallback = await cache.match("./offline.html");
-    if (offlineFallback) {
-      return offlineFallback;
-    }
+    if (offlineFallback) return offlineFallback;
 
     throw error;
   }
 }
 
 // ===============================
-// Asset handler – cache-first
+// Asset handler
 // ===============================
 async function handleAssetRequest(request) {
   const cache = await caches.open(CACHE_NAME);
 
-  // Try cache first
   const cached = await cache.match(request);
-  if (cached) {
-    return cached;
+  if (cached) return cached;
+
+  const networkResponse = await fetch(request);
+  if (networkResponse && networkResponse.status === 200) {
+    cache.put(request, networkResponse.clone());
   }
 
-  // Fetch from network and cache it for next time
-  try {
-    const networkResponse = await fetch(request);
-    if (networkResponse && networkResponse.status === 200) {
-      cache.put(request, networkResponse.clone());
-    }
-    return networkResponse;
-  } catch (error) {
-    throw error;
-  }
+  return networkResponse;
 }
