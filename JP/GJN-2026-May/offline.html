@@ -1,52 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Offline – JP GJN-2024</title>
+  <meta charset="UTF-8" />
+  <title>You’re offline</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
       margin: 0;
-      padding: 32px 18px;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, sans-serif;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: #05060b;
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
       text-align: center;
-      background: #060711;
-      color: #f5f7ff;
     }
-    .box {
-      max-width: 460px;
-      margin: 0 auto;
-      padding: 28px 22px;
+
+    .card {
+      max-width: 420px;
+      padding: 28px;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: radial-gradient(circle at top, #1d2238 0, #060711 60%);
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
+
+    .icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
     h1 {
-      margin-top: 0;
+      font-size: 1.4rem;
       margin-bottom: 10px;
-      font-size: 22px;
     }
+
     p {
-      margin: 8px 0;
-      font-size: 14px;
-      color: #c5cbdd;
+      opacity: 0.85;
+      line-height: 1.5;
+      margin: 0.75em 0;
     }
-    .emoji {
-      font-size: 32px;
-      margin-bottom: 10px;
+
+    .actions {
+      margin-top: 20px;
+    }
+
+    a.button {
+      display: inline-block;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
-  <div class="box">
-    <div class="emoji">📡</div>
-    <h1>Offline for now</h1>
+
+  <div class="card">
+    <div class="icon">📴</div>
+    <h1>You’re offline</h1>
+
     <p>
-      The JP GJN-2024 trip app shell is available offline, but secure trip
-      details are hosted behind Cloudflare Access and require an internet connection.
+      This Japan trip app is available offline, but some sections need an
+      internet connection to load.
     </p>
-    <p>Please reconnect to view accommodation, activities, flights and other trip sections.</p>
+
+    <p>
+      Reconnect when you can and the app will refresh automatically.
+    </p>
+
+    <p>
+      If you were trying to open an external website and lost connection,
+      go back to Trip Home and switch Trip Mode to Offline to continue using the app.
+    </p>
+
+    <div class="actions">
+      <a class="button" href="./index.html">Back to Trip Home</a>
+    </div>
+
+    <p style="margin-top: 18px; font-size: 0.9rem; opacity: 0.6;">
+      JP · GJN-2026-May · Japan
+    </p>
   </div>
+
 </body>
 </html>
