@@ -51,7 +51,8 @@
 
   <div class="actions">
     <a class="button" href="./">Back to Trip Home</a>
-    <a class="button" id="goBack" href="./">Go Back</a>
+<a class="button" id="goBack" href="#"
+   onclick="if (history.length > 1) { history.back(); } else { window.location.href = './'; } return false;">Go Back</a>
   </div>
 
   <div class="footer">
