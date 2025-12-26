@@ -50,8 +50,8 @@
   <p id="message">Checking connection…</p>
 
   <div class="actions">
-    <a class="button" href="./index.html">Back to Trip Home</a>
-    <a class="button" id="goBack" href="https://trekworks.org/JP/GJN-2026-May/attractions-guide.html">Go Back</a>
+    <a class="button" href="./">Back to Trip Home</a>
+    <a class="button" id="goBack" href="./">Go Back</a>
   </div>
 
   <div class="footer">
@@ -64,10 +64,11 @@
   const target = params.get("url");
   const back = params.get("back");
 
-  if (back && /^[a-z0-9\\-\\/]+\\.html$/i.test(back)) {
+  if (back && /^[a-z0-9\-\/]+\.html$/i.test(back)) {
     document.getElementById("goBack").href = "./" + back;
   }
 
+  // Trip Mode (primary): localStorage, to match index.html
   const TRIP_MODE_LS_KEY = "trekworks.tripMode";
   const DEFAULT_TRIP_MODE = "online";
 
@@ -80,6 +81,7 @@
     }
   }
 
+  // Trip Mode (legacy fallback): IndexedDB
   function openDB() {
     return new Promise((resolve, reject) => {
       const req = indexedDB.open("trekworks", 1);
