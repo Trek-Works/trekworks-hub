@@ -1,140 +1,164 @@
-// ===============================
-// JP GJN-2026-May – Service Worker
-// Strategy:
-//   • Network-first for HTML navigations
-//   • Cache-first for static assets
-//   • Deterministic offline behaviour
-//   • Explicit pre-cache for all trip elements
-// ===============================
+// =====================================================
+// TrekWorks Trip Mode (TTM) Service Worker
+// Trip: JP / GJN-2026-May
+// Scope: /JP/GJN-2026-May/
+// =====================================================
 
-// 🔁 BUMP VERSION ON DEPLOY
-const CACHE_VERSION = "tw-gjn-jp-2026-may-v3";
-const CACHE_NAME = `trekworks-cache-${CACHE_VERSION}`;
+const CACHE_VERSION = "tw-jp-GJN-2026-May-2024-12-22";
+const CACHE_NAME = `trekworks-${CACHE_VERSION}`;
 
-// ===============================
-// Core assets (pre-cached)
-// ===============================
+// -----------------------------------------------------
+// Trip Mode storage (IndexedDB)
+// -----------------------------------------------------
+const DB_NAME = "trekworks";
+const DB_VERSION = 1;
+const STORE_NAME = "settings";
+const TRIP_MODE_KEY = "tripMode";
+const DEFAULT_MODE = "online";
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function getTripMode() {
+  try {
+    const db = await openDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE_NAME, "readonly");
+      const store = tx.objectStore(STORE_NAME);
+      const req = store.get(TRIP_MODE_KEY);
+      req.onsuccess = () => resolve(req.result || DEFAULT_MODE);
+      req.onerror = () => resolve(DEFAULT_MODE);
+    });
+  } catch {
+    return DEFAULT_MODE;
+  }
+}
+
+// -----------------------------------------------------
+// Core assets
+// -----------------------------------------------------
 const CORE_ASSETS = [
-  // Root + shell
-  "./",
-  "./index.html",
-  "./offline.html",
-  "./external.html",
-
-  // Trip elements (FULL, EXPLICIT)
-  "./accommodation.html",
-  "./activities.html",
-  "./airport-limousine-bus.html",
-  "./flights.html",
-  "./guides.html",
-  "./maps.html",
-  "./shopping.html",
-  "./task-list.html",
-  "./trains.html",
-  "./travel-packing-guide.html",
-
-  // PWA metadata
-  "./manifest.json",
-
-  // Icons
-  "./assets/icons/icon-192x192.png",
-  "./assets/icons/icon-512x512.png"
+  "/JP/GJN-2026-May/",
+  "/JP/GJN-2026-May/index.html",
+  "/JP/GJN-2026-May/offline.html",
+  "/JP/GJN-2026-May/manifest.json",
+  "/JP/GJN-2026-May/assets/icons/icon-192x192.png",
+  "/JP/GJN-2026-May/assets/icons/icon-512x512.png"
 ];
 
-// ===============================
-// Install – cache core shell
-// ===============================
+// -----------------------------------------------------
+// Install
+// -----------------------------------------------------
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
   );
-
   self.skipWaiting();
 });
 
-// ===============================
-// Activate – clean old caches
-// ===============================
+// -----------------------------------------------------
+// Activate
+// -----------------------------------------------------
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
         keys
-          .filter(
-            (key) =>
-              key.startsWith("trekworks-cache-") &&
-              key !== CACHE_NAME
-          )
+          .filter((key) => key.startsWith("trekworks-") && key !== CACHE_NAME)
           .map((key) => caches.delete(key))
-      )
-    )
+      );
+      await self.clients.claim();
+    })()
+  );
+});
+
+// -----------------------------------------------------
+// Fetch handling (navigation only)
+// -----------------------------------------------------
+self.addEventListener("fetch", (event) => {
+  if (event.request.mode !== "navigate") return;
+  event.respondWith(handleNavigation(event.request));
+});
+
+// -----------------------------------------------------
+// Navigation strategy
+// -----------------------------------------------------
+async function handleNavigation(request) {
+  const url = new URL(request.url);
+  const cache = await caches.open(CACHE_NAME);
+
+  const inTripScope = url.pathname.startsWith("/JP/GJN-2026-May/");
+  const isExternalRouter =
+    url.pathname === "/JP/GJN-2026-May/external.html";
+
+  const isTripDocument =
+    inTripScope &&
+    request.destination === "document" &&
+    !isExternalRouter;
+
+  const canonicalExternalRequest = new Request(
+    "/JP/GJN-2026-May/external.html"
   );
 
-  self.clients.claim();
-});
+  const tripMode = await getTripMode();
 
-// ===============================
-// Fetch handling
-// ===============================
-self.addEventListener("fetch", (event) => {
-  const request = event.request;
-  const url = new URL(request.url);
+  // =====================================================
+  // Trip Mode: OFFLINE
+  // =====================================================
+  if (tripMode === "offline") {
 
-  // Same-origin only
-  if (url.origin !== self.location.origin) {
-    return;
+    // External router stays special
+    if (isExternalRouter) {
+      const cached = await cache.match(canonicalExternalRequest);
+      if (cached) return cached;
+      return cache.match("/JP/GJN-2026-May/offline.html");
+    }
+
+    // Any normal trip HTML page → serve from cache if available
+    if (isTripDocument) {
+      const cached = await cache.match(request);
+      if (cached) return cached;
+    }
+
+    return cache.match("/JP/GJN-2026-May/offline.html");
   }
 
-  // HTML navigations – network first
-  if (request.mode === "navigate") {
-    event.respondWith(handleNavigationRequest(request));
-    return;
-  }
-
-  // Assets – cache first
-  event.respondWith(handleAssetRequest(request));
-});
-
-// ===============================
-// Navigation handler
-// ===============================
-async function handleNavigationRequest(request) {
+  // =====================================================
+  // Trip Mode: ONLINE
+  // =====================================================
   try {
-    const networkResponse = await fetch(request);
+    const response = await fetch(request);
 
-    const cache = await caches.open(CACHE_NAME);
-    cache.put(request, networkResponse.clone());
+    if (response && response.ok && inTripScope) {
+      if (isExternalRouter) {
+        cache.put(canonicalExternalRequest, response.clone());
+      } else {
+        cache.put(request, response.clone());
+      }
+    }
 
-    return networkResponse;
-  } catch (error) {
-    const cache = await caches.open(CACHE_NAME);
+    return response;
+  } catch {
+    if (isExternalRouter) {
+      const cached = await cache.match(canonicalExternalRequest);
+      if (cached) return cached;
+    }
 
     const cached = await cache.match(request);
     if (cached) return cached;
 
-    const indexFallback = await cache.match("./index.html");
-    if (indexFallback) return indexFallback;
-
-    const offlineFallback = await cache.match("./offline.html");
-    if (offlineFallback) return offlineFallback;
-
-    throw error;
+    return cache.match("/JP/GJN-2026-May/offline.html");
   }
-}
-
-// ===============================
-// Asset handler
-// ===============================
-async function handleAssetRequest(request) {
-  const cache = await caches.open(CACHE_NAME);
-
-  const cached = await cache.match(request);
-  if (cached) return cached;
-
-  const networkResponse = await fetch(request);
-  if (networkResponse && networkResponse.status === 200) {
-    cache.put(request, networkResponse.clone());
-  }
-
-  return networkResponse;
 }
