@@ -4,7 +4,7 @@
 // Scope: /JP/GJN-2026-May/
 // =====================================================
 
-const CACHE_VERSION = "tw-jp-gjn-2024-sep-2024-12-22";
+const CACHE_VERSION = "tw-jp-gjn-2026-may-2024-12-22";
 const CACHE_NAME = `trekworks-${CACHE_VERSION}`;
 
 // -----------------------------------------------------
