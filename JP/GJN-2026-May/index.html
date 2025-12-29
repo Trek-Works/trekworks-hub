@@ -46,7 +46,9 @@
       cursor:pointer;
       user-select:none;
     }
-    .pill.install{ color:var(--text-main); }
+    .pill.install{
+      color:var(--text-main);
+    }
     .pill.trip-offline{
       color:#fbbf24;
       border-color:#fbbf24;
@@ -82,7 +84,7 @@
     .secure-dot{width:7px; height:7px; border-radius:999px; background:#22c55e;}
     .card-link{text-decoration:none; color:var(--accent-blue); font-size:13px;}
     .card-link span{font-size:14px;}
-    .hub-container{text-align:center; margin-top:36px;}
+
     .hub-btn{
       margin-top:40px;
       display:inline-block;
@@ -93,6 +95,53 @@
       color:var(--text-main);
       font-size:14px;
       text-decoration:none;
+      letter-spacing:0.3px;
+    }
+    .hub-btn:hover{
+      background:radial-gradient(circle at top left,#263445,#0b0f19);
+      border-color:#4b5563;
+    }
+
+    .hub-container{text-align:center; margin-top:36px;}
+
+    /* ===============================
+       iOS Install Helper (additive)
+       =============================== */
+    .ios-install-helper{
+      position:fixed;
+      bottom:14px;
+      left:50%;
+      transform:translateX(-50%);
+      max-width:520px;
+      width:calc(100% - 28px);
+      background:rgba(15,23,42,.97);
+      border:1px solid var(--border-soft);
+      border-radius:14px;
+      padding:12px 14px;
+      display:none;
+      z-index:999;
+      box-shadow:0 20px 40px rgba(0,0,0,.6);
+    }
+    .ios-install-helper p{
+      margin:0;
+      font-size:13px;
+      color:var(--text-muted);
+      line-height:1.4;
+    }
+    .ios-install-helper strong{
+      color:var(--text-main);
+      font-weight:600;
+    }
+    .ios-install-actions{
+      margin-top:8px;
+      display:flex;
+      justify-content:flex-end;
+    }
+    .ios-install-dismiss{
+      font-size:12px;
+      color:var(--accent-blue);
+      cursor:pointer;
+      user-select:none;
     }
   </style>
 </head>
@@ -100,112 +149,272 @@
 <body>
 <div class="page">
 
-<header>
-  <div class="trip-flag">JP · GJN-JP-2026-May</div>
-  <h1>Trip Home</h1>
-  <p class="trip-dates">Japan · May 2026 · Secure trip guide</p>
+  <header>
+    <div class="trip-flag">JP · GJN-JP-2026-May</div>
+    <h1>Trip Home</h1>
+    <p class="trip-dates">Japan · May 2026 · Secure trip guide</p>
 
-  <div class="pill-row">
-    <div class="pill" id="tripModePill">Trip Mode: Online</div>
-    <div class="pill" id="tripModeHelp">?</div>
-    <div class="pill install" id="installPill" style="display:none;">
-      <span>⬇️</span>Install App
+    <div class="pill-row">
+      <div class="pill" id="tripModePill">Trip Mode: Online</div>
+      <div class="pill" id="tripModeHelp">?</div>
+      <div class="pill install" id="installPill" style="display:none;">
+        <span>⬇️</span>Install App
+      </div>
     </div>
+  </header>
+
+  <main>
+    <div class="grid">
+
+      <article class="card">
+        <div>
+          <div class="card-tag">TRIP ELEMENT</div>
+          <div class="card-header"><div class="card-emoji">🛏️</div><div class="card-title">Accommodation & Flights</div></div>
+          <div class="card-text">Hotels and flight bookings for the May 2026 itinerary.</div>
+        </div>
+        <div class="card-footer">
+          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
+          <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/accommodation-flights-guide.html">Open <span>↗</span></a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div>
+          <div class="card-tag">TRIP ELEMENT</div>
+          <div class="card-header"><div class="card-emoji">🎡</div><div class="card-title">Attractions Guide</div></div>
+          <div class="card-text">Key attractions for Tokyo, Osaka, Kyoto & Hiroshima.</div>
+        </div>
+        <div class="card-footer">
+          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
+          <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/attractions-guide.html">Open <span>↗</span></a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div>
+          <div class="card-tag">TRIP ELEMENT</div>
+          <div class="card-header"><div class="card-emoji">🚄</div><div class="card-title">Train Guide</div></div>
+          <div class="card-text">Shinkansen timings, durations and travel routes.</div>
+        </div>
+        <div class="card-footer">
+          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
+          <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/train-guide.html">Open <span>↗</span></a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div>
+          <div class="card-tag">TRIP ELEMENT</div>
+          <div class="card-header"><div class="card-emoji">📝</div><div class="card-title">Task List</div></div>
+          <div class="card-text">Trip organisation and preparation checklists.</div>
+        </div>
+        <div class="card-footer">
+          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
+          <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/task-list-guide.html">Open <span>↗</span></a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div>
+          <div class="card-tag">TRIP ELEMENT</div>
+          <div class="card-header"><div class="card-emoji">🎒</div><div class="card-title">Travel Packing Guide</div></div>
+          <div class="card-text">Packing checklist for Sema & Gavin.</div>
+        </div>
+        <div class="card-footer">
+          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
+          <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/travel-packing-guide.html">Open <span>↗</span></a>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="hub-container">
+      <a href="https://trekworks.org/" class="hub-btn">← Back to TrekWorks Hub</a>
+    </div>
+  </main>
+
+</div>
+
+<!-- iOS Install Helper (HTML additive) -->
+<div class="ios-install-helper" id="iosInstallHelper">
+  <p>
+    <strong>Install this trip for offline use</strong><br>
+    Tap <strong>Share</strong> then <strong>Add to Home Screen</strong> in Safari.
+  </p>
+  <div class="ios-install-actions">
+    <span class="ios-install-dismiss" id="iosInstallDismiss">Dismiss</span>
   </div>
-</header>
-
-<main>
-<div class="grid">
-
-  <article class="card">
-    <div>
-      <div class="card-tag">TRIP ELEMENT</div>
-      <div class="card-header"><div class="card-emoji">🛏️</div><div class="card-title">Accommodation & Flights</div></div>
-      <div class="card-text">Hotels and flight bookings for the May 2026 itinerary.</div>
-    </div>
-    <div class="card-footer">
-      <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-      <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/accommodation-flights-guide.html">Open <span>↗</span></a>
-    </div>
-  </article>
-
-  <article class="card">
-    <div>
-      <div class="card-tag">TRIP ELEMENT</div>
-      <div class="card-header"><div class="card-emoji">🎡</div><div class="card-title">Attractions Guide</div></div>
-      <div class="card-text">Key attractions for Tokyo, Osaka, Kyoto & Hiroshima.</div>
-    </div>
-    <div class="card-footer">
-      <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-      <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/attractions-guide.html">Open <span>↗</span></a>
-    </div>
-  </article>
-
-  <article class="card">
-    <div>
-      <div class="card-tag">TRIP ELEMENT</div>
-      <div class="card-header"><div class="card-emoji">🚄</div><div class="card-title">Train Guide</div></div>
-      <div class="card-text">Shinkansen timings, durations and travel routes.</div>
-    </div>
-    <div class="card-footer">
-      <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-      <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/train-guide.html">Open <span>↗</span></a>
-    </div>
-  </article>
-
-  <article class="card">
-    <div>
-      <div class="card-tag">TRIP ELEMENT</div>
-      <div class="card-header"><div class="card-emoji">📝</div><div class="card-title">Task List</div></div>
-      <div class="card-text">Trip organisation and preparation checklists.</div>
-    </div>
-    <div class="card-footer">
-      <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-      <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/task-list-guide.html">Open <span>↗</span></a>
-    </div>
-  </article>
-
-  <article class="card">
-    <div>
-      <div class="card-tag">TRIP ELEMENT</div>
-      <div class="card-header"><div class="card-emoji">🎒</div><div class="card-title">Travel Packing Guide</div></div>
-      <div class="card-text">Packing checklist for Sema & Gavin.</div>
-    </div>
-    <div class="card-footer">
-      <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-      <a class="card-link" href="https://trekworks.org/JP/GJN-2026-May/travel-packing-guide.html">Open <span>↗</span></a>
-    </div>
-  </article>
-
-</div>
-
-<div class="hub-container">
-  <a href="https://trekworks.org/" class="hub-btn">← Back to TrekWorks Hub</a>
-</div>
-</main>
 </div>
 
 <script>
+// ===============================
+// TrekWorks Trip Mode – localStorage (shared)
+// ===============================
 const TRIP_ID = "GJN-2026-May";
 const TRIP_MODE_LS_KEY = "trekworks.tripMode:GJN-2026-May";
-const TRIP_MODE_KEY = "tripMode:GJN-2026-May";
 const DEFAULT_TRIP_MODE = "online";
 
-/* IndexedDB logic — identical */
+/* ===============================
+   IndexedDB Trip Mode (authoritative)
+   =============================== */
 const DB_NAME = "trekworks";
+const DB_VERSION = 1;
 const STORE_NAME = "settings";
+const TRIP_MODE_KEY = "tripMode:GJN-2026-May";
 
-function getTripMode(){ return localStorage.getItem(TRIP_MODE_LS_KEY) || DEFAULT_TRIP_MODE; }
-function setTripMode(m){ localStorage.setItem(TRIP_MODE_LS_KEY,m); }
-
-const pill=document.getElementById("tripModePill");
-function refresh(){ 
-  const m=getTripMode();
-  pill.textContent="Trip Mode: "+(m==="offline"?"Offline":"Online");
-  pill.classList.toggle("trip-offline",m==="offline");
+function openTripDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
 }
-pill.onclick=()=>{ setTripMode(getTripMode()==="offline"?"online":"offline"); refresh(); };
-refresh();
+
+async function persistTripModeToDB(mode) {
+  try {
+    const db = await openTripDB();
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    tx.objectStore(STORE_NAME).put(mode, TRIP_MODE_KEY);
+  } catch {}
+}
+
+// ===============================
+// Trip Mode IndexedDB initialisation (first load only)
+// ===============================
+(async () => {
+  try {
+    const db = await openTripDB();
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+    const req = store.get(TRIP_MODE_KEY);
+
+    req.onsuccess = () => {
+      if (req.result === undefined) {
+        const mode =
+          localStorage.getItem(TRIP_MODE_LS_KEY) || DEFAULT_TRIP_MODE;
+        persistTripModeToDB(mode);
+      }
+    };
+  } catch {}
+})();
+
+function getTripMode() {
+  return localStorage.getItem(TRIP_MODE_LS_KEY) || DEFAULT_TRIP_MODE;
+}
+
+function setTripMode(mode) {
+  localStorage.setItem(TRIP_MODE_LS_KEY, mode);
+  persistTripModeToDB(mode);
+}
+
+// ===============================
+// Trip Mode Pill UI
+// ===============================
+const tripPill = document.getElementById("tripModePill");
+const helpPill = document.getElementById("tripModeHelp");
+
+function refreshTripModeUI() {
+  const mode = getTripMode();
+  if (mode === "offline") {
+    tripPill.textContent = "Trip Mode: Offline";
+    tripPill.classList.add("trip-offline");
+  } else {
+    tripPill.textContent = "Trip Mode: Online";
+    tripPill.classList.remove("trip-offline");
+  }
+}
+
+tripPill.addEventListener("click", () => {
+  const current = getTripMode();
+  const next = current === "offline" ? "online" : "offline";
+  setTripMode(next);
+  refreshTripModeUI();
+});
+
+helpPill.addEventListener("click", () => {
+  alert(
+    "Trip Mode controls how external links behave while travelling.\n\n" +
+    "Offline: keeps you inside the app.\n" +
+    "Online: allows external sites."
+  );
+});
+
+// Initialise on load
+refreshTripModeUI();
+
+// ===============================
+// Install App logic (unchanged)
+// ===============================
+let deferredInstallPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const pill = document.getElementById("installPill");
+  if (pill) pill.style.display = "inline-flex";
+});
+
+window.addEventListener("appinstalled", () => {
+  const pill = document.getElementById("installPill");
+  if (pill) pill.style.display = "none";
+  deferredInstallPrompt = null;
+});
+
+const installPill = document.getElementById("installPill");
+if (installPill) {
+  installPill.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    installPill.style.display = "none";
+  });
+}
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
+    .then(() => {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        for (let reg of regs) reg.update();
+      });
+    });
+}
+
+// ===============================
+// iOS Install Helper logic (additive)
+// ===============================
+(function () {
+  const DISMISS_KEY = "trekworks.iosInstallDismissed";
+  const helper = document.getElementById("iosInstallHelper");
+  const dismissBtn = document.getElementById("iosInstallDismiss");
+
+  if (!helper || !dismissBtn) return;
+
+  const ua = window.navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua);
+  const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+  const isStandalone =
+    window.navigator.standalone === true ||
+    window.matchMedia("(display-mode: standalone)").matches;
+
+  const dismissed = localStorage.getItem(DISMISS_KEY) === "true";
+
+  if (isIOS && isSafari && !isStandalone && !dismissed) {
+    helper.style.display = "block";
+  }
+
+  dismissBtn.addEventListener("click", () => {
+    localStorage.setItem(DISMISS_KEY, "true");
+    helper.style.display = "none";
+  });
+})();
 </script>
+
 </body>
 </html>
