@@ -1,23 +1,23 @@
 // =====================================================
 // TrekWorks Hub Service Worker
 // Scope: /
-// Purpose: Ensure Trip Hub is available offline
+// Purpose: Ensure Trip Hub is available with no data
 // =====================================================
 
-const CACHE_VERSION = "trekworks-hub-2024-12-22";
+const CACHE_VERSION = "trekworks-hub-2025-01";
 const CACHE_NAME = `trekworks-hub-${CACHE_VERSION}`;
 
 // -----------------------------------------------------
-// Core Hub assets (keep this deliberately small)
+// Core Hub assets (keep small and deterministic)
 // -----------------------------------------------------
 const CORE_ASSETS = [
-  "/",                 // Hub root
+  "/",            // Hub root
   "/index.html",
   "/trips.json"
 ];
 
 // -----------------------------------------------------
-// Install — pre-cache Hub shell
+// Install — precache Hub shell
 // -----------------------------------------------------
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -48,14 +48,13 @@ self.addEventListener("activate", (event) => {
 });
 
 // -----------------------------------------------------
-// Fetch — navigation only (Hub-safe)
+// Fetch — navigation handling (Hub only)
 // -----------------------------------------------------
 self.addEventListener("fetch", (event) => {
   if (event.request.mode !== "navigate") return;
 
   const url = new URL(event.request.url);
 
-  // Only handle Hub-level navigations
   // Never interfere with trip scopes
   if (
     url.pathname.startsWith("/JP/") ||
@@ -75,7 +74,7 @@ async function handleHubNavigation(request) {
   const cache = await caches.open(CACHE_NAME);
 
   try {
-    // Network-first for freshness
+    // Network-first when available
     const response = await fetch(request);
 
     if (response && response.ok) {
@@ -83,10 +82,10 @@ async function handleHubNavigation(request) {
       return response;
     }
   } catch {
-    // Ignore and fall through to cache
+    // Ignore network failure
   }
 
-  // Offline fallback
+  // Cache fallback
   const cached = await cache.match(request);
   if (cached) return cached;
 
