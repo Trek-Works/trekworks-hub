@@ -1,7 +1,7 @@
 // =====================================================
 // TrekWorks Trip Mode (TTM) Service Worker
-// Trip: JP / GJN-2024-Sep
-// Scope: /JP/GJN-2024-Sep/
+// Trip: JP / GJN-2026-May
+// Scope: /JP/GJN-2026-May/
 // =====================================================
 
 const CACHE_VERSION = "tw-jp-gjn-2024-sep-2024-12-22";
@@ -49,12 +49,12 @@ async function getTripMode() {
 // Core assets
 // -----------------------------------------------------
 const CORE_ASSETS = [
-  "/JP/GJN-2024-Sep/",
-  "/JP/GJN-2024-Sep/index.html",
-  "/JP/GJN-2024-Sep/offline.html",
-  "/JP/GJN-2024-Sep/manifest.json",
-  "/JP/GJN-2024-Sep/assets/icons/icon-192x192.png",
-  "/JP/GJN-2024-Sep/assets/icons/icon-512x512.png"
+  "/JP/GJN-2026-May/",
+  "/JP/GJN-2026-May/index.html",
+  "/JP/GJN-2026-May/offline.html",
+  "/JP/GJN-2026-May/manifest.json",
+  "/JP/GJN-2026-May/assets/icons/icon-192x192.png",
+  "/JP/GJN-2026-May/assets/icons/icon-512x512.png"
 ];
 
 // -----------------------------------------------------
@@ -99,9 +99,9 @@ async function handleNavigation(request) {
   const url = new URL(request.url);
   const cache = await caches.open(CACHE_NAME);
 
-  const inTripScope = url.pathname.startsWith("/JP/GJN-2024-Sep/");
+  const inTripScope = url.pathname.startsWith("/JP/GJN-2026-May/");
   const isExternalRouter =
-    url.pathname === "/JP/GJN-2024-Sep/external.html";
+    url.pathname === "/JP/GJN-2026-May/external.html";
 
   const isTripDocument =
     inTripScope &&
@@ -109,7 +109,7 @@ async function handleNavigation(request) {
     !isExternalRouter;
 
   const canonicalExternalRequest = new Request(
-    "/JP/GJN-2024-Sep/external.html"
+    "/JP/GJN-2026-May/external.html"
   );
 
   const tripMode = await getTripMode();
@@ -123,7 +123,7 @@ async function handleNavigation(request) {
     if (isExternalRouter) {
       const cached = await cache.match(canonicalExternalRequest);
       if (cached) return cached;
-      return cache.match("/JP/GJN-2024-Sep/offline.html");
+      return cache.match("/JP/GJN-2026-May/offline.html");
     }
 
     // Any normal trip HTML page → serve from cache if available
@@ -132,7 +132,7 @@ async function handleNavigation(request) {
       if (cached) return cached;
     }
 
-    return cache.match("/JP/GJN-2024-Sep/offline.html");
+    return cache.match("/JP/GJN-2026-May/offline.html");
   }
 
   // =====================================================
@@ -159,6 +159,6 @@ async function handleNavigation(request) {
     const cached = await cache.match(request);
     if (cached) return cached;
 
-    return cache.match("/JP/GJN-2024-Sep/offline.html");
+    return cache.match("/JP/GJN-2026-May/offline.html");
   }
 }

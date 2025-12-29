@@ -2,202 +2,211 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Task List Guide</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JP GJN-2024 Sep – Task List Guide</title>
 
   <style>
     :root {
       --bg-main: #050814;
       --bg-gradient-top: #020617;
-      --bg-gradient-mid: #0b1225;
-      --bg-gradient-bot: #050814;
-
-      --text: #e5e7eb;
-      --text-soft: #a7b0c0;
-      --text-muted: #7c879c;
-
+      --bg-gradient-bottom: #020617;
       --card-bg: #0b1020;
-      --card-bg-alt: #0b1326;
-
-      --border: rgba(148, 163, 184, 0.22);
-      --border-strong: rgba(148, 163, 184, 0.30);
-
-      --pill-bg: rgba(148, 163, 184, 0.10);
-      --pill-bg-strong: rgba(59, 130, 246, 0.22);
-
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-      --shadow-soft: 0 6px 18px rgba(0, 0, 0, 0.25);
+      --card-bg-alt: #10172f;
+      --pill-bg: #111827;
+      --pill-border: rgba(148, 163, 184, 0.4);
+      --accent-green: #4ade80;
+      --accent-blue: #60a5fa;
+      --accent-amber: #fbbf24;
+      --accent-red: #fb7185;
+      --border-soft: rgba(148, 163, 184, 0.35);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --shadow-card: 0 18px 40px rgba(15, 23, 42, 0.7);
+      --radius-card: 18px;
+      --radius-pill: 999px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      background:
-        radial-gradient(1100px 600px at 50% -10%, rgba(59,130,246,0.20), transparent 55%),
-        radial-gradient(900px 520px at 50% 8%, rgba(124,58,237,0.10), transparent 60%),
-        radial-gradient(900px 650px at 50% 55%, rgba(16,185,129,0.06), transparent 62%),
-        linear-gradient(180deg, var(--bg-gradient-top), var(--bg-gradient-mid) 45%, var(--bg-gradient-bot));
-      color: var(--text);
+      padding: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      color: var(--text-main);
+      background: radial-gradient(circle at top, var(--bg-gradient-top), var(--bg-main));
+      display: flex;
+      justify-content: center;
     }
 
     .page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 28px 22px 70px;
+      width: 100%;
+      max-width: 980px;
+      padding: 32px 14px 40px;
     }
 
     header {
       text-align: center;
-      padding: 18px 12px 26px;
+      margin-bottom: 28px;
     }
 
     .trip-flag {
-      font-size: 12px;
-      letter-spacing: 0.18em;
+      font-size: 18px;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--text-soft);
-      margin-bottom: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
     }
 
-    h1 {
-      margin: 0;
-      font-size: 42px;
-      font-weight: 800;
-      letter-spacing: -0.01em;
+    header h1 {
+      margin: 0 0 4px;
+      font-size: clamp(24px, 3vw, 30px);
+      letter-spacing: 0.04em;
     }
 
     .trip-dates {
-      margin: 10px 0 0;
-      color: var(--text-soft);
+      margin: 0;
       font-size: 14px;
+      color: var(--text-muted);
     }
 
     .top-bar {
+      margin-top: 16px;
       display: flex;
-      justify-content: center;
-      gap: 12px;
       flex-wrap: wrap;
-      margin-top: 18px;
+      gap: 10px;
+      justify-content: center;
     }
 
     .pill-btn {
+      border-radius: var(--radius-pill);
+      padding: 7px 14px;
+      font-size: 13px;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top left, #1e293b, #020617);
+      color: var(--text-main);
+      cursor: pointer;
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text);
-      text-decoration: none;
-      box-shadow: var(--shadow-soft);
-      font-size: 13px;
-    }
-
-    .pill-btn.primary {
-      background: rgba(59, 130, 246, 0.18);
-      border-color: rgba(59, 130, 246, 0.35);
+      gap: 6px;
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+      transition: transform 0.15s ease, box-shadow 0.15s ease,
+        border-color 0.15s ease;
     }
 
     .pill-btn span {
-      display: inline-flex;
-      width: 18px;
-      justify-content: center;
-      opacity: 0.95;
+      font-size: 15px;
+    }
+
+    .pill-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 25px rgba(15, 23, 42, 0.7);
+      border-color: rgba(96, 165, 250, 0.7);
+    }
+
+    .pill-btn.primary {
+      background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+      border-color: rgba(129, 140, 248, 0.9);
+    }
+
+    .pill-btn.primary:hover {
+      border-color: #93c5fd;
     }
 
     main {
-      margin-top: 18px;
-    }
-
-    section {
-      margin: 18px 0 26px;
-      padding-top: 18px;
-      border-top: 1px solid rgba(148, 163, 184, 0.14);
-    }
-
-    .section-head {
+      margin-top: 32px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .section-header {
+      display: flex;
       align-items: baseline;
-      gap: 16px;
-      padding: 6px 6px 12px;
+      justify-content: space-between;
+      margin-bottom: 10px;
     }
 
     .section-title {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 800;
-      margin: 0;
-    }
-
-    .section-subtitle {
-      color: var(--text-soft);
-      font-size: 12px;
-      letter-spacing: 0.04em;
-      text-transform: none;
-      margin: 0;
-    }
-
-    .sub-pill {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.03);
-      color: var(--text-soft);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .section-title span.emoji {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .section-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .task-card {
+      background: radial-gradient(circle at top left, #020617, #020617);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-card);
+      padding: 18px 18px 14px;
+    }
+
+    .category-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
       font-size: 11px;
-      letter-spacing: 0.12em;
       text-transform: uppercase;
+      letter-spacing: 0.14em;
+      background: #0b1120;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-muted);
+      margin-bottom: 10px;
     }
 
-    .tasks {
-      background: rgba(11, 16, 32, 0.70);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px 14px 10px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
+    .category-label .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent-blue);
     }
 
-    ul.task-list {
+    .task-list {
       list-style: none;
       padding: 0;
       margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .task-item {
       display: flex;
-      gap: 12px;
-      padding: 12px 10px;
-      border-radius: 14px;
-    }
-
-    .task-item + .task-item {
-      margin-top: 8px;
-    }
-
-    .task-item {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(148, 163, 184, 0.12);
+      gap: 8px;
+      align-items: flex-start;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(31, 41, 55, 0.9);
     }
 
     .task-checkbox {
-      display: flex;
-      align-items: flex-start;
-      padding-top: 4px;
+      margin-top: 2px;
+      flex-shrink: 0;
     }
 
-    input[type="checkbox"]{
-      width: 18px;
-      height: 18px;
-      accent-color: #22c55e;
+    .task-checkbox input {
+      width: 16px;
+      height: 16px;
+      accent-color: #4ade80;
       cursor: pointer;
     }
 
@@ -209,71 +218,69 @@
     .task-title-row {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
-      align-items: center;
+      gap: 8px;
+      font-size: 14px;
     }
 
     .task-title {
-      font-weight: 800;
-      font-size: 14px;
-      margin: 0;
-      color: var(--text);
-    }
-
-    .task-note {
-      margin-top: 4px;
-      color: var(--text-soft);
-      font-size: 12px;
-      line-height: 1.45;
+      font-weight: 500;
     }
 
     .task-tag {
       font-size: 11px;
-      padding: 4px 10px;
+      padding: 2px 8px;
       border-radius: 999px;
-      background: rgba(245, 158, 11, 0.12);
-      border: 1px solid rgba(245, 158, 11, 0.30);
-      color: rgba(245, 158, 11, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: var(--accent-amber);
+      background: rgba(31, 41, 55, 0.8);
       white-space: nowrap;
     }
 
-    .task-tag.blue {
-      background: rgba(59, 130, 246, 0.12);
-      border-color: rgba(59, 130, 246, 0.30);
-      color: rgba(147, 197, 253, 0.92);
-    }
-
-    .task-tag.green {
-      background: rgba(16, 185, 129, 0.10);
-      border-color: rgba(16, 185, 129, 0.28);
-      color: rgba(52, 211, 153, 0.92);
-    }
-
-    .task-tag.gray {
-      background: rgba(148, 163, 184, 0.10);
-      border-color: rgba(148, 163, 184, 0.28);
-      color: rgba(148, 163, 184, 0.92);
-    }
-
-    .task-tag.purple {
-      background: rgba(124, 58, 237, 0.10);
-      border-color: rgba(124, 58, 237, 0.28);
-      color: rgba(196, 181, 253, 0.92);
+    .task-note {
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--text-muted);
     }
 
     .section-hint {
-      margin-top: 10px;
-      color: var(--text-muted);
+      margin-top: 6px;
       font-size: 12px;
-      padding: 4px 2px 0;
+      color: var(--text-muted);
     }
 
-    @media (max-width: 760px) {
-      .page { padding: 22px 14px 60px; }
-      h1 { font-size: 34px; }
-      .section-head { flex-direction: column; align-items: flex-start; }
-      .task-title-row { flex-direction: column; align-items: flex-start; }
-      .task-tag { margin-top: 8px; }
+    footer {
+      margin-top: 26px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    footer a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 22px 12px 28px;
+      }
+
+      header h1 {
+        font-size: 22px;
+      }
+
+      .task-item {
+        padding: 7px 8px;
+      }
+
+      .task-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
@@ -281,7 +288,7 @@
 <body>
   <div class="page">
     <header>
-      <div class="trip-flag">JP · GJN-JP-2026-May · Japan Trip</div>
+      <div class="trip-flag">JP · GJN-2026-May · Japan Trip</div>
       <h1>Task List Guide</h1>
       <p class="trip-dates">Pre-trip and on-trip checklist</p>
 
@@ -301,13 +308,19 @@
 
       <!-- Pre-trip admin -->
       <section>
-        <div class="section-head">
-          <h2 class="section-title">📁 Pre-trip admin</h2>
-          <p class="section-subtitle">Bookings, approvals, and key logistics</p>
+        <div class="section-header">
+          <div class="section-title">
+            <span class="emoji">🗂️</span>
+            <span>Pre-trip admin</span>
+          </div>
+          <div class="section-meta">Bookings, approvals, and key logistics</div>
         </div>
 
-        <div class="tasks">
-          <div class="sub-pill">● Core planning</div>
+        <div class="task-card">
+          <div class="category-label">
+            <span class="dot"></span>
+            CORE PLANNING
+          </div>
 
           <ul class="task-list">
             <li class="task-item">
@@ -317,10 +330,10 @@
               <div class="task-content">
                 <div class="task-title-row">
                   <div class="task-title">Confirm all hotel bookings</div>
-                  <div class="task-tag">Accommodation &amp; Flights</div>
+                  <div class="task-tag">Accommodation & Flights</div>
                 </div>
                 <div class="task-note">
-                  Check dates and room types for Osaka, Okinawa, Fukuoka, and final Osaka stay.
+                  Check dates and room types for Osaka, Hiroshima, Tokyo, Yudanaka, Kyoto, and final Osaka stay.
                 </div>
               </div>
             </li>
@@ -331,11 +344,11 @@
               </div>
               <div class="task-content">
                 <div class="task-title-row">
-                  <div class="task-title">Review international flights (JQ001 / JQ002)</div>
+                  <div class="task-title">Review international flights (JQ13 / JQ14)</div>
                   <div class="task-tag">Flights</div>
                 </div>
                 <div class="task-note">
-                  Outbound: JQ001 SYD → KIX (14 May 2026). Return: JQ002 KIX → SYD (29 May 2026). Domestic: JAL JL2087 ITM → OKA (17 May 2026) and JAL JL054 OKA → FUK (22 May 2026). Confirm departure and arrival times, baggage allowance, and any seat or meal selections.
+                  Confirm departure and arrival times, baggage allowance, and any seat or meal selections.
                 </div>
               </div>
             </li>
@@ -365,7 +378,7 @@
                   <div class="task-tag">Insurance</div>
                 </div>
                 <div class="task-note">
-                  Check policy period covers 14 May 2026 to 30 May 2026 (insure4less Excel Plus, Certificate TI-251025-0005) and store emergency numbers in phone contacts.
+                  Check policy period covers 31 Aug to 10 Sep and store emergency numbers in phone contacts.
                 </div>
               </div>
             </li>
@@ -377,15 +390,21 @@
         </div>
       </section>
 
-      <!-- Money and payment -->
+      <!-- Money & cards -->
       <section>
-        <div class="section-head">
-          <h2 class="section-title">💳 Money and payment</h2>
-          <p class="section-subtitle">Cards, cash, and budgeting</p>
+        <div class="section-header">
+          <div class="section-title">
+            <span class="emoji">💳</span>
+            <span>Money and payment</span>
+          </div>
+          <div class="section-meta">Cards, cash, and budgeting</div>
         </div>
 
-        <div class="tasks">
-          <div class="sub-pill">● Payment ready</div>
+        <div class="task-card">
+          <div class="category-label">
+            <span class="dot"></span>
+            PAYMENT READY
+          </div>
 
           <ul class="task-list">
             <li class="task-item">
@@ -436,15 +455,21 @@
         </div>
       </section>
 
-      <!-- Tech and connectivity -->
+      <!-- Tech & connectivity -->
       <section>
-        <div class="section-head">
-          <h2 class="section-title">🧩 Tech and connectivity</h2>
-          <p class="section-subtitle">Phones, eSIM, and charging</p>
+        <div class="section-header">
+          <div class="section-title">
+            <span class="emoji">📱</span>
+            <span>Tech and connectivity</span>
+          </div>
+          <div class="section-meta">Phones, eSIM, and charging</div>
         </div>
 
-        <div class="tasks">
-          <div class="sub-pill">● Connected</div>
+        <div class="task-card">
+          <div class="category-label">
+            <span class="dot"></span>
+            CONNECTED
+          </div>
 
           <ul class="task-list">
             <li class="task-item">
@@ -495,15 +520,21 @@
         </div>
       </section>
 
-      <!-- Documents and IDs -->
+      <!-- Documents -->
       <section>
-        <div class="section-head">
-          <h2 class="section-title">📄 Documents and IDs</h2>
-          <p class="section-subtitle">What must be in the carry-on</p>
+        <div class="section-header">
+          <div class="section-title">
+            <span class="emoji">📄</span>
+            <span>Documents and IDs</span>
+          </div>
+          <div class="section-meta">What must be in the carry-on</div>
         </div>
 
-        <div class="tasks">
-          <div class="sub-pill">● Documents</div>
+        <div class="task-card">
+          <div class="category-label">
+            <span class="dot"></span>
+            DOCUMENTS
+          </div>
 
           <ul class="task-list">
             <li class="task-item">
@@ -554,15 +585,21 @@
         </div>
       </section>
 
-      <!-- Packing overview -->
+      <!-- Packing -->
       <section>
-        <div class="section-head">
-          <h2 class="section-title">🧳 Packing overview</h2>
-          <p class="section-subtitle">High level checks before closing the suitcases</p>
+        <div class="section-header">
+          <div class="section-title">
+            <span class="emoji">🧳</span>
+            <span>Packing overview</span>
+          </div>
+          <div class="section-meta">High level checks before closing the suitcases</div>
         </div>
 
-        <div class="tasks">
-          <div class="sub-pill">● Packing</div>
+        <div class="task-card">
+          <div class="category-label">
+            <span class="dot"></span>
+            PACKING
+          </div>
 
           <ul class="task-list">
             <li class="task-item">
@@ -613,15 +650,21 @@
         </div>
       </section>
 
-      <!-- Home and wrap-up -->
+      <!-- Home & wrap-up -->
       <section>
-        <div class="section-head">
-          <h2 class="section-title">🏠 Home and wrap-up</h2>
-          <p class="section-subtitle">Final checks before leaving for the airport</p>
+        <div class="section-header">
+          <div class="section-title">
+            <span class="emoji">🏠</span>
+            <span>Home and wrap-up</span>
+          </div>
+          <div class="section-meta">Final checks before leaving for the airport</div>
         </div>
 
-        <div class="tasks">
-          <div class="sub-pill">● Final checks</div>
+        <div class="task-card">
+          <div class="category-label">
+            <span class="dot"></span>
+            FINAL CHECKS
+          </div>
 
           <ul class="task-list">
             <li class="task-item">
@@ -673,6 +716,7 @@
       </section>
 
     </main>
+
   </div>
 </body>
 </html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Leaving TrekWorks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: #05060b;
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      max-width: 420px;
+      padding: 28px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+    }
+    p {
+      opacity: 0.85;
+      line-height: 1.5;
+    }
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    a.button {
+      text-decoration: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: #2563eb;
+      color: #fff;
+      font-weight: 500;
+    }
+    a.secondary {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ADDITIVE — offline screen styling (mirrors offline.html) */
+    .offline-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .offline-footer {
+      margin-top: 18px;
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <h1 id="title">External link unavailable</h1>
+  <p id="message">Checking connection…</p>
+
+  <div class="actions">
+    <a class="button secondary" href="./index.html">
+      Back to Trip Home
+    </a>
+
+    <a class="button secondary"
+       href="https://trekworks.org/JP/GJN-2026-May/attractions-guide.html">
+      Go Back
+    </a>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const target = params.get("url");
+
+  function getTripMode() {
+    return new Promise((resolve) => {
+      const req = indexedDB.open("trekworks", 1);
+
+      req.onerror = () => resolve("offline");
+
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains("settings")) {
+          db.createObjectStore("settings");
+        }
+      };
+
+      req.onsuccess = () => {
+        try {
+          const db = req.result;
+          const tx = db.transaction("settings", "readonly");
+          const store = tx.objectStore("settings");
+          const r = store.get("tripMode");
+
+          r.onsuccess = () => {
+            if (r.result === undefined && localStorage.getItem("trekworks.tripMode")) {
+              store.put(localStorage.getItem("trekworks.tripMode"), "tripMode");
+            }
+            resolve(r.result || "offline");
+          };
+
+          r.onerror = () => resolve("offline");
+        } catch {
+          resolve("offline");
+        }
+      };
+    });
+  }
+
+  /* ADDITIVE — authoritative offline renderer (matches offline.html) */
+  function renderOfflineScreen() {
+    const card = document.getElementById("card");
+    card.innerHTML = `
+      <div class="offline-icon">📴</div>
+      <h1>You’re offline</h1>
+
+      <p>
+        This Japan trip app is available offline, but some sections need an
+        internet connection to load.
+      </p>
+
+      <p>
+        Reconnect when you can and the app will refresh automatically.
+      </p>
+
+      <p>
+        If you were trying to open an external website and lost connection,
+        go back to Trip Home and switch Trip Mode to Offline to continue using the app.
+      </p>
+
+      <div class="actions">
+        <a class="button secondary" href="./index.html">
+          Back to Trip Home
+        </a>
+
+        <a class="button secondary"
+           href="https://trekworks.org/JP/GJN-2026-May/attractions-guide.html">
+          Go Back
+        </a>
+      </div>
+
+      <div class="offline-footer">
+        JP · GJN-2026-May · Japan
+      </div>
+    `;
+  }
+
+  /* ADDITIVE — do not trust navigator.onLine */
+  async function hasUsableData() {
+    try {
+      await fetch("https://www.google.com/generate_204", {
+        method: "GET",
+        mode: "no-cors",
+        cache: "no-store"
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  (async () => {
+    if (!target) {
+      document.getElementById("message").textContent = "Invalid external link.";
+      return;
+    }
+
+    const online = await hasUsableData();
+    if (!online) {
+      renderOfflineScreen();
+      return;
+    }
+
+    const tripMode = await getTripMode();
+
+    if (tripMode !== "online") {
+      document.getElementById("title").textContent = "External link unavailable";
+      document.getElementById("message").textContent =
+        "You are currently in Offline Trip Mode. External websites are unavailable.";
+      return;
+    }
+
+    try {
+      await fetch(target, { mode: "no-cors", cache: "no-store" });
+      location.replace(target);
+    } catch {
+      renderOfflineScreen();
+    }
+  })();
+</script>
+
+</body>
+</html>
