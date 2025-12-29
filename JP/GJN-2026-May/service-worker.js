@@ -46,13 +46,26 @@ async function getTripMode() {
 }
 
 // -----------------------------------------------------
-// Core assets
+// Core assets (FULL TRIP PRECACHE)
 // -----------------------------------------------------
 const CORE_ASSETS = [
+  // App shell
   "/JP/GJN-2026-May/",
   "/JP/GJN-2026-May/index.html",
   "/JP/GJN-2026-May/offline.html",
   "/JP/GJN-2026-May/manifest.json",
+
+  // Trip element pages
+  "/JP/GJN-2026-May/accommodation-flights-guide.html",
+  "/JP/GJN-2026-May/attractions-guide.html",
+  "/JP/GJN-2026-May/train-guide.html",
+  "/JP/GJN-2026-May/task-list-guide.html",
+  "/JP/GJN-2026-May/travel-packing-guide.html",
+
+  // External router (cached for Trip Mode handling)
+  "/JP/GJN-2026-May/external.html",
+
+  // Icons
   "/JP/GJN-2026-May/assets/icons/icon-192x192.png",
   "/JP/GJN-2026-May/assets/icons/icon-512x512.png"
 ];
@@ -119,14 +132,12 @@ async function handleNavigation(request) {
   // =====================================================
   if (tripMode === "offline") {
 
-    // External router stays special
     if (isExternalRouter) {
       const cached = await cache.match(canonicalExternalRequest);
       if (cached) return cached;
       return cache.match("/JP/GJN-2026-May/offline.html");
     }
 
-    // Any normal trip HTML page → serve from cache if available
     if (isTripDocument) {
       const cached = await cache.match(request);
       if (cached) return cached;
