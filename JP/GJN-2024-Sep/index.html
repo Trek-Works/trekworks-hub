@@ -250,7 +250,8 @@
 // ===============================
 // TrekWorks Trip Mode – localStorage (shared)
 // ===============================
-const TRIP_MODE_LS_KEY = "trekworks.tripMode";
+const TRIP_ID = "GJN-2024-Sep";
+const TRIP_MODE_LS_KEY = "trekworks.tripMode:GJN-2024-Sep";
 const DEFAULT_TRIP_MODE = "online";
 
 /* ===============================
@@ -259,7 +260,7 @@ const DEFAULT_TRIP_MODE = "online";
 const DB_NAME = "trekworks";
 const DB_VERSION = 1;
 const STORE_NAME = "settings";
-const TRIP_MODE_KEY = "tripMode";
+const TRIP_MODE_KEY = "tripMode:GJN-2024-Sep";
 
 function openTripDB() {
   return new Promise((resolve, reject) => {
