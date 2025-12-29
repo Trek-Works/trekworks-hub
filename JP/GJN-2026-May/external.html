@@ -102,11 +102,11 @@
           const db = req.result;
           const tx = db.transaction("settings", "readonly");
           const store = tx.objectStore("settings");
-          const r = store.get("tripMode");
+          const r = store.get("tripMode:GJN-2026-May");
 
           r.onsuccess = () => {
-            if (r.result === undefined && localStorage.getItem("trekworks.tripMode")) {
-              store.put(localStorage.getItem("trekworks.tripMode"), "tripMode");
+            if (r.result === undefined && localStorage.getItem("trekworks.tripMode:GJN-2026-May")) {
+              store.put(localStorage.getItem("trekworks.tripMode:GJN-2026-May"), "tripMode:GJN-2026-May");
             }
             resolve(r.result || "offline");
           };
