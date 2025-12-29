@@ -23,14 +23,8 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
       text-align: center;
     }
-    h1 {
-      font-size: 1.3rem;
-      margin-bottom: 12px;
-    }
-    p {
-      opacity: 0.85;
-      line-height: 1.5;
-    }
+    h1 { font-size: 1.3rem; margin-bottom: 12px; }
+    p { opacity: 0.85; line-height: 1.5; }
     .actions {
       margin-top: 20px;
       display: flex;
@@ -46,20 +40,10 @@
       color: #fff;
       font-weight: 500;
     }
-    a.secondary {
-      background: rgba(255,255,255,0.1);
-    }
+    a.secondary { background: rgba(255,255,255,0.1); }
 
-    /* ADDITIVE — offline screen styling (mirrors offline.html) */
-    .offline-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-    }
-    .offline-footer {
-      margin-top: 18px;
-      font-size: 0.9rem;
-      opacity: 0.6;
-    }
+    .offline-icon { font-size: 48px; margin-bottom: 12px; }
+    .offline-footer { margin-top: 18px; font-size: 0.9rem; opacity: 0.6; }
   </style>
 </head>
 <body>
@@ -84,6 +68,10 @@
   const params = new URLSearchParams(location.search);
   const target = params.get("url");
 
+  const TRIP_ID = "GJN-2026-May";
+  const TRIP_MODE_KEY = "tripMode:GJN-2026-May";
+  const TRIP_MODE_LS_KEY = "trekworks.tripMode:GJN-2026-May";
+
   function getTripMode() {
     return new Promise((resolve) => {
       const req = indexedDB.open("trekworks", 1);
@@ -102,11 +90,11 @@
           const db = req.result;
           const tx = db.transaction("settings", "readonly");
           const store = tx.objectStore("settings");
-          const r = store.get("tripMode:GJN-2026-May");
+          const r = store.get(TRIP_MODE_KEY);
 
           r.onsuccess = () => {
-            if (r.result === undefined && localStorage.getItem("trekworks.tripMode:GJN-2026-May")) {
-              store.put(localStorage.getItem("trekworks.tripMode:GJN-2026-May"), "tripMode:GJN-2026-May");
+            if (r.result === undefined && localStorage.getItem(TRIP_MODE_LS_KEY)) {
+              store.put(localStorage.getItem(TRIP_MODE_LS_KEY), TRIP_MODE_KEY);
             }
             resolve(r.result || "offline");
           };
@@ -119,7 +107,6 @@
     });
   }
 
-  /* ADDITIVE — authoritative offline renderer (matches offline.html) */
   function renderOfflineScreen() {
     const card = document.getElementById("card");
     card.innerHTML = `
@@ -157,7 +144,6 @@
     `;
   }
 
-  /* ADDITIVE — do not trust navigator.onLine */
   async function hasUsableData() {
     try {
       await fetch("https://www.google.com/generate_204", {
