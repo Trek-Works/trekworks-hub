@@ -4,7 +4,7 @@
 // Scope: /JP/GJN-2024-Sep/
 // =====================================================
 
-const CACHE_VERSION = "tw-jp-gjn-2024-sep-2025-01-precache";
+const CACHE_VERSION = "tw-jp-gjn-2024-sep-2025-01-fallbackfix";
 const CACHE_NAME = `trekworks-${CACHE_VERSION}`;
 
 // -----------------------------------------------------
@@ -49,23 +49,19 @@ async function getTripMode() {
 // Core assets (FULL TRIP PRECACHE)
 // -----------------------------------------------------
 const CORE_ASSETS = [
-  // App shell
   "/JP/GJN-2024-Sep/",
   "/JP/GJN-2024-Sep/index.html",
   "/JP/GJN-2024-Sep/offline.html",
   "/JP/GJN-2024-Sep/manifest.json",
 
-  // Trip element pages
   "/JP/GJN-2024-Sep/accommodation-flights-guide.html",
   "/JP/GJN-2024-Sep/attractions-guide.html",
   "/JP/GJN-2024-Sep/train-guide.html",
   "/JP/GJN-2024-Sep/task-list-guide.html",
   "/JP/GJN-2024-Sep/travel-packing-guide.html",
 
-  // External router
   "/JP/GJN-2024-Sep/external.html",
 
-  // Icons
   "/JP/GJN-2024-Sep/assets/icons/icon-192x192.png",
   "/JP/GJN-2024-Sep/assets/icons/icon-512x512.png"
 ];
@@ -106,7 +102,7 @@ self.addEventListener("fetch", (event) => {
 });
 
 // -----------------------------------------------------
-// Navigation strategy
+// Navigation strategy (FIXED FALLBACK ORDER)
 // -----------------------------------------------------
 async function handleNavigation(request) {
   const url = new URL(request.url);
@@ -133,17 +129,19 @@ async function handleNavigation(request) {
   if (tripMode === "offline") {
 
     if (isExternalRouter) {
-      const cached = await cache.match(canonicalExternalRequest);
-      if (cached) return cached;
-      return cache.match("/JP/GJN-2024-Sep/offline.html");
+      return (
+        (await cache.match(canonicalExternalRequest)) ||
+        (await cache.match("/JP/GJN-2024-Sep/offline.html"))
+      );
     }
 
     if (isTripDocument) {
-      const cached = await cache.match(request);
-      if (cached) return cached;
+      return (
+        (await cache.match(request)) ||
+        (await cache.match("/JP/GJN-2024-Sep/index.html")) ||
+        (await cache.match("/JP/GJN-2024-Sep/offline.html"))
+      );
     }
-
-    return cache.match("/JP/GJN-2024-Sep/offline.html");
   }
 
   // =====================================================
@@ -162,14 +160,10 @@ async function handleNavigation(request) {
 
     return response;
   } catch {
-    if (isExternalRouter) {
-      const cached = await cache.match(canonicalExternalRequest);
-      if (cached) return cached;
-    }
-
-    const cached = await cache.match(request);
-    if (cached) return cached;
-
-    return cache.match("/JP/GJN-2024-Sep/offline.html");
+    return (
+      (await cache.match(request)) ||
+      (await cache.match("/JP/GJN-2024-Sep/index.html")) ||
+      (await cache.match("/JP/GJN-2024-Sep/offline.html"))
+    );
   }
 }
