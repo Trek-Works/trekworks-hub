@@ -46,9 +46,7 @@
       cursor:pointer;
       user-select:none;
     }
-    .pill.install{
-      color:var(--text-main);
-    }
+    .pill.install{ color:var(--text-main); }
     .pill.trip-offline{
       color:#fbbf24;
       border-color:#fbbf24;
@@ -174,7 +172,7 @@
         </div>
         <div class="card-footer">
           <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="https://trekworks.org/JP/GJN-2024-Sep/accommodation-flights-guide.html">Open <span>↗</span></a>
+          <a class="card-link" href="./accommodation-flights-guide.html">Open <span>↗</span></a>
         </div>
       </article>
 
@@ -186,7 +184,7 @@
         </div>
         <div class="card-footer">
           <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="https://trekworks.org/JP/GJN-2024-Sep/attractions-guide.html">Open <span>↗</span></a>
+          <a class="card-link" href="./attractions-guide.html">Open <span>↗</span></a>
         </div>
       </article>
 
@@ -198,7 +196,7 @@
         </div>
         <div class="card-footer">
           <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="https://trekworks.org/JP/GJN-2024-Sep/train-guide.html">Open <span>↗</span></a>
+          <a class="card-link" href="./train-guide.html">Open <span>↗</span></a>
         </div>
       </article>
 
@@ -210,7 +208,7 @@
         </div>
         <div class="card-footer">
           <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="https://trekworks.org/JP/GJN-2024-Sep/task-list-guide.html">Open <span>↗</span></a>
+          <a class="card-link" href="./task-list-guide.html">Open <span>↗</span></a>
         </div>
       </article>
 
@@ -222,20 +220,20 @@
         </div>
         <div class="card-footer">
           <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="https://trekworks.org/JP/GJN-2024-Sep/travel-packing-guide.html">Open <span>↗</span></a>
+          <a class="card-link" href="./travel-packing-guide.html">Open <span>↗</span></a>
         </div>
       </article>
 
     </div>
 
     <div class="hub-container">
-      <a href="https://trekworks.org/" class="hub-btn">← Back to TrekWorks Hub</a>
+      <a href="/" class="hub-btn">← Back to TrekWorks Hub</a>
     </div>
   </main>
 
 </div>
 
-<!-- iOS Install Helper (HTML additive) -->
+<!-- iOS Install Helper -->
 <div class="ios-install-helper" id="iosInstallHelper">
   <p>
     <strong>Install this trip for offline use</strong><br>
@@ -248,15 +246,12 @@
 
 <script>
 // ===============================
-// TrekWorks Trip Mode – localStorage (shared)
+// TrekWorks Trip Mode – localStorage + IndexedDB
 // ===============================
 const TRIP_ID = "GJN-2024-Sep";
 const TRIP_MODE_LS_KEY = "trekworks.tripMode:GJN-2024-Sep";
 const DEFAULT_TRIP_MODE = "online";
 
-/* ===============================
-   IndexedDB Trip Mode (authoritative)
-   =============================== */
 const DB_NAME = "trekworks";
 const DB_VERSION = 1;
 const STORE_NAME = "settings";
@@ -281,21 +276,15 @@ async function persistTripModeToDB(mode) {
     const db = await openTripDB();
     const tx = db.transaction(STORE_NAME, "readwrite");
     tx.objectStore(STORE_NAME).put(mode, TRIP_MODE_KEY);
-  } catch {
-    // fail silently
-  }
+  } catch {}
 }
 
-// ===============================
-// Trip Mode IndexedDB initialisation (first load only)
-// ===============================
 (async () => {
   try {
     const db = await openTripDB();
     const tx = db.transaction(STORE_NAME, "readonly");
     const store = tx.objectStore(STORE_NAME);
     const req = store.get(TRIP_MODE_KEY);
-
     req.onsuccess = () => {
       if (req.result === undefined) {
         const mode =
@@ -303,9 +292,7 @@ async function persistTripModeToDB(mode) {
         persistTripModeToDB(mode);
       }
     };
-  } catch {
-    // fail silently
-  }
+  } catch {}
 })();
 
 function getTripMode() {
@@ -317,9 +304,6 @@ function setTripMode(mode) {
   persistTripModeToDB(mode);
 }
 
-// ===============================
-// Trip Mode Pill UI
-// ===============================
 const tripPill = document.getElementById("tripModePill");
 const helpPill = document.getElementById("tripModeHelp");
 
@@ -335,8 +319,7 @@ function refreshTripModeUI() {
 }
 
 tripPill.addEventListener("click", () => {
-  const current = getTripMode();
-  const next = current === "offline" ? "online" : "offline";
+  const next = getTripMode() === "offline" ? "online" : "offline";
   setTripMode(next);
   refreshTripModeUI();
 });
@@ -349,38 +332,34 @@ helpPill.addEventListener("click", () => {
   );
 });
 
-// Initialise on load
 refreshTripModeUI();
 
 // ===============================
-// Install App logic (unchanged)
+// Install App logic
 // ===============================
 let deferredInstallPrompt = null;
 
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredInstallPrompt = e;
-  const pill = document.getElementById("installPill");
-  if (pill) pill.style.display = "inline-flex";
+  document.getElementById("installPill").style.display = "inline-flex";
 });
 
 window.addEventListener("appinstalled", () => {
-  const pill = document.getElementById("installPill");
-  if (pill) pill.style.display = "none";
+  document.getElementById("installPill").style.display = "none";
   deferredInstallPrompt = null;
 });
 
-const installPill = document.getElementById("installPill");
-if (installPill) {
-  installPill.addEventListener("click", async () => {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    await deferredInstallPrompt.userChoice;
-    deferredInstallPrompt = null;
-    installPill.style.display = "none";
-  });
-}
+document.getElementById("installPill").addEventListener("click", async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+});
 
+// ===============================
+// Service Worker (with update refresh)
+// ===============================
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./service-worker.js", { scope: "./" })
     .then(() => {
@@ -391,7 +370,7 @@ if ("serviceWorker" in navigator) {
 }
 
 // ===============================
-// iOS Install Helper logic (additive)
+// iOS Install Helper logic
 // ===============================
 (function () {
   const DISMISS_KEY = "trekworks.iosInstallDismissed";
@@ -400,11 +379,11 @@ if ("serviceWorker" in navigator) {
 
   if (!helper || !dismissBtn) return;
 
-  const ua = window.navigator.userAgent;
+  const ua = navigator.userAgent;
   const isIOS = /iPad|iPhone|iPod/.test(ua);
   const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   const isStandalone =
-    window.navigator.standalone === true ||
+    navigator.standalone === true ||
     window.matchMedia("(display-mode: standalone)").matches;
 
   const dismissed = localStorage.getItem(DISMISS_KEY) === "true";

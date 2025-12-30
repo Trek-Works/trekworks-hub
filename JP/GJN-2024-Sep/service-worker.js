@@ -1,7 +1,7 @@
 // =====================================================
 // TrekWorks Trip Mode (TTM) Service Worker
 // Trip: JP / GJN-2024-Sep
-// Scope: /JP/GJN-2024-Sep/
+// Scope: subdomain root (./)
 // =====================================================
 
 const CACHE_VERSION = "tw-jp-gjn-2024-sep-2025-01-fallbackfix";
@@ -13,7 +13,7 @@ const CACHE_NAME = `trekworks-${CACHE_VERSION}`;
 const DB_NAME = "trekworks";
 const DB_VERSION = 1;
 const STORE_NAME = "settings";
-const TRIP_MODE_KEY = "tripMode";
+const TRIP_MODE_KEY = "tripMode:GJN-2024-Sep";
 const DEFAULT_MODE = "online";
 
 function openDB() {
@@ -49,21 +49,21 @@ async function getTripMode() {
 // Core assets (FULL TRIP PRECACHE)
 // -----------------------------------------------------
 const CORE_ASSETS = [
-  "/JP/GJN-2024-Sep/",
-  "/JP/GJN-2024-Sep/index.html",
-  "/JP/GJN-2024-Sep/offline.html",
-  "/JP/GJN-2024-Sep/manifest.json",
+  "./",
+  "./index.html",
+  "./offline.html",
+  "./manifest.json",
 
-  "/JP/GJN-2024-Sep/accommodation-flights-guide.html",
-  "/JP/GJN-2024-Sep/attractions-guide.html",
-  "/JP/GJN-2024-Sep/train-guide.html",
-  "/JP/GJN-2024-Sep/task-list-guide.html",
-  "/JP/GJN-2024-Sep/travel-packing-guide.html",
+  "./accommodation-flights-guide.html",
+  "./attractions-guide.html",
+  "./train-guide.html",
+  "./task-list-guide.html",
+  "./travel-packing-guide.html",
 
-  "/JP/GJN-2024-Sep/external.html",
+  "./external.html",
 
-  "/JP/GJN-2024-Sep/assets/icons/icon-192x192.png",
-  "/JP/GJN-2024-Sep/assets/icons/icon-512x512.png"
+  "./assets/icons/icon-192x192.png",
+  "./assets/icons/icon-512x512.png"
 ];
 
 // -----------------------------------------------------
@@ -108,18 +108,14 @@ async function handleNavigation(request) {
   const url = new URL(request.url);
   const cache = await caches.open(CACHE_NAME);
 
-  const inTripScope = url.pathname.startsWith("/JP/GJN-2024-Sep/");
   const isExternalRouter =
-    url.pathname === "/JP/GJN-2024-Sep/external.html";
+    url.pathname.endsWith("/external.html") ||
+    url.pathname === "/external.html";
 
   const isTripDocument =
-    inTripScope &&
-    request.destination === "document" &&
-    !isExternalRouter;
+    request.destination === "document" && !isExternalRouter;
 
-  const canonicalExternalRequest = new Request(
-    "/JP/GJN-2024-Sep/external.html"
-  );
+  const canonicalExternalRequest = new Request("./external.html");
 
   const tripMode = await getTripMode();
 
@@ -131,15 +127,15 @@ async function handleNavigation(request) {
     if (isExternalRouter) {
       return (
         (await cache.match(canonicalExternalRequest)) ||
-        (await cache.match("/JP/GJN-2024-Sep/offline.html"))
+        (await cache.match("./offline.html"))
       );
     }
 
     if (isTripDocument) {
       return (
         (await cache.match(request)) ||
-        (await cache.match("/JP/GJN-2024-Sep/index.html")) ||
-        (await cache.match("/JP/GJN-2024-Sep/offline.html"))
+        (await cache.match("./index.html")) ||
+        (await cache.match("./offline.html"))
       );
     }
   }
@@ -150,7 +146,7 @@ async function handleNavigation(request) {
   try {
     const response = await fetch(request);
 
-    if (response && response.ok && inTripScope) {
+    if (response && response.ok) {
       if (isExternalRouter) {
         cache.put(canonicalExternalRequest, response.clone());
       } else {
@@ -162,8 +158,8 @@ async function handleNavigation(request) {
   } catch {
     return (
       (await cache.match(request)) ||
-      (await cache.match("/JP/GJN-2024-Sep/index.html")) ||
-      (await cache.match("/JP/GJN-2024-Sep/offline.html"))
+      (await cache.match("./index.html")) ||
+      (await cache.match("./offline.html"))
     );
   }
 }
