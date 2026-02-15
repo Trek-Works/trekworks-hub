@@ -4,30 +4,45 @@
 // Purpose: Ensure Trip Hub is available with no data
 // =====================================================
 
-const CACHE_VERSION = "trekworks-hub-2025-01";
+const CACHE_VERSION = "trekworks-hub-2026-02";
 const CACHE_NAME = `trekworks-hub-${CACHE_VERSION}`;
 
 // -----------------------------------------------------
-// Core Hub assets (keep small and deterministic)
+// Core Hub assets (minimal and deterministic)
 // -----------------------------------------------------
 const CORE_ASSETS = [
   "/",            // Hub root
-  "/index.html",
-  "/trips.json"
+  "/index.html"
 ];
 
 // -----------------------------------------------------
-// Install — precache Hub shell
+// Install — resilient precache Hub shell
 // -----------------------------------------------------
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+
+      await Promise.allSettled(
+        CORE_ASSETS.map(async (asset) => {
+          const req = new Request(asset, { cache: "reload" });
+          const res = await fetch(req);
+
+          if (!res || !res.ok) {
+            throw new Error(`Precache failed: ${asset} (${res && res.status})`);
+          }
+
+          await cache.put(req, res);
+        })
+      );
+    })()
   );
+
   self.skipWaiting();
 });
 
 // -----------------------------------------------------
-// Activate — clean up old Hub caches only
+// Activate — clean old Hub caches only
 // -----------------------------------------------------
 self.addEventListener("activate", (event) => {
   event.waitUntil(
@@ -35,11 +50,7 @@ self.addEventListener("activate", (event) => {
       const keys = await caches.keys();
       await Promise.all(
         keys
-          .filter(
-            (key) =>
-              key.startsWith("trekworks-hub-") &&
-              key !== CACHE_NAME
-          )
+          .filter((key) => key.startsWith("trekworks-hub-") && key !== CACHE_NAME)
           .map((key) => caches.delete(key))
       );
       await self.clients.claim();
@@ -74,7 +85,6 @@ async function handleHubNavigation(request) {
   const cache = await caches.open(CACHE_NAME);
 
   try {
-    // Network-first when available
     const response = await fetch(request);
 
     if (response && response.ok) {
@@ -82,13 +92,11 @@ async function handleHubNavigation(request) {
       return response;
     }
   } catch {
-    // Ignore network failure
+    // ignore network failure
   }
 
-  // Cache fallback
   const cached = await cache.match(request);
   if (cached) return cached;
 
-  // Final fallback — Hub root
   return cache.match("/index.html");
 }
