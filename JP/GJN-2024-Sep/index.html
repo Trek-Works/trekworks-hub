@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GJN-JP-2024-Sep · Trip Home</title>
+  <title>GJN-2024-Sep · Japan Trip</title>
 
   <link rel="manifest" href="./manifest.json" />
 
@@ -20,126 +20,211 @@
       --radius-pill: 999px;
       --shadow-card: 0 20px 40px rgba(15,23,42,0.8);
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0; padding:0; min-height:100vh;
-      font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
-      background:radial-gradient(circle at top,#111827 0,#020617 45%,#020617 100%);
-      color:var(--text-main); display:flex; justify-content:center;
-    }
-    .page{width:100%; max-width:960px; padding:26px 14px 80px;}
-    header{text-align:center; margin-bottom:26px;}
-    .trip-flag{font-size:13px; letter-spacing:.18em; color:var(--text-muted); margin-bottom:4px;}
-    h1{margin:0; font-size:clamp(24px,3.2vw,30px);}
-    .trip-dates{margin-top:4px; font-size:13px; color:var(--text-muted);}
-    .pill-row{margin-top:14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
-    .pill{
-      border-radius:var(--radius-pill);
-      padding:6px 12px;
-      font-size:12px;
-      border:1px solid var(--border-soft);
-      background:radial-gradient(circle at top left,#1f2937,#020617);
-      color:var(--text-muted);
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .pill.install{ color:var(--text-main); }
-    .pill.trip-offline{
-      color:#fbbf24;
-      border-color:#fbbf24;
-    }
-    .grid{
-      margin-top:24px;
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:18px;
-    }
-    .card{
-      background:radial-gradient(circle at top,var(--bg-card),var(--bg-card-soft));
-      border:1px solid var(--border-soft);
-      border-radius:var(--radius-card);
-      box-shadow:var(--shadow-card);
-      padding:16px 17px 14px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-    }
-    .card-header{display:flex; gap:10px; align-items:center; margin-bottom:10px;}
-    .card-emoji{font-size:26px;}
-    .card-title{font-size:16px; font-weight:600;}
-    .card-tag{font-size:11px; text-transform:uppercase; letter-spacing:.18em; color:var(--text-muted); margin-bottom:6px;}
-    .card-text{font-size:13px; color:var(--text-muted); margin-bottom:12px;}
-    .card-footer{display:flex; justify-content:space-between; align-items:center;}
-    .secure-label{
-      display:inline-flex; align-items:center; gap:6px;
-      padding:3px 9px; border-radius:var(--radius-pill);
-      border:1px solid rgba(148,163,184,.55);
-      background:rgba(15,23,42,.95); color:var(--text-muted);
-    }
-    .secure-dot{width:7px; height:7px; border-radius:999px; background:#22c55e;}
-    .card-link{text-decoration:none; color:var(--accent-blue); font-size:13px;}
-    .card-link span{font-size:14px;}
 
-    .hub-btn{
-      margin-top:40px;
-      display:inline-block;
-      padding:10px 22px;
-      border-radius:var(--radius-pill);
-      background:radial-gradient(circle at top left,#1f2937,#020617);
-      border:1px solid var(--border-soft);
-      color:var(--text-main);
-      font-size:14px;
-      text-decoration:none;
-      letter-spacing:0.3px;
-    }
-    .hub-btn:hover{
-      background:radial-gradient(circle at top left,#263445,#0b0f19);
-      border-color:#4b5563;
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: system-ui,-apple-system,"Segoe UI",sans-serif;
+      background: radial-gradient(circle at top,#111827 0,#020617 45%,#020617 100%);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
     }
 
-    .hub-container{text-align:center; margin-top:36px;}
+    .page {
+      width: 100%;
+      max-width: 960px;
+      padding: 26px 14px 80px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    .trip-flag {
+      font-size: 13px;
+      letter-spacing: .18em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px,3.2vw,30px);
+    }
+
+    .trip-dates {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .pill-row {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      border-radius: var(--radius-pill);
+      padding: 6px 12px;
+      font-size: 12px;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top left,#1f2937,#020617);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .pill.install {
+      color: var(--text-main);
+    }
+
+    .pill.trip-offline {
+      color: #fbbf24;
+      border-color: #fbbf24;
+    }
+
+    .grid {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: radial-gradient(circle at top,var(--bg-card),var(--bg-card-soft));
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      padding: 16px 17px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-height: 160px;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .card-tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    .card-link {
+      text-decoration: none;
+      color: var(--accent-blue);
+      font-size: 13px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .card-header {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .card-emoji {
+      font-size: 26px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .card-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 0;
+      line-height: 1.45;
+    }
+
+    .hub-btn {
+      margin-top: 40px;
+      display: inline-block;
+      padding: 10px 22px;
+      border-radius: var(--radius-pill);
+      background: radial-gradient(circle at top left,#1f2937,#020617);
+      border: 1px solid var(--border-soft);
+      color: var(--text-main);
+      font-size: 14px;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+    }
+
+    .hub-btn:hover {
+      background: radial-gradient(circle at top left,#263445,#0b0f19);
+      border-color: #4b5563;
+    }
+
+    .hub-container {
+      text-align: center;
+      margin-top: 36px;
+    }
 
     /* ===============================
        iOS Install Helper (additive)
        =============================== */
-    .ios-install-helper{
-      position:fixed;
-      bottom:14px;
-      left:50%;
-      transform:translateX(-50%);
-      max-width:520px;
-      width:calc(100% - 28px);
-      background:rgba(15,23,42,.97);
-      border:1px solid var(--border-soft);
-      border-radius:14px;
-      padding:12px 14px;
-      display:none;
-      z-index:999;
-      box-shadow:0 20px 40px rgba(0,0,0,.6);
+    .ios-install-helper {
+      position: fixed;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 520px;
+      width: calc(100% - 28px);
+      background: rgba(15,23,42,.97);
+      border: 1px solid var(--border-soft);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: none;
+      z-index: 999;
+      box-shadow: 0 20px 40px rgba(0,0,0,.6);
     }
-    .ios-install-helper p{
-      margin:0;
-      font-size:13px;
-      color:var(--text-muted);
-      line-height:1.4;
+
+    .ios-install-helper p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.4;
     }
-    .ios-install-helper strong{
-      color:var(--text-main);
-      font-weight:600;
+
+    .ios-install-helper strong {
+      color: var(--text-main);
+      font-weight: 600;
     }
-    .ios-install-actions{
-      margin-top:8px;
-      display:flex;
-      justify-content:flex-end;
+
+    .ios-install-actions {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
     }
-    .ios-install-dismiss{
-      font-size:12px;
-      color:var(--accent-blue);
-      cursor:pointer;
-      user-select:none;
+
+    .ios-install-dismiss {
+      font-size: 12px;
+      color: var(--accent-blue);
+      cursor: pointer;
+      user-select: none;
     }
   </style>
 </head>
@@ -148,9 +233,9 @@
 <div class="page">
 
   <header>
-    <div class="trip-flag">JP · GJN-JP-2024-Sep</div>
+    <div class="trip-flag">GJN-2024-Sep · Japan Trip</div>
     <h1>Trip Home</h1>
-    <p class="trip-dates">Japan · September 2024 · Secure trip guide</p>
+    <p class="trip-dates">Japan · 31 Aug 2024 → 10 Sep 2024</p>
 
     <div class="pill-row">
       <div class="pill" id="tripModePill">Trip Mode: Online</div>
@@ -165,69 +250,69 @@
     <div class="grid">
 
       <article class="card">
-        <div>
+        <div class="card-top">
           <div class="card-tag">TRIP ELEMENT</div>
-          <div class="card-header"><div class="card-emoji">🛏️</div><div class="card-title">Accommodation & Flights</div></div>
-          <div class="card-text">Hotels and flight bookings for the September 2024 itinerary.</div>
+          <a class="card-link" href="./accommodation-flights-guide.html">Open ↗</a>
         </div>
-        <div class="card-footer">
-          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="./accommodation-flights-guide.html">Open <span>↗</span></a>
+        <div class="card-header">
+          <div class="card-emoji">🛏️</div>
+          <div class="card-title">Accommodation & Flights</div>
         </div>
+        <div class="card-text">Hotels and flight bookings for the September 2024 itinerary.</div>
       </article>
 
       <article class="card">
-        <div>
+        <div class="card-top">
           <div class="card-tag">TRIP ELEMENT</div>
-          <div class="card-header"><div class="card-emoji">🎡</div><div class="card-title">Attractions Guide</div></div>
-          <div class="card-text">Key attractions for Tokyo, Osaka, Kyoto & Hiroshima.</div>
+          <a class="card-link" href="./attractions-guide.html">Open ↗</a>
         </div>
-        <div class="card-footer">
-          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="./attractions-guide.html">Open <span>↗</span></a>
+        <div class="card-header">
+          <div class="card-emoji">🎡</div>
+          <div class="card-title">Attractions Guide</div>
         </div>
+        <div class="card-text">Key attractions for Tokyo, Osaka, Kyoto & Hiroshima.</div>
       </article>
 
       <article class="card">
-        <div>
+        <div class="card-top">
           <div class="card-tag">TRIP ELEMENT</div>
-          <div class="card-header"><div class="card-emoji">🚄</div><div class="card-title">Train Guide</div></div>
-          <div class="card-text">Shinkansen timings, durations and travel routes.</div>
+          <a class="card-link" href="./train-guide.html">Open ↗</a>
         </div>
-        <div class="card-footer">
-          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="./train-guide.html">Open <span>↗</span></a>
+        <div class="card-header">
+          <div class="card-emoji">🚄</div>
+          <div class="card-title">Train Guide</div>
         </div>
+        <div class="card-text">Shinkansen timings, durations and travel routes.</div>
       </article>
 
       <article class="card">
-        <div>
+        <div class="card-top">
           <div class="card-tag">TRIP ELEMENT</div>
-          <div class="card-header"><div class="card-emoji">📝</div><div class="card-title">Task List</div></div>
-          <div class="card-text">Trip organisation and preparation checklists.</div>
+          <a class="card-link" href="./task-list-guide.html">Open ↗</a>
         </div>
-        <div class="card-footer">
-          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="./task-list-guide.html">Open <span>↗</span></a>
+        <div class="card-header">
+          <div class="card-emoji">📝</div>
+          <div class="card-title">Task List</div>
         </div>
+        <div class="card-text">Trip organisation and preparation checklists.</div>
       </article>
 
       <article class="card">
-        <div>
+        <div class="card-top">
           <div class="card-tag">TRIP ELEMENT</div>
-          <div class="card-header"><div class="card-emoji">🎒</div><div class="card-title">Travel Packing Guide</div></div>
-          <div class="card-text">Packing checklist for Sema & Gavin.</div>
+          <a class="card-link" href="./travel-packing-guide.html">Open ↗</a>
         </div>
-        <div class="card-footer">
-          <div class="secure-label"><span class="secure-dot"></span>Secure section</div>
-          <a class="card-link" href="./travel-packing-guide.html">Open <span>↗</span></a>
+        <div class="card-header">
+          <div class="card-emoji">🎒</div>
+          <div class="card-title">Travel Packing Guide</div>
         </div>
+        <div class="card-text">Packing checklist for Sema & Gavin.</div>
       </article>
 
     </div>
 
     <div class="hub-container">
-      <a href="/" class="hub-btn">← Back to TrekWorks Hub</a>
+      <a href="https://trekworks.org/" class="hub-btn">← Back to TrekWorks Hub</a>
     </div>
   </main>
 
